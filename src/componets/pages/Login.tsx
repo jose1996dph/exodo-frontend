@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import CustomTextField from '../atoms/CustomTextField'
 import CustomButton from '../atoms/CustomButton'
 import {
@@ -10,30 +11,16 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
-  TypographyProps,
 } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import LockIcon from '@mui/icons-material/Lock'
-import Link from '@mui/material/Link'
 import { isEmail } from '../../framework/helpers/validation.helper'
 import { makeAuthService } from '../../services/auth.service'
 import {
   setRememberMe as setStoreRememberMe,
   getRememberMe as getStoreRememberMe,
 } from '../../framework/helpers/auth.helper'
-
-function Copyright(props: TypographyProps) {
-  return (
-    <Typography variant='body2' color='text.secondary' align='center' {...props}>
-      {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../atoms/Copyright'
 
 const theme = createTheme()
 
@@ -45,6 +32,9 @@ const Login: FC = () => {
   const [rememberMe, setRememberMe] = useState(false)
   const [emailHelperText, setEmailHelperText] = useState('')
   const [passwordHelperText, setPasswordHelperText] = useState('')
+
+  const navigate = useNavigate()
+
   const authService = makeAuthService()
 
   useEffect(() => {
@@ -88,8 +78,9 @@ const Login: FC = () => {
       } else {
         setStoreRememberMe('')
       }
-    } catch (error: any) {
-      setError(error.message)
+      navigate('/dashboard', { replace: true })
+    } catch ({ message }) {
+      if (message) setError(message as string)
     } finally {
       setIsLoading(false)
     }
