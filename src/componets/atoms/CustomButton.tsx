@@ -10,7 +10,6 @@ type CustomButtonProp = ButtonProps & {
 }
 
 const CustomButton: React.FunctionComponent<CustomButtonProp> = ({
-  id,
   text,
   onClick,
   disabled = false,
@@ -18,7 +17,6 @@ const CustomButton: React.FunctionComponent<CustomButtonProp> = ({
 }: CustomButtonProp) => {
   return (
     <Button
-      id={id}
       disabled={disabled}
       onClick={onClick}
       fullWidth
