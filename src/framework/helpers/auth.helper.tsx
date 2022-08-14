@@ -1,8 +1,8 @@
 const TOKEN_KEY = 'ACCESS_TOKEN'
 const REMEMBER_ME = 'REMEMBER_ME'
 
-export function setToken(value: string) {
-  localStorage.setItem(TOKEN_KEY, value)
+export function setToken(value: string): void {
+  return localStorage.setItem(TOKEN_KEY, value)
 }
 
 export function getToken(): string | null {
