@@ -4,7 +4,6 @@ import { TextField, TextFieldProps } from '@mui/material'
 type EnterEventHandelr = () => void
 
 type CustomTextFieldProp = TextFieldProps & {
-  id: string
   label: string
   value: string
   onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
@@ -13,7 +12,6 @@ type CustomTextFieldProp = TextFieldProps & {
 }
 
 const CustomTextField: React.FunctionComponent<CustomTextFieldProp> = ({
-  id,
   label,
   value,
   onChange,
@@ -32,7 +30,6 @@ const CustomTextField: React.FunctionComponent<CustomTextFieldProp> = ({
 
   return (
     <TextField
-      id={id}
       label={label}
       variant='outlined'
       value={value}
