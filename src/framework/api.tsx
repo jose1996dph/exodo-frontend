@@ -1,6 +1,7 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { BackendURL } from '../config'
-import { getToken } from './helpers/auth.helper'
+import { getToken, setToken } from './helpers/auth.helper'
+import { UrlRoutes } from './routes/routes'
 
 const token = getToken()
 let headers
@@ -10,9 +11,37 @@ if (token) {
   headers = { 'Content-Type': 'application/json' }
 }
 
-console.log(BackendURL)
-
-export const api = axios.create({
+const api = axios.create({
   baseURL: BackendURL || '',
   headers: headers,
 })
+
+api.interceptors.request.use(
+  function (config: AxiosRequestConfig) {
+    const token = getToken()
+    if (token && config.headers) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
+    return config
+  },
+  function (error) {
+    return Promise.reject(error)
+  },
+)
+
+api.interceptors.response.use(
+  function (response) {
+    return response
+  },
+  function (error) {
+    if (401 === error.response.status) {
+      setToken('')
+      if (!window.location.href.includes(UrlRoutes.Login)) {
+        window.location.href = UrlRoutes.Login
+      }
+    }
+    return Promise.reject(error)
+  },
+)
+
+export default api

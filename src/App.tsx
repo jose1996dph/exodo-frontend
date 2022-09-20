@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Dashboard from './componets/pages/Dashboard'
+import CreateUser from './componets/pages/CreateUser'
+import EditUser from './componets/pages/EditUser'
 import Login from './componets/pages/Login'
-import UsersPage from './componets/pages/UsersPage'
+import SetPassword from './componets/pages/SetPassword'
+import ForgotPassword from './componets/pages/ForgotPassword'
+import UsersPage from './componets/pages/Users'
 import { getToken } from './framework/helpers/auth.helper'
 import ProtectedRoute from './framework/routes/ProtectRoute'
 import { UrlRoutes } from './framework/routes/routes'
 
 function App() {
   const location = useLocation()
-  const [isLoged, setIsloged] = useState(true)
+  const [isLoged, setIsloged] = useState(false)
 
   const [open, setOpen] = useState(true)
   const toggleDrawer = () => {
@@ -24,13 +28,23 @@ function App() {
     }
   }, [location])
 
+  const isLogedRedirectTo = (page: ReactElement) => {
+    if (isLoged) {
+      return <Navigate to={UrlRoutes.Dashboard} replace />
+    }
+
+    return page
+  }
+
   return (
     <div className='App'>
       <Routes>
         <Route
-          path={UrlRoutes.Login}
-          element={<>{isLoged ? <Navigate to={UrlRoutes.Dashboard} replace /> : <Login />}</>}
+          path={UrlRoutes.ForgotPassword}
+          element={<>{isLogedRedirectTo(<ForgotPassword />)}</>}
         />
+        <Route path={UrlRoutes.SetPassword} element={<>{isLogedRedirectTo(<SetPassword />)}</>} />
+        <Route path={UrlRoutes.Login} element={<>{isLogedRedirectTo(<Login />)}</>} />
         <Route path={UrlRoutes.Home}>
           <Route
             path={UrlRoutes.Home}
@@ -40,7 +54,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path={UrlRoutes.Dashboard}
             element={
@@ -58,8 +71,26 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path={UrlRoutes.CreateUser}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateUser open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.EditUser}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <EditUser open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
         </Route>
-        <Route path='*' element={<Navigate to={UrlRoutes.Home} />} />
+        {/* <Route path='*' element={<Navigate to={UrlRoutes.Home} />} />*/}
       </Routes>
     </div>
   )

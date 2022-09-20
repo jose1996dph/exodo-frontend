@@ -1,4 +1,5 @@
-import { FC } from 'react'
+import { MouseEvent } from 'react'
+import FunctionComponent from 'react/FunctionComponent'
 import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
 
 // Generate Order Data
@@ -21,7 +22,7 @@ const rows = [
   createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
 ]
 
-function preventDefault(event: React.MouseEvent) {
+function preventDefault(event: MouseEvent) {
   event.preventDefault()
 }
 
@@ -33,10 +34,10 @@ const propRows: CustomTableRow[] = [
   { title: 'Sale Amount', key: 'amount', props: { align: 'right' } },
 ]
 
-const Users: FC = () => {
+const OrderTable: FunctionComponent = () => {
   return (
     <CustomTable
-      title='Usuarios'
+      title='Orders'
       items={rows}
       tableRows={propRows}
       preventDefault={preventDefault}
@@ -44,4 +45,4 @@ const Users: FC = () => {
   )
 }
 
-export default Users
+export default OrderTable

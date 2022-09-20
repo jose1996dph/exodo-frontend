@@ -1,5 +1,5 @@
 import { MouseEventHandler } from 'react'
-import { Button, ButtonProps } from '@mui/material/'
+import Button, { ButtonProps } from '@mui/material/Button'
 
 type CustomButtonProp = ButtonProps & {
   id: string
@@ -9,12 +9,12 @@ type CustomButtonProp = ButtonProps & {
   onClick?: MouseEventHandler<HTMLAnchorElement> | undefined
 }
 
-const CustomButton: React.FunctionComponent<CustomButtonProp> = ({
+export default function CustomButton({
   text,
   onClick,
   disabled = false,
   ...props
-}: CustomButtonProp) => {
+}: CustomButtonProp) {
   return (
     <Button
       disabled={disabled}
@@ -29,5 +29,3 @@ const CustomButton: React.FunctionComponent<CustomButtonProp> = ({
     </Button>
   )
 }
-
-export default CustomButton

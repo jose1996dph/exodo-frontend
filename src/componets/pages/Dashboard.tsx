@@ -1,10 +1,9 @@
-import { FC } from 'react'
-import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
+import Grid from '@mui/material/Grid'
 
 import Chart from '../molecules/Chart'
 import Deposits from '../molecules/Deposits'
-import Orders from '../organisms/Orders'
+import OrderTable from '../organisms/OrderTable'
 import Content from '../organisms/Content'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 
@@ -13,7 +12,7 @@ type DashboardProps = {
   toggleDrawer: ToggleDrawerHandler
 }
 
-export const Dashboard: FC<DashboardProps> = ({ open, toggleDrawer }) => {
+export default function Dashboard({ open, toggleDrawer }: DashboardProps) {
   return (
     <Content title='Indicadores' open={open} toggleDrawer={toggleDrawer}>
       <Grid item xs={12} md={8} lg={9}>
@@ -44,11 +43,9 @@ export const Dashboard: FC<DashboardProps> = ({ open, toggleDrawer }) => {
       {/* Recent Orders */}
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <Orders />
+          <OrderTable />
         </Paper>
       </Grid>
     </Content>
   )
 }
-
-export default Dashboard

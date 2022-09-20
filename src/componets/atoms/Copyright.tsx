@@ -1,5 +1,5 @@
-import { Typography, TypographyProps, Link } from '@mui/material'
-import { FC } from 'react'
+import Typography, { TypographyProps } from '@mui/material/Typography'
+import Link from '@mui/material/Link'
 import { SxProps } from '@mui/system'
 import { Theme } from '../styles'
 
@@ -8,7 +8,7 @@ type CopyrightProps = TypographyProps & {
   sx?: SxProps<Theme>
 }
 
-const Copyright: FC = (props: CopyrightProps) => {
+export default function Copyright(props: CopyrightProps) {
   return (
     <Typography variant='body2' color='text.secondary' align='center' {...props} sx={props.sx}>
       {'Copyright © '}
@@ -20,5 +20,3 @@ const Copyright: FC = (props: CopyrightProps) => {
     </Typography>
   )
 }
-
-export default Copyright

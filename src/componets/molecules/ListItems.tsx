@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Fragment } from 'react'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -12,12 +12,13 @@ import AssignmentIcon from '@mui/icons-material/Assignment'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import WorkIcon from '@mui/icons-material/Work'
 import { useNavigate } from 'react-router-dom'
+
 import { UrlRoutes } from '../../framework/routes/routes'
 
 export const MainListItems = () => {
   const navigate = useNavigate()
   return (
-    <React.Fragment>
+    <Fragment>
       <ListItemButton onClick={() => navigate(UrlRoutes.Dashboard, { replace: true })}>
         <ListItemIcon>
           <DashboardIcon />
@@ -60,12 +61,12 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary='Usuarios' />
       </ListItemButton>
-    </React.Fragment>
+    </Fragment>
   )
 }
 
 export const secondaryListItems = (
-  <React.Fragment>
+  <Fragment>
     <ListSubheader component='div' inset>
       Saved reports
     </ListSubheader>
@@ -87,5 +88,5 @@ export const secondaryListItems = (
       </ListItemIcon>
       <ListItemText primary='Year-end sale' />
     </ListItemButton>
-  </React.Fragment>
+  </Fragment>
 )

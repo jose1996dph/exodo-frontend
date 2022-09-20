@@ -1,9 +1,9 @@
-import { Fragment, FC } from 'react'
-import { useTheme } from '@mui/material/styles'
+import { Fragment } from 'react'
+import { useTheme } from '@mui/material'
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts'
 import Title from '../atoms/Title'
 
-const Chart: FC = () => {
+export default function Chart() {
   const theme = useTheme()
 
   const data = [
@@ -60,5 +60,3 @@ const Chart: FC = () => {
     </Fragment>
   )
 }
-
-export default Chart

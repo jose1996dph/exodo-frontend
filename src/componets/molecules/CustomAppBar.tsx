@@ -1,8 +1,11 @@
-import { FC } from 'react'
-import { Toolbar, IconButton, Badge, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { styled } from '@mui/material'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Badge from '@mui/material/Badge'
+import Typography from '@mui/material/Typography'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu'
+
 import NotificationsIcon from '@mui/icons-material/Notifications'
 
 const drawerWidth = 240
@@ -15,7 +18,7 @@ interface AppBarProps extends MuiAppBarProps {
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open }: AppBarProps) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
@@ -37,7 +40,7 @@ type CustomAppBarProps = {
   toggleDrawer: ToggleDrawerHandler
 }
 
-const CustomAppBar: FC<CustomAppBarProps> = ({ title, open, toggleDrawer }) => {
+export default function CustomAppBar({ title, open, toggleDrawer }: CustomAppBarProps) {
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -69,5 +72,3 @@ const CustomAppBar: FC<CustomAppBarProps> = ({ title, open, toggleDrawer }) => {
     </AppBar>
   )
 }
-
-export default CustomAppBar

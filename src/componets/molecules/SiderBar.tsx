@@ -1,9 +1,9 @@
-import { FC } from 'react'
-import { styled } from '@mui/material/styles'
 import MuiDrawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
+import { styled } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
+
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import { MainListItems } from '../molecules/ListItems'
 import Toolbar from '@mui/material/Toolbar'
@@ -41,7 +41,7 @@ type SiderBarProps = {
   toggleDrawer: () => void
 }
 
-const SiderBar: FC<SiderBarProps> = ({ open, toggleDrawer }) => {
+export default function SiderBar({ open, toggleDrawer }: SiderBarProps) {
   return (
     <Drawer variant='permanent' open={open}>
       <Toolbar
@@ -65,5 +65,3 @@ const SiderBar: FC<SiderBarProps> = ({ open, toggleDrawer }) => {
     </Drawer>
   )
 }
-
-export default SiderBar

@@ -1,10 +1,12 @@
-import { FC } from 'react'
+import { ReactNode } from 'react'
+import FunctionComponent from 'react/FunctionComponent'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
+
 import Copyright from '../atoms/Copyright'
 import CustomAppBar, { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 import SiderBar from '../molecules/SiderBar'
@@ -15,10 +17,15 @@ type ContentProps = {
   title: string
   open: boolean
   toggleDrawer: ToggleDrawerHandler
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-const Content: FC<ContentProps> = ({ title, open, children, toggleDrawer }: ContentProps) => {
+const Content: FunctionComponent<ContentProps> = ({
+  title,
+  open,
+  children,
+  toggleDrawer,
+}: ContentProps) => {
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>

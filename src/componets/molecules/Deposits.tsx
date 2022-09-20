@@ -1,15 +1,14 @@
-import { FC, Fragment } from 'react'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import Title from '../atoms/Title'
 
-const Deposits: FC = () => {
+export default function Deposits() {
   function preventDefault(event: React.MouseEvent) {
     event.preventDefault()
   }
 
   return (
-    <Fragment>
+    <>
       <Title>Recent Deposits</Title>
       <Typography component='p' variant='h4'>
         $3,024.00
@@ -22,8 +21,6 @@ const Deposits: FC = () => {
           View balance
         </Link>
       </div>
-    </Fragment>
+    </>
   )
 }
-
-export default Deposits
