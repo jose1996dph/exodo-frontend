@@ -80,7 +80,7 @@ export default function SetPassword() {
     <>
       <AlertDialog
         icon='success'
-        content='Se le enviará un correo electrónico para restablecer su contraseña.'
+        content='Se estableció su contraseña con éxito.'
         open={open}
         setOpen={setOpen}
         onAcept={() => navigate(UrlRoutes.Login, { replace: true })}
