@@ -26,6 +26,8 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
   const [users, setUsers] = useState<UserItem[]>([])
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
+  const [page, setPage] = useState(1)
+  const [pages, setPages] = useState(0)
 
   const userService = makeUserService()
 
@@ -33,8 +35,9 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
 
   const loadUsers = async () => {
     try {
-      const _users = await userService.getAll()
+      const [_users, _pages] = await userService.getAll(page, searchText)
       setUsers(_users)
+      setPages(_pages)
     } catch {
       console.error('error')
     }
@@ -73,8 +76,13 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
   }
 
   useEffect(() => {
+    const timeOutId = setTimeout(() => loadUsers(), 1000)
+    return () => clearTimeout(timeOutId)
+  }, [searchText])
+
+  useEffect(() => {
     loadUsers()
-  }, [])
+  }, [page])
 
   return (
     <>
@@ -133,7 +141,14 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
         {/* Recent Orders */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-            <UserTable data={users} onDelete={openAlert} onUpdate={onUpdateHandler} />
+            <UserTable
+              pages={pages}
+              page={page}
+              setPage={setPage}
+              data={users}
+              onDelete={openAlert}
+              onUpdate={onUpdateHandler}
+            />
           </Paper>
         </Grid>
       </Content>

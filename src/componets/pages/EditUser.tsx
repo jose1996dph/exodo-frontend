@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@mui/material'
+import { Alert, Grid, Paper } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { RoleItem } from '../../domains/role.domain'
@@ -17,6 +17,7 @@ type EditUserPageProps = {
 }
 
 export default function EditUser({ open, toggleDrawer }: EditUserPageProps) {
+  const [errorMessage, setErrorMessage] = useState<string | string[]>('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [firstName, setFirstName] = useState('')
@@ -25,8 +26,6 @@ export default function EditUser({ open, toggleDrawer }: EditUserPageProps) {
   const [roleId, setRoleId] = useState('')
   const [email, setEmail] = useState('')
   const [dni, setDni] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
 
   const [roles, setRoles] = useState<RoleItem[]>([])
 
@@ -46,16 +45,7 @@ export default function EditUser({ open, toggleDrawer }: EditUserPageProps) {
       const userId = parseInt(id)
       const _roleId = parseInt(roleId ?? 0)
 
-      const user = new UpdateUser(
-        dni,
-        firstName,
-        lastName,
-        phone,
-        _roleId,
-        email,
-        password,
-        confirmPassword,
-      )
+      const user = new UpdateUser(dni, firstName, lastName, phone, _roleId, email)
 
       const _errors = user.isValid()
 
@@ -70,11 +60,10 @@ export default function EditUser({ open, toggleDrawer }: EditUserPageProps) {
 
       navigate(UrlRoutes.Users, { replace: true })
     } catch (error) {
-      // eslint-disable-next-line no-debugger
-      debugger
       if (isServerException(error)) {
         const { message } = error as ServerException
-        console.log(message)
+        console.error(message)
+        setErrorMessage(message)
       }
     } finally {
       setIsLoading(false)
@@ -88,9 +77,8 @@ export default function EditUser({ open, toggleDrawer }: EditUserPageProps) {
     setRoleId('')
     setEmail('')
     setDni('')
-    setPassword('')
-    setConfirmPassword('')
     setErrors({})
+    setErrorMessage('')
   }
 
   const loadRoles = async () => {
@@ -138,20 +126,21 @@ export default function EditUser({ open, toggleDrawer }: EditUserPageProps) {
               roleId={roleId}
               email={email}
               dni={dni}
-              password={password}
-              confirmPassword={confirmPassword}
               setFirstName={setFirstName}
               setLastName={setLastName}
               setPhone={setPhone}
               setRoleId={setRoleId}
               setEmail={setEmail}
               setDni={setDni}
-              setPassword={setPassword}
-              setConfirmPassword={setConfirmPassword}
               roles={roles}
               errors={errors}
               onSubmit={handleSubmit}
             />
+            {errorMessage && (
+              <Alert sx={{ mt: '10px' }} severity='error'>
+                {errorMessage}
+              </Alert>
+            )}
           </Paper>
         </Grid>
       </Content>

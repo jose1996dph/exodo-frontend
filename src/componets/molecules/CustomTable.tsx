@@ -1,5 +1,4 @@
-import { Fragment, MouseEvent } from 'react'
-import Link from '@mui/material/Link'
+import { Fragment } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell, { TableCellProps } from '@mui/material/TableCell'
@@ -11,8 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
 import Title from '../atoms/Title'
-
-type PreventDefault = (event: MouseEvent) => void
+import { Pagination } from '@mui/material'
 
 export type CustomTableRow = {
   title: string
@@ -22,18 +20,22 @@ export type CustomTableRow = {
 
 type CustomTableProps = {
   title: string
+  pages: number
+  page: number
+  setPage: (value: number) => void
   tableRows: CustomTableRow[]
   items: any[]
-  preventDefault: PreventDefault
   onDelete: (id: number) => void
   onUpdate: (id: number) => void
 }
 
 export default function CustomTable({
   title,
+  pages,
+  page,
+  setPage,
   tableRows,
   items,
-  preventDefault,
   onDelete,
   onUpdate,
 }: CustomTableProps) {
@@ -76,10 +78,14 @@ export default function CustomTable({
           {'No se encontraron registros'}
         </Typography>
       )}
-
-      <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
-        See more orders
-      </Link>
+      {pages > 0 && (
+        <Pagination
+          sx={{ marginLeft: 'auto', marginRight: 'auto', marginTop: '15px' }}
+          count={pages}
+          page={page}
+          onChange={(_, value) => setPage(value)}
+        />
+      )}
     </Fragment>
   )
 }

@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@mui/material'
+import { Alert, Grid, Paper } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RoleItem } from '../../domains/role.domain'
@@ -17,6 +17,7 @@ type CreateUserPageProps = {
 }
 
 export default function CreateUser({ open, toggleDrawer }: CreateUserPageProps) {
+  const [errorMessage, setErrorMessage] = useState<string | string[]>('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [firstName, setFirstName] = useState('')
@@ -55,7 +56,8 @@ export default function CreateUser({ open, toggleDrawer }: CreateUserPageProps) 
     } catch (error) {
       if (isServerException(error)) {
         const { message } = error as ServerException
-        console.log(message)
+        console.error(message)
+        setErrorMessage(message)
       }
     } finally {
       setIsLoading(false)
@@ -70,6 +72,7 @@ export default function CreateUser({ open, toggleDrawer }: CreateUserPageProps) 
     setEmail('')
     setDni('')
     setErrors({})
+    setErrorMessage('')
   }
 
   const loadRoles = async () => {
@@ -114,6 +117,11 @@ export default function CreateUser({ open, toggleDrawer }: CreateUserPageProps) 
               errors={errors}
               onSubmit={handleSubmit}
             />
+            {errorMessage && (
+              <Alert sx={{ mt: '10px' }} severity='error'>
+                {errorMessage}
+              </Alert>
+            )}
           </Paper>
         </Grid>
       </Content>

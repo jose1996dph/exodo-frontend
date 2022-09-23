@@ -1,10 +1,6 @@
 import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
 import { UserItem } from '../../domains/user.domain'
 
-function preventDefault(event: React.MouseEvent) {
-  event.preventDefault()
-}
-
 const propRows: CustomTableRow[] = [
   { title: 'Cédula', key: 'dni' },
   { title: 'Nombre', key: 'firstName' },
@@ -14,18 +10,30 @@ const propRows: CustomTableRow[] = [
 ]
 
 type UserTableProps = {
+  pages: number
+  page: number
+  setPage: (value: number) => void
   data: UserItem[]
   onDelete: (id: number) => void
   onUpdate: (id: number) => void
 }
 
-export default function UserTable({ data, onDelete, onUpdate }: UserTableProps) {
+export default function UserTable({
+  pages,
+  page,
+  setPage,
+  data,
+  onDelete,
+  onUpdate,
+}: UserTableProps) {
   return (
     <CustomTable
       title='Usuarios'
+      pages={pages}
+      page={page}
+      setPage={setPage}
       items={data}
       tableRows={propRows}
-      preventDefault={preventDefault}
       onDelete={onDelete}
       onUpdate={onUpdate}
     ></CustomTable>

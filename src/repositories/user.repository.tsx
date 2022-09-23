@@ -3,7 +3,7 @@ import api from '../framework/api'
 import { BackendURL } from '../config'
 
 export interface IUserRepository {
-  getAll(): Promise<UserItem[]>
+  getAll(pageSize: number, pageNum: number, search: string): Promise<[UserItem[], number]>
 
   getById(id: number): Promise<UserDetail>
 
@@ -15,10 +15,16 @@ export interface IUserRepository {
 }
 
 class UserRepository implements IUserRepository {
-  async getAll(): Promise<UserItem[]> {
-    const { data } = await api.get(`${BackendURL}users/`)
+  async getAll(pageSize: number, pageNum: number, search: string): Promise<[UserItem[], number]> {
+    const { data } = await api.get(
+      `${BackendURL}users/?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`,
+    )
 
-    return data as UserItem[]
+    const [user, count] = data
+
+    const _count: number = (count / pageSize) >> 0
+
+    return [user as UserItem[], _count]
   }
 
   async getById(id: number): Promise<UserDetail> {

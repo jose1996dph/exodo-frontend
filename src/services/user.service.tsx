@@ -5,9 +5,10 @@ class UserService {
   [x: string]: any
   private userRepo: IUserRepository = makeUserRepository()
 
-  async getAll() {
+  async getAll(pageNum: number, search: string) {
     try {
-      const users = await this.userRepo.getAll()
+      const pageSize = 10
+      const users = await this.userRepo.getAll(pageSize, pageNum - 1, search)
       return users
     } catch ({ response: { data } }) {
       console.error(data)

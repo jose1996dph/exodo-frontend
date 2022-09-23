@@ -13,7 +13,7 @@ import { UrlRoutes } from './framework/routes/routes'
 
 function App() {
   const location = useLocation()
-  const [isLoged, setIsloged] = useState(false)
+  const [isLoged, setIsloged] = useState(getToken() !== null)
 
   const [open, setOpen] = useState(true)
   const toggleDrawer = () => {

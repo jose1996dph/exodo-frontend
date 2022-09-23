@@ -39,7 +39,6 @@ export default function Login() {
 
   useEffect(() => {
     if (getStoreRememberMe()) {
-      console.log(getStoreRememberMe())
       setRememberMe(true)
       setEmail(getStoreRememberMe() ?? '')
     }
