@@ -20,52 +20,11 @@ type SubmitHandler = (
 type CustomerFormProps = {
   isLoading: boolean
   customer?: CustomerDetail | undefined
-  /*
-  dni: string
-  setDni: (value: string) => void
-  businessName: string
-  setBusinessName: (value: string) => void
-  storeName: string
-  setStoreName: (value: string) => void
-  address: string
-  setAddress: (value: string) => void
-  referencePoint: string
-  setReferencePoint: (value: string) => void
-  phone: string
-  setPhone: (value: string) => void
-  contactName: string
-  setContactName: (value: string) => void
-  contactPhone: string
-  setContactPhone: (value: string) => void
-  */
   errors: Record<string, string>
   onSubmit: SubmitHandler
 }
 
-export default function CustomerForm({
-  isLoading,
-  customer,
-  /*
-  dni,
-  setDni,
-  businessName,
-  setBusinessName,
-  storeName,
-  setStoreName,
-  address,
-  setAddress,
-  referencePoint,
-  setReferencePoint,
-  phone,
-  setPhone,
-  contactName,
-  setContactName,
-  contactPhone,
-  setContactPhone,
-  */
-  errors,
-  onSubmit,
-}: CustomerFormProps) {
+export default function CustomerForm({ isLoading, customer, errors, onSubmit }: CustomerFormProps) {
   const [dni, setDni] = useState('')
   const [businessName, setBusinessName] = useState('')
   const [storeName, setStoreName] = useState('')
@@ -186,6 +145,7 @@ export default function CustomerForm({
             error={errors['contactPhone'] ? true : false}
             helperText={errors['contactPhone']}
             onChange={(event) => setContactPhone(event.target.value)}
+            inputProps={{ inputMode: 'tel' }}
           ></CustomTextField>
         </Grid>
       </Grid>
