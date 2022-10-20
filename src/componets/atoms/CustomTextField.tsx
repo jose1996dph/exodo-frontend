@@ -35,7 +35,6 @@ export default function CustomTextField({
     } else if (inputProps && inputProps.inputMode == 'tel') {
       event.target.value = event.target.value.replace(/[^-0-9]+/g, '')
     }
-
     onChange(event)
   }
 

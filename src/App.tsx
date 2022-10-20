@@ -6,10 +6,13 @@ import EditUser from './componets/pages/EditUser'
 import Login from './componets/pages/Login'
 import SetPassword from './componets/pages/SetPassword'
 import ForgotPassword from './componets/pages/ForgotPassword'
+import CustomersPage from './componets/pages/Customers'
+import CreateCustomer from './componets/pages/CreateCustomer'
 import UsersPage from './componets/pages/Users'
 import { getToken } from './framework/helpers/auth.helper'
 import ProtectedRoute from './framework/routes/ProtectRoute'
 import { UrlRoutes } from './framework/routes/routes'
+import EditCustomer from './componets/pages/EditCustomer'
 
 function App() {
   const location = useLocation()
@@ -59,6 +62,33 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <Dashboard open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.Customers}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CustomersPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.CreateCustomer}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateCustomer open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.EditCustomer}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <EditCustomer open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

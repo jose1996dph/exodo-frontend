@@ -102,7 +102,7 @@ export default function UserForm({
             id='roleId'
             value={roleId}
             disabled={isLoading}
-            onChange={(event) => setRoleId(event.target.value)}
+            onChange={(event) => setRoleId(event.target.value as string)}
             error={errors['roleId'] ? true : false}
             helperText={errors['roleId']}
             items={roles.map((item) => {

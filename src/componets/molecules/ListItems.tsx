@@ -37,7 +37,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary='Órdenes' />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate(UrlRoutes.Customers, { replace: true })}>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
