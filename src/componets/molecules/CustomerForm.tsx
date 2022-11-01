@@ -51,7 +51,7 @@ export default function CustomerForm({ isLoading, customer, errors, onSubmit }: 
     <>
       <Grid container spacing={0.5}>
         <Grid item xs={12}>
-          <Title>Información de usuario</Title>
+          <Title>Información del cliente</Title>
         </Grid>
 
         <Grid item xs={12}>

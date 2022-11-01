@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import FunctionComponent from 'react/FunctionComponent'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
@@ -20,12 +19,7 @@ type ContentProps = {
   children?: ReactNode
 }
 
-const Content: FunctionComponent<ContentProps> = ({
-  title,
-  open,
-  children,
-  toggleDrawer,
-}: ContentProps) => {
+export default function Content({ title, open, children, toggleDrawer }: ContentProps) {
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -55,5 +49,3 @@ const Content: FunctionComponent<ContentProps> = ({
     </ThemeProvider>
   )
 }
-
-export default Content

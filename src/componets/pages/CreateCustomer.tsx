@@ -18,16 +18,6 @@ export default function CreateCustomer({ open, toggleDrawer }: CreateCustomerPag
   const [errorMessage, setErrorMessage] = useState<string | string[]>('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
-  /*
-  const [dni, setDni] = useState('')
-  const [businessName, setBusinessName] = useState('')
-  const [storeName, setStoreName] = useState('')
-  const [address, setAddress] = useState('')
-  const [referencePoint, setReferencePoint] = useState('')
-  const [phone, setPhone] = useState('')
-  const [contactName, setContactName] = useState('')
-  const [contactPhone, setContactPhone] = useState('')
-  */
 
   const customerService = makeCustomerService()
 
@@ -80,16 +70,6 @@ export default function CreateCustomer({ open, toggleDrawer }: CreateCustomerPag
   }
 
   const clearForm = () => {
-    /*
-    setDni('')
-    setBusinessName('')
-    setStoreName('')
-    setAddress('')
-    setReferencePoint('')
-    setPhone('')
-    setContactName('')
-    setContactPhone('')
-    */
     setErrors({})
     setErrorMessage('')
   }
@@ -105,29 +85,7 @@ export default function CreateCustomer({ open, toggleDrawer }: CreateCustomerPag
               flexDirection: 'column',
             }}
           >
-            <CustomerForm
-              isLoading={isLoading}
-              /*
-              dni={dni}
-              businessName={businessName}
-              storeName={storeName}
-              address={address}
-              referencePoint={referencePoint}
-              phone={phone}
-              contactName={contactName}
-              contactPhone={contactPhone}
-              setDni={setDni}
-              setBusinessName={setBusinessName}
-              setStoreName={setStoreName}
-              setAddress={setAddress}
-              setReferencePoint={setReferencePoint}
-              setPhone={setPhone}
-              setContactName={setContactName}
-              setContactPhone={setContactPhone}
-              */
-              errors={errors}
-              onSubmit={handleSubmit}
-            />
+            <CustomerForm isLoading={isLoading} errors={errors} onSubmit={handleSubmit} />
             {errorMessage && (
               <Alert sx={{ mt: '10px' }} severity='error'>
                 {errorMessage}

@@ -5,38 +5,38 @@ import SearchIcon from '@mui/icons-material/Search'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import InputAdornment from '@mui/material/InputAdornment'
 
-import CustomerTable from '../organisms/CustomerTable'
+import SupplierTable from '../organisms/SupplierTable'
 import CustomButton from '../atoms/CustomButton'
 import CustomTextField from '../atoms/CustomTextField'
 import Content from '../organisms/Content'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
-import { makeCustomerService } from '../../services/customer.service'
-import { CustomerItem } from '../../domains/customer.domain'
+import { makeSupplierService } from '../../services/supplier.service'
+import { SupplierItem } from '../../domains/supplier.domain'
 import ConfirmDialog from '../atoms/ConfirmDialog'
 import { useNavigate } from 'react-router-dom'
 import { UrlRoutes } from '../../framework/routes/routes'
 
-type CustomersPageProps = {
+type SuppliersPageProps = {
   open: boolean
   toggleDrawer: ToggleDrawerHandler
 }
 
-export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
+export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
   const [searchText, setSearchText] = useState('')
-  const [customers, setCustomers] = useState<CustomerItem[]>([])
+  const [suppliers, setSuppliers] = useState<SupplierItem[]>([])
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 
-  const customerService = makeCustomerService()
+  const supplierService = makeSupplierService()
 
   const navigate = useNavigate()
 
-  const loadCustomers = async () => {
+  const loadSuppliers = async () => {
     try {
-      const [_customers, _pages] = await customerService.getAll(page, searchText)
-      setCustomers(_customers)
+      const [_suppliers, _pages] = await supplierService.getAll(page, searchText)
+      setSuppliers(_suppliers)
       setPages(_pages)
     } catch {
       console.error('error')
@@ -54,8 +54,8 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
 
   const handlerDelete = async () => {
     try {
-      await customerService.delete(seletedId)
-      loadCustomers()
+      await supplierService.delete(seletedId)
+      loadSuppliers()
     } catch {
       console.error('error')
     } finally {
@@ -63,25 +63,25 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
     }
   }
 
-  const goToCreateCustomer = () => {
-    navigate(UrlRoutes.CreateCustomer, { replace: true })
+  const goToCreateSupplier = () => {
+    navigate(UrlRoutes.CreateSupplier, { replace: true })
   }
 
   const onUpdateHandler = (id: number) => {
     try {
-      navigate(`${UrlRoutes.EditCustomer}${id}`, { replace: true })
+      navigate(`${UrlRoutes.EditSupplier}${id}`, { replace: true })
     } catch {
       console.error('error')
     }
   }
 
   useEffect(() => {
-    const timeOutId = setTimeout(() => loadCustomers(), 1000)
+    const timeOutId = setTimeout(() => loadSuppliers(), 1000)
     return () => clearTimeout(timeOutId)
   }, [searchText])
 
   useEffect(() => {
-    loadCustomers()
+    loadSuppliers()
   }, [page])
 
   return (
@@ -89,10 +89,10 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de borrar el cliente?'
+        content='¿Está seguro de borrar el proveedor?'
         onAcept={handlerDelete}
       />
-      <Content title='Clientes' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Proveedores' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
           <Paper
             sx={{
@@ -105,10 +105,10 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
             <CustomButton
               aria-label='delete'
               color='primary'
-              text='Crear cliente'
-              id='create_customer'
+              text='Crear proveedor'
+              id='create_supplier'
               startIcon={<PersonAddIcon />}
-              onClick={goToCreateCustomer}
+              onClick={goToCreateSupplier}
             ></CustomButton>
           </Paper>
         </Grid>
@@ -122,7 +122,7 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
             }}
           >
             <CustomTextField
-              label='Buscar cliente'
+              label='Buscar proveeder'
               aria-label='delete'
               color='primary'
               variant='outlined'
@@ -141,11 +141,11 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
         {/* Recent Orders */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-            <CustomerTable
+            <SupplierTable
               pages={pages}
               page={page}
               setPage={setPage}
-              data={customers}
+              data={suppliers}
               onDelete={openAlert}
               onUpdate={onUpdateHandler}
             />

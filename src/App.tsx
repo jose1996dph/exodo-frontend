@@ -13,6 +13,9 @@ import { getToken } from './framework/helpers/auth.helper'
 import ProtectedRoute from './framework/routes/ProtectRoute'
 import { UrlRoutes } from './framework/routes/routes'
 import EditCustomer from './componets/pages/EditCustomer'
+import EditSupplier from './componets/pages/EditSupplier'
+import CreateSupplier from './componets/pages/CreateSupplier'
+import SuppliersPage from './componets/pages/Suppliers'
 
 function App() {
   const location = useLocation()
@@ -89,6 +92,33 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <EditCustomer open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.Suppliers}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <SuppliersPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.CreateSupplier}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateSupplier open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.EditSupplier}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <EditSupplier open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

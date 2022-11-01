@@ -14,4 +14,9 @@ export enum UrlRoutes {
   Customer = '/customers/:id',
   CreateCustomer = '/create/customer',
   EditCustomer = '/edit/customer/',
+  // Supplier
+  Suppliers = '/suppliers',
+  Supplier = '/suppliers/:id',
+  CreateSupplier = '/create/supplier',
+  EditSupplier = '/edit/supplier/',
 }
