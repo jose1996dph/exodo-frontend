@@ -16,6 +16,9 @@ import EditCustomer from './componets/pages/EditCustomer'
 import EditSupplier from './componets/pages/EditSupplier'
 import CreateSupplier from './componets/pages/CreateSupplier'
 import SuppliersPage from './componets/pages/Suppliers'
+import CreateProduct from './componets/pages/CreateProduct'
+import EditProduct from './componets/pages/EditProduct'
+import ProductsPage from './componets/pages/Products'
 
 function App() {
   const location = useLocation()
@@ -119,6 +122,33 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <EditSupplier open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.Products}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <ProductsPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.CreateProduct}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateProduct open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.EditProduct}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <EditProduct open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

@@ -15,6 +15,7 @@ import { Pagination } from '@mui/material'
 export type CustomTableRow = {
   title: string
   key: string
+  render?: (tableRow: CustomTableRow, item: any) => void
   props?: TableCellProps | undefined
 }
 
@@ -26,7 +27,7 @@ type CustomTableProps = {
   tableRows: CustomTableRow[]
   items: any[]
   onDelete: (id: number) => void
-  onUpdate: (id: number) => void
+  onUpdate?: (id: number) => void | undefined
 }
 
 export default function CustomTable({
@@ -37,7 +38,7 @@ export default function CustomTable({
   tableRows,
   items,
   onDelete,
-  onUpdate,
+  onUpdate = undefined,
 }: CustomTableProps) {
   return (
     <Fragment>
@@ -58,13 +59,15 @@ export default function CustomTable({
             <TableRow key={item.id}>
               {tableRows.map((tableRow) => (
                 <TableCell key={tableRow.key} {...tableRow.props}>
-                  {item[tableRow.key]}
+                  {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
                 </TableCell>
               ))}
               <TableCell align='right'>
-                <IconButton color='primary' onClick={() => onUpdate(item.id)}>
-                  <EditIcon />
-                </IconButton>
+                {onUpdate && (
+                  <IconButton color='primary' onClick={() => onUpdate(item.id)}>
+                    <EditIcon />
+                  </IconButton>
+                )}
                 <IconButton color='error' onClick={() => onDelete(item.id)}>
                   <DeleteIcon />
                 </IconButton>

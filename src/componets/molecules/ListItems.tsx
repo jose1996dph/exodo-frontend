@@ -8,6 +8,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import PeopleIcon from '@mui/icons-material/People'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import InventoryIcon from '@mui/icons-material/Inventory'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import WorkIcon from '@mui/icons-material/Work'
@@ -48,6 +49,12 @@ export const MainListItems = () => {
           <LocalShippingIcon />
         </ListItemIcon>
         <ListItemText primary='Proveedores' />
+      </ListItemButton>
+      <ListItemButton onClick={() => navigate(UrlRoutes.Products, { replace: true })}>
+        <ListItemIcon>
+          <InventoryIcon />
+        </ListItemIcon>
+        <ListItemText primary='Productos' />
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
