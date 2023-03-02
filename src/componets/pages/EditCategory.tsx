@@ -83,7 +83,7 @@ export default function EditCategory({ open, toggleDrawer }: EditCategoryPagePro
 
   return (
     <>
-      <Content title='Actualizar cliente' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Actualizar categoría' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
             <CategoryForm

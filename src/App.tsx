@@ -19,6 +19,9 @@ import SuppliersPage from './componets/pages/Suppliers'
 import CreateProduct from './componets/pages/CreateProduct'
 import EditProduct from './componets/pages/EditProduct'
 import ProductsPage from './componets/pages/Products'
+import CategoriesPage from './componets/pages/Categories'
+import CreateCategory from './componets/pages/CreateCategory'
+import EditCategory from './componets/pages/EditCategory'
 
 function App() {
   const location = useLocation()
@@ -149,6 +152,33 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <EditProduct open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.Categories}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CategoriesPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.CreateCategory}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateCategory open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.EditCategory}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <EditCategory open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

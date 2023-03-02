@@ -58,7 +58,7 @@ export default function CreateCategory({ open, toggleDrawer }: CreateCategoryPag
 
   return (
     <>
-      <Content title='Nuevo cliente' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Nuevo categoría' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12}>
           <Paper
             sx={{

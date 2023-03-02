@@ -89,10 +89,10 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de borrar el cliente?'
+        content='¿Está seguro de borrar la categoría?'
         onAcept={handlerDelete}
       />
-      <Content title='Clientes' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Categorías' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
           <Paper
             sx={{
@@ -105,7 +105,7 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
             <CustomButton
               aria-label='delete'
               color='primary'
-              text='Crear cliente'
+              text='Crear categoría'
               id='create_category'
               startIcon={<PersonAddIcon />}
               onClick={goToCreateCategory}
@@ -122,7 +122,7 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
             }}
           >
             <CustomTextField
-              label='Buscar cliente'
+              label='Buscar categoría'
               aria-label='delete'
               color='primary'
               variant='outlined'
