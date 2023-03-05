@@ -14,7 +14,7 @@ type CustomerTableProps = {
   page: number
   setPage: (value: number) => void
   data: CustomerItem[]
-  onDelete: (id: number) => void
+  onToggle: (id: number) => void
   onUpdate: (id: number) => void
 }
 
@@ -23,7 +23,7 @@ export default function CustomerTable({
   page,
   setPage,
   data,
-  onDelete,
+  onToggle,
   onUpdate,
 }: CustomerTableProps) {
   return (
@@ -34,7 +34,7 @@ export default function CustomerTable({
       setPage={setPage}
       items={data}
       tableRows={propRows}
-      onDelete={onDelete}
+      onToggle={onToggle}
       onUpdate={onUpdate}
     ></CustomTable>
   )

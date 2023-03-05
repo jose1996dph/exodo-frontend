@@ -17,7 +17,6 @@ export default function CategoryTable({
   page,
   setPage,
   data,
-  onDelete,
   onUpdate,
 }: CategoryTableProps) {
   return (
@@ -28,7 +27,6 @@ export default function CategoryTable({
       setPage={setPage}
       items={data}
       tableRows={propRows}
-      onDelete={onDelete}
       onUpdate={onUpdate}
     ></CustomTable>
   )

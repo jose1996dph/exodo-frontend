@@ -11,6 +11,8 @@ export interface IProductRepository {
 
   updateProduct(id: number, updateUser: UpdateProduct): Promise<ProductItem>
 
+  toggleStatus(id: number): Promise<ProductItem>
+
   deleteProduct(id: number): void
 }
 
@@ -45,6 +47,12 @@ class ProductRepository implements IProductRepository {
 
   async updateProduct(id: number, updateUser: UpdateProduct): Promise<ProductItem> {
     const { data } = await api.put(`${BackendURL}products/${id}`, updateUser)
+
+    return data as ProductItem
+  }
+
+  async toggleStatus(id: number): Promise<ProductItem> {
+    const { data } = await api.patch(`${BackendURL}products/${id}/status`)
 
     return data as ProductItem
   }

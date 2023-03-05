@@ -46,6 +46,16 @@ class CustomerService {
     }
   }
 
+  async toggleStatus(id: number) {
+    try {
+      const customer = await this.customerRepo.toggleStatus(id)
+      return customer
+    } catch ({ response: { data } }) {
+      console.error(data)
+      throw data
+    }
+  }
+
   async delete(id: number) {
     try {
       await this.customerRepo.deleteCustomer(id)

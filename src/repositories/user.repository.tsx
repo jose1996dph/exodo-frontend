@@ -11,6 +11,8 @@ export interface IUserRepository {
 
   updateUser(id: number, updateUser: UpdateUser): Promise<UserItem>
 
+  toggleStatus(id: number): Promise<UserItem>
+
   deleteUser(id: number): void
 }
 
@@ -41,6 +43,12 @@ class UserRepository implements IUserRepository {
 
   async updateUser(id: number, updateUser: UpdateUser): Promise<UserItem> {
     const { data } = await api.put(`${BackendURL}users/${id}`, updateUser)
+
+    return data as UserItem
+  }
+
+  async toggleStatus(id: number): Promise<UserItem> {
+    const { data } = await api.patch(`${BackendURL}users/${id}/status`)
 
     return data as UserItem
   }

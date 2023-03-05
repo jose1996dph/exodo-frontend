@@ -52,9 +52,9 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
     setSelectedId(id)
   }
 
-  const handlerDelete = async () => {
+  const handlerToggleStatus = async () => {
     try {
-      await productService.delete(seletedId)
+      await productService.toggleStatus(seletedId)
       loadProducts()
     } catch {
       console.error('error')
@@ -89,8 +89,8 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de borrar el producto?'
-        onAcept={handlerDelete}
+        content='¿Está seguro de cambiar el estatus del producto?'
+        onAcept={handlerToggleStatus}
       />
       <Content title='Productos' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
@@ -146,7 +146,7 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
               page={page}
               setPage={setPage}
               data={products}
-              onDelete={openAlert}
+              onToggle={openAlert}
               onUpdate={onUpdateHandler}
             />
           </Paper>

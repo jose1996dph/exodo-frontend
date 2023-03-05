@@ -16,6 +16,8 @@ export interface ICustomerRepository {
 
   updateCustomer(id: number, updateUser: UpdateCustomer): Promise<CustomerItem>
 
+  toggleStatus(id: number): Promise<CustomerItem>
+
   deleteCustomer(id: number): void
 }
 
@@ -50,6 +52,12 @@ class CustomerRepository implements ICustomerRepository {
 
   async updateCustomer(id: number, updateUser: UpdateCustomer): Promise<CustomerItem> {
     const { data } = await api.put(`${BackendURL}customers/${id}`, updateUser)
+
+    return data as CustomerItem
+  }
+
+  async toggleStatus(id: number): Promise<CustomerItem> {
+    const { data } = await api.patch(`${BackendURL}customers/${id}/status`)
 
     return data as CustomerItem
   }

@@ -1,3 +1,4 @@
+import ProductForm from '../componets/molecules/ProductForm'
 import { CreateProduct, UpdateProduct } from '../domains/product.domain'
 import { IProductRepository, makeProductRepository } from '../repositories/product.repository'
 
@@ -39,6 +40,16 @@ class ProductService {
   async update(id: number, updateProduct: UpdateProduct) {
     try {
       const product = await this.productRepo.updateProduct(id, updateProduct)
+      return product
+    } catch ({ response: { data } }) {
+      console.error(data)
+      throw data
+    }
+  }
+
+  async toggleStatus(id: number) {
+    try {
+      const product = await this.productRepo.toggleStatus(id)
       return product
     } catch ({ response: { data } }) {
       console.error(data)

@@ -16,6 +16,8 @@ export interface ICategoryRepository {
 
   updateCategory(id: number, updateUser: UpdateCategory): Promise<CategoryItem>
 
+  toggleStatus(id: number): Promise<CategoryItem>
+
   deleteCategory(id: number): void
 }
 
@@ -53,6 +55,12 @@ class CategoryRepository implements ICategoryRepository {
 
   async updateCategory(id: number, updateUser: UpdateCategory): Promise<CategoryItem> {
     const { data } = await api.put(`${BackendURL}categories/${id}`, updateUser)
+
+    return data as CategoryItem
+  }
+
+  async toggleStatus(id: number): Promise<CategoryItem> {
+    const { data } = await api.patch(`${BackendURL}categories/${id}/status`)
 
     return data as CategoryItem
   }

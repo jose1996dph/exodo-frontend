@@ -52,9 +52,9 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
     setSelectedId(id)
   }
 
-  const handlerDelete = async () => {
+  const handlerToggleStatus = async () => {
     try {
-      await customerService.delete(seletedId)
+      await customerService.toggleStatus(seletedId)
       loadCustomers()
     } catch {
       console.error('error')
@@ -89,8 +89,8 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de borrar el cliente?'
-        onAcept={handlerDelete}
+        content='¿Está seguro de cambiar el estatus del cliente?'
+        onAcept={handlerToggleStatus}
       />
       <Content title='Clientes' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
@@ -146,7 +146,7 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
               page={page}
               setPage={setPage}
               data={customers}
-              onDelete={openAlert}
+              onToggle={openAlert}
               onUpdate={onUpdateHandler}
             />
           </Paper>

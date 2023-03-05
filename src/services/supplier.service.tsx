@@ -46,6 +46,16 @@ class SupplierService {
     }
   }
 
+  async toggleStatus(id: number) {
+    try {
+      const supplier = await this.supplierRepo.toggleStatus(id)
+      return supplier
+    } catch ({ response: { data } }) {
+      console.error(data)
+      throw data
+    }
+  }
+
   async delete(id: number) {
     try {
       await this.supplierRepo.deleteSupplier(id)

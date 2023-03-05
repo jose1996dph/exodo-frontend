@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
 import Title from '../atoms/Title'
-import { Pagination } from '@mui/material'
+import { Pagination, Switch } from '@mui/material'
 
 export type CustomTableRow = {
   title: string
@@ -26,8 +26,9 @@ type CustomTableProps = {
   setPage: (value: number) => void
   tableRows: CustomTableRow[]
   items: any[]
-  onDelete: (id: number) => void
+  onDelete?: (id: number) => void | undefined
   onUpdate?: (id: number) => void | undefined
+  onToggle?: (id: number) => void | undefined
 }
 
 export default function CustomTable({
@@ -37,8 +38,9 @@ export default function CustomTable({
   setPage,
   tableRows,
   items,
-  onDelete,
+  onDelete = undefined,
   onUpdate = undefined,
+  onToggle = undefined,
 }: CustomTableProps) {
   return (
     <Fragment>
@@ -55,25 +57,32 @@ export default function CustomTable({
           </TableRow>
         </TableHead>
         <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              {tableRows.map((tableRow) => (
-                <TableCell key={tableRow.key} {...tableRow.props}>
-                  {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
+          {items.map((item) => {
+            return (
+              <TableRow key={item.id}>
+                {tableRows.map((tableRow) => (
+                  <TableCell key={tableRow.key} {...tableRow.props}>
+                    {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
+                  </TableCell>
+                ))}
+                <TableCell align='right'>
+                  {onUpdate && (
+                    <IconButton color='primary' onClick={() => onUpdate(item.id)}>
+                      <EditIcon />
+                    </IconButton>
+                  )}
+                  {onDelete && (
+                    <IconButton color='error' onClick={() => onDelete(item.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
+                  {onToggle && (
+                    <Switch checked={item['isActive']} onChange={() => onToggle(item.id)} />
+                  )}
                 </TableCell>
-              ))}
-              <TableCell align='right'>
-                {onUpdate && (
-                  <IconButton color='primary' onClick={() => onUpdate(item.id)}>
-                    <EditIcon />
-                  </IconButton>
-                )}
-                <IconButton color='error' onClick={() => onDelete(item.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
       {items.length == 0 && (

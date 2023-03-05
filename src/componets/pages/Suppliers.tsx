@@ -52,9 +52,9 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
     setSelectedId(id)
   }
 
-  const handlerDelete = async () => {
+  const handlerToggleStatus = async () => {
     try {
-      await supplierService.delete(seletedId)
+      await supplierService.toggleStatus(seletedId)
       loadSuppliers()
     } catch {
       console.error('error')
@@ -89,8 +89,8 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de borrar el proveedor?'
-        onAcept={handlerDelete}
+        content='¿Está seguro de cambiar el estatus del proveedor?'
+        onAcept={handlerToggleStatus}
       />
       <Content title='Proveedores' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
@@ -146,7 +146,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
               page={page}
               setPage={setPage}
               data={suppliers}
-              onDelete={openAlert}
+              onToggle={openAlert}
               onUpdate={onUpdateHandler}
             />
           </Paper>

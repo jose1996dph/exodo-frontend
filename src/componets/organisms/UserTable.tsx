@@ -14,7 +14,7 @@ type UserTableProps = {
   page: number
   setPage: (value: number) => void
   data: UserItem[]
-  onDelete: (id: number) => void
+  onToggle: (id: number) => void
   onUpdate: (id: number) => void
 }
 
@@ -23,7 +23,7 @@ export default function UserTable({
   page,
   setPage,
   data,
-  onDelete,
+  onToggle,
   onUpdate,
 }: UserTableProps) {
   return (
@@ -34,7 +34,7 @@ export default function UserTable({
       setPage={setPage}
       items={data}
       tableRows={propRows}
-      onDelete={onDelete}
+      onToggle={onToggle}
       onUpdate={onUpdate}
     ></CustomTable>
   )

@@ -52,9 +52,9 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
     setSelectedId(id)
   }
 
-  const handlerDelete = async () => {
+  const handlerToggleStatus = async () => {
     try {
-      await userService.delete(seletedId)
+      await userService.toggleStatus(seletedId)
       loadUsers()
     } catch {
       console.error('error')
@@ -89,8 +89,8 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de borrar el usuario?'
-        onAcept={handlerDelete}
+        content='¿Está seguro de cambiar el estatus del usuario?'
+        onAcept={handlerToggleStatus}
       />
       <Content title='Usuarios' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
@@ -146,7 +146,7 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
               page={page}
               setPage={setPage}
               data={users}
-              onDelete={openAlert}
+              onToggle={openAlert}
               onUpdate={onUpdateHandler}
             />
           </Paper>

@@ -16,6 +16,8 @@ export interface ISupplierRepository {
 
   updateSupplier(id: number, updateUser: UpdateSupplier): Promise<SupplierItem>
 
+  toggleStatus(id: number): Promise<SupplierItem>
+
   deleteSupplier(id: number): void
 }
 
@@ -50,6 +52,12 @@ class SupplierRepository implements ISupplierRepository {
 
   async updateSupplier(id: number, updateUser: UpdateSupplier): Promise<SupplierItem> {
     const { data } = await api.put(`${BackendURL}suppliers/${id}`, updateUser)
+
+    return data as SupplierItem
+  }
+
+  async toggleStatus(id: number): Promise<SupplierItem> {
+    const { data } = await api.patch(`${BackendURL}suppliers/${id}/status`)
 
     return data as SupplierItem
   }

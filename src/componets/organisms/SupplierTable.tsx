@@ -13,7 +13,7 @@ type SupplierTableProps = {
   page: number
   setPage: (value: number) => void
   data: SupplierItem[]
-  onDelete: (id: number) => void
+  onToggle: (id: number) => void
   onUpdate: (id: number) => void
 }
 
@@ -22,7 +22,7 @@ export default function SupplierTable({
   page,
   setPage,
   data,
-  onDelete,
+  onToggle,
   onUpdate,
 }: SupplierTableProps) {
   return (
@@ -33,7 +33,7 @@ export default function SupplierTable({
       setPage={setPage}
       items={data}
       tableRows={propRows}
-      onDelete={onDelete}
+      onToggle={onToggle}
       onUpdate={onUpdate}
     ></CustomTable>
   )

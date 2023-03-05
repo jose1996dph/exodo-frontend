@@ -46,6 +46,16 @@ class UserService {
     }
   }
 
+  async toggleStatus(id: number) {
+    try {
+      const user = await this.userRepo.toggleStatus(id)
+      return user
+    } catch ({ response: { data } }) {
+      console.error(data)
+      throw data
+    }
+  }
+
   async delete(id: number) {
     try {
       await this.userRepo.deleteUser(id)
