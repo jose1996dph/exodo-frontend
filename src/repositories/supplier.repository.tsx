@@ -12,9 +12,9 @@ export interface ISupplierRepository {
 
   getById(id: number): Promise<SupplierDetail>
 
-  createSupplier(createUser: CreateSupplier): Promise<SupplierItem>
+  createSupplier(createSupplier: CreateSupplier): Promise<SupplierItem>
 
-  updateSupplier(id: number, updateUser: UpdateSupplier): Promise<SupplierItem>
+  updateSupplier(id: number, updateSupplier: UpdateSupplier): Promise<SupplierItem>
 
   toggleStatus(id: number): Promise<SupplierItem>
 
@@ -33,7 +33,11 @@ class SupplierRepository implements ISupplierRepository {
 
     const [user, count] = data
 
-    const _count: number = (count / pageSize) >> 0
+    let _count: number = (count / pageSize) >> 0
+
+    if (count % pageSize > 0) {
+      _count += 1
+    }
 
     return [user as SupplierItem[], _count]
   }
@@ -44,14 +48,14 @@ class SupplierRepository implements ISupplierRepository {
     return data as SupplierDetail
   }
 
-  async createSupplier(createUser: CreateSupplier): Promise<SupplierItem> {
-    const { data } = await api.post(`${BackendURL}suppliers/`, createUser)
+  async createSupplier(createSupplier: CreateSupplier): Promise<SupplierItem> {
+    const { data } = await api.post(`${BackendURL}suppliers/`, createSupplier)
 
     return data as SupplierItem
   }
 
-  async updateSupplier(id: number, updateUser: UpdateSupplier): Promise<SupplierItem> {
-    const { data } = await api.put(`${BackendURL}suppliers/${id}`, updateUser)
+  async updateSupplier(id: number, updateSupplier: UpdateSupplier): Promise<SupplierItem> {
+    const { data } = await api.put(`${BackendURL}suppliers/${id}`, updateSupplier)
 
     return data as SupplierItem
   }

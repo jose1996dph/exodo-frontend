@@ -2,7 +2,6 @@ import { CreateSupplier, UpdateSupplier } from '../domains/supplier.domain'
 import { ISupplierRepository, makeSupplierRepository } from '../repositories/supplier.repository'
 
 class SupplierService {
-  [x: string]: any
   private supplierRepo: ISupplierRepository = makeSupplierRepository()
 
   async getAll(pageNum: number, search: string) {

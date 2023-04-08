@@ -24,7 +24,11 @@ class UserRepository implements IUserRepository {
 
     const [user, count] = data
 
-    const _count: number = (count / pageSize) >> 0
+    let _count: number = (count / pageSize) >> 0
+
+    if (count % pageSize > 0) {
+      _count += 1
+    }
 
     return [user as UserItem[], _count]
   }

@@ -25,7 +25,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
   const [searchText, setSearchText] = useState('')
   const [suppliers, setSuppliers] = useState<SupplierItem[]>([])
   const [openModal, setOpenModal] = useState(false)
-  const [seletedId, setSelectedId] = useState(0)
+  const [selectedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 
@@ -54,7 +54,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
 
   const handlerToggleStatus = async () => {
     try {
-      await supplierService.toggleStatus(seletedId)
+      await supplierService.toggleStatus(selectedId)
       loadSuppliers()
     } catch {
       console.error('error')
@@ -65,6 +65,14 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
 
   const goToCreateSupplier = () => {
     navigate(UrlRoutes.CreateSupplier, { replace: true })
+  }
+
+  const onShowHandler = (id: number) => {
+    try {
+      navigate(`${UrlRoutes.Supplier}${id}`, { replace: true })
+    } catch {
+      console.error('error')
+    }
   }
 
   const onUpdateHandler = (id: number) => {
@@ -146,6 +154,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
               page={page}
               setPage={setPage}
               data={suppliers}
+              onShow={onShowHandler}
               onToggle={openAlert}
               onUpdate={onUpdateHandler}
             />

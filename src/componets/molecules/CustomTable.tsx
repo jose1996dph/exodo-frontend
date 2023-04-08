@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, ReactNode } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell, { TableCellProps } from '@mui/material/TableCell'
@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 import Title from '../atoms/Title'
 import { Pagination, Switch } from '@mui/material'
@@ -15,7 +16,7 @@ import { Pagination, Switch } from '@mui/material'
 export type CustomTableRow = {
   title: string
   key: string
-  render?: (tableRow: CustomTableRow, item: any) => void
+  render?: (tableRow: CustomTableRow, item: any) => ReactNode
   props?: TableCellProps | undefined
 }
 
@@ -26,8 +27,10 @@ type CustomTableProps = {
   setPage: (value: number) => void
   tableRows: CustomTableRow[]
   items: any[]
+  identify?: string
+  onShow?: (id: number) => void | undefined
   onDelete?: (id: number) => void | undefined
-  onUpdate?: (id: number) => void | undefined
+  onUpdate?: (id: number, item: any) => void | undefined
   onToggle?: (id: number) => void | undefined
 }
 
@@ -38,6 +41,8 @@ export default function CustomTable({
   setPage,
   tableRows,
   items,
+  identify = 'id',
+  onShow = undefined,
   onDelete = undefined,
   onUpdate = undefined,
   onToggle = undefined,
@@ -59,25 +64,30 @@ export default function CustomTable({
         <TableBody>
           {items.map((item) => {
             return (
-              <TableRow key={item.id}>
+              <TableRow key={item[identify]}>
                 {tableRows.map((tableRow) => (
                   <TableCell key={tableRow.key} {...tableRow.props}>
                     {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
                   </TableCell>
                 ))}
                 <TableCell align='right'>
+                  {onShow && (
+                    <IconButton color='primary' onClick={() => onShow(item[identify])}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  )}
                   {onUpdate && (
-                    <IconButton color='primary' onClick={() => onUpdate(item.id)}>
+                    <IconButton color='primary' onClick={() => onUpdate(item[identify], item)}>
                       <EditIcon />
                     </IconButton>
                   )}
                   {onDelete && (
-                    <IconButton color='error' onClick={() => onDelete(item.id)}>
+                    <IconButton color='error' onClick={() => onDelete(item[identify])}>
                       <DeleteIcon />
                     </IconButton>
                   )}
                   {onToggle && (
-                    <Switch checked={item['isActive']} onChange={() => onToggle(item.id)} />
+                    <Switch checked={item['isActive']} onChange={() => onToggle(item[identify])} />
                   )}
                 </TableCell>
               </TableRow>

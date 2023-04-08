@@ -3,7 +3,12 @@ import api from '../framework/api'
 import { BackendURL } from '../config'
 
 export interface IProductRepository {
-  getAll(pageSize: number, pageNum: number, search: string): Promise<[ProductItem[], number]>
+  getAll(
+    pageSize: number,
+    pageNum: number,
+    search: string,
+    notSupplierId: number,
+  ): Promise<[ProductItem[], number]>
 
   getById(id: number): Promise<ProductDetail>
 
@@ -21,14 +26,23 @@ class ProductRepository implements IProductRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    notSupplierId = 0,
   ): Promise<[ProductItem[], number]> {
-    const { data } = await api.get(
-      `${BackendURL}products/?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`,
-    )
+    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+
+    if (notSupplierId > 0) {
+      params = params + `&notSupplierId=${notSupplierId}`
+    }
+
+    const { data } = await api.get(`${BackendURL}products/?${params}`)
 
     const [user, count] = data
 
-    const _count: number = (count / pageSize) >> 0
+    let _count: number = (count / pageSize) >> 0
+
+    if (count % pageSize > 0) {
+      _count += 1
+    }
 
     return [user as ProductItem[], _count]
   }

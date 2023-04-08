@@ -2,7 +2,6 @@ import { CreateCustomer, UpdateCustomer } from '../domains/customer.domain'
 import { ICustomerRepository, makeCustomerRepository } from '../repositories/customer.repository'
 
 class CustomerService {
-  [x: string]: any
   private customerRepo: ICustomerRepository = makeCustomerRepository()
 
   async getAll(pageNum: number, search: string) {

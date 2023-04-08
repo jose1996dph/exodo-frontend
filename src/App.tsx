@@ -22,6 +22,7 @@ import ProductsPage from './componets/pages/Products'
 import CategoriesPage from './componets/pages/Categories'
 import CreateCategory from './componets/pages/CreateCategory'
 import EditCategory from './componets/pages/EditCategory'
+import SupplierPage from './componets/pages/Supplier'
 
 function App() {
   const location = useLocation()
@@ -107,6 +108,15 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <SuppliersPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.Supplier}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <SupplierPage open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

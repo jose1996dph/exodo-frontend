@@ -36,7 +36,11 @@ class CategoryRepository implements ICategoryRepository {
 
     const [categories, count] = data
 
-    const _count: number = pageSize ? (count / pageSize) >> 0 : 0
+    let _count: number = pageSize ? (count / pageSize) >> 0 : 0
+
+    if (pageSize && count % pageSize > 0) {
+      _count += 1
+    }
 
     return [categories as CategoryItem[], _count]
   }

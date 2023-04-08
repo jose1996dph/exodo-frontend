@@ -35,7 +35,7 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
 
   const loadCategories = async () => {
     try {
-      const [_categories, _pages] = await categoryService.getAll(page, searchText)
+      const [_categories, _pages] = await categoryService.getAll(page, searchText, 10)
       setCategories(_categories)
       setPages(_pages)
     } catch {

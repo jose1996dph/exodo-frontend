@@ -1,15 +1,13 @@
-import ProductForm from '../componets/molecules/ProductForm'
 import { CreateProduct, UpdateProduct } from '../domains/product.domain'
 import { IProductRepository, makeProductRepository } from '../repositories/product.repository'
 
 class ProductService {
-  [x: string]: any
   private productRepo: IProductRepository = makeProductRepository()
 
-  async getAll(pageNum: number, search: string) {
+  async getAll(pageNum: number, search: string, notSupplierId = 0) {
     try {
       const pageSize = 10
-      const products = await this.productRepo.getAll(pageSize, pageNum - 1, search)
+      const products = await this.productRepo.getAll(pageSize, pageNum - 1, search, notSupplierId)
       return products
     } catch ({ response: { data } }) {
       console.error(data)

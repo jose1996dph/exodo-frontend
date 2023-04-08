@@ -2,7 +2,6 @@ import { CreateCategory, UpdateCategory } from '../domains/category.domain'
 import { ICategoryRepository, makeCategoryRepository } from '../repositories/category.repository'
 
 class CategoryService {
-  [x: string]: any
   private categoryRepo: ICategoryRepository = makeCategoryRepository()
 
   async getAll(pageNum: number, search: string, pageSize?: number) {
