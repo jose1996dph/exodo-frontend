@@ -1,3 +1,4 @@
+import { isEmail } from '../framework/helpers/validation.helper'
 import { RoleItem } from './role.domain'
 
 export type UserItem = {
@@ -77,6 +78,9 @@ export class CreateUser {
     if (!this.email) {
       errors['email'] = 'Correo es requerido'
     }
+    if (this.email && !isEmail(this.email)) {
+      errors['email'] = 'Correo no valido'
+    }
     return errors
   }
 }
@@ -134,6 +138,10 @@ export class UpdateUser {
     if (!this.email) {
       errors['email'] = 'Correo es requerido'
     }
+    if (this.email && !isEmail(this.email)) {
+      errors['email'] = 'Correo no valido'
+    }
+
     return errors
   }
 }
