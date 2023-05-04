@@ -67,7 +67,12 @@ export default function DiscountForm({
           disabled={isLoading}
           error={errors['percentage'] ? true : false}
           helperText={errors['percentage']}
-          onChange={(event) => setPercentage(event.target.value)}
+          onChange={(event) => {
+            if (event.target.value && event.target.value.length > 2) {
+              return
+            }
+            setPercentage(event.target.value)
+          }}
           inputProps={{ inputMode: 'decimal' }}
         ></CustomTextField>
       </Grid>

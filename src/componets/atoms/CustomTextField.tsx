@@ -32,6 +32,8 @@ export default function CustomTextField({
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (inputProps && inputProps.inputMode == 'numeric') {
       event.target.value = event.target.value.replace(/\D/g, '')
+    } else if (inputProps && inputProps.inputMode == 'decimal') {
+      event.target.value = event.target.value.replace(/[^.0-9]/g, '')
     } else if (inputProps && inputProps.inputMode == 'tel') {
       event.target.value = event.target.value.replace(/[^-0-9]+/g, '')
     }
