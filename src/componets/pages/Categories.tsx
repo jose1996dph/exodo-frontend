@@ -24,6 +24,8 @@ type CategoriesPageProps = {
 export default function Categories({ open, toggleDrawer }: CategoriesPageProps) {
   const [searchText, setSearchText] = useState('')
   const [categories, setCategories] = useState<CategoryItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('description')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
@@ -35,7 +37,13 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
 
   const loadCategories = async () => {
     try {
-      const [_categories, _pages] = await categoryService.getAll(page, searchText, 10)
+      const [_categories, _pages] = await categoryService.getAll(
+        page,
+        searchText,
+        10,
+        orderBy,
+        orderDirection,
+      )
       setCategories(_categories)
       setPages(_pages)
     } catch {
@@ -82,7 +90,7 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
 
   useEffect(() => {
     loadCategories()
-  }, [page])
+  }, [page, orderDirection, orderBy])
 
   return (
     <>
@@ -145,6 +153,10 @@ export default function Categories({ open, toggleDrawer }: CategoriesPageProps) 
               pages={pages}
               page={page}
               setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
               data={categories}
               onDelete={openAlert}
               onUpdate={onUpdateHandler}

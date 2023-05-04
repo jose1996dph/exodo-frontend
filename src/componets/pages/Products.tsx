@@ -24,6 +24,8 @@ type ProductsPageProps = {
 export default function Products({ open, toggleDrawer }: ProductsPageProps) {
   const [searchText, setSearchText] = useState('')
   const [products, setProducts] = useState<ProductItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('name')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
@@ -35,7 +37,13 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
 
   const loadProducts = async () => {
     try {
-      const [_products, _pages] = await productService.getAll(page, searchText)
+      const [_products, _pages] = await productService.getAll(
+        page,
+        searchText,
+        0,
+        orderBy,
+        orderDirection,
+      )
       setProducts(_products)
       setPages(_pages)
     } catch {
@@ -82,7 +90,7 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
 
   useEffect(() => {
     loadProducts()
-  }, [page])
+  }, [page, orderDirection, orderBy])
 
   return (
     <>
@@ -145,6 +153,10 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
               pages={pages}
               page={page}
               setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
               data={products}
               onToggle={openAlert}
               onUpdate={onUpdateHandler}

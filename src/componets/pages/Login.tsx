@@ -143,7 +143,7 @@ export default function Login() {
               ></CustomButton>
               <Grid container>
                 <Grid item xs>
-                  <Link href={`${UrlRoutes.ForgotPassword}`} variant='body2'>
+                  <Link href={UrlRoutes.ForgotPassword} variant='body2'>
                     ¿Has olvidado tu contraseña?
                   </Link>
                 </Grid>

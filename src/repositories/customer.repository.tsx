@@ -8,7 +8,13 @@ import api from '../framework/api'
 import { BackendURL } from '../config'
 
 export interface ICustomerRepository {
-  getAll(pageSize: number, pageNum: number, search: string): Promise<[CustomerItem[], number]>
+  getAll(
+    pageSize: number,
+    pageNum: number,
+    search: string,
+    orderBy?: string,
+    orderDirection?: string,
+  ): Promise<[CustomerItem[], number]>
 
   getById(id: number): Promise<CustomerDetail>
 
@@ -26,10 +32,19 @@ class CustomerRepository implements ICustomerRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[CustomerItem[], number]> {
-    const { data } = await api.get(
-      `${BackendURL}customers/?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`,
-    )
+    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+    if (orderBy) {
+      params += `&orderBy=${orderBy}`
+    }
+
+    if (orderDirection) {
+      params += `&orderDirection=${orderDirection}`
+    }
+
+    const { data } = await api.get(`${BackendURL}customers/?${params}`)
 
     const [user, count] = data
 

@@ -24,6 +24,8 @@ type CustomersPageProps = {
 export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
   const [searchText, setSearchText] = useState('')
   const [customers, setCustomers] = useState<CustomerItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('dni')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
@@ -35,7 +37,12 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
 
   const loadCustomers = async () => {
     try {
-      const [_customers, _pages] = await customerService.getAll(page, searchText)
+      const [_customers, _pages] = await customerService.getAll(
+        page,
+        searchText,
+        orderBy,
+        orderDirection,
+      )
       setCustomers(_customers)
       setPages(_pages)
     } catch {
@@ -82,7 +89,7 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
 
   useEffect(() => {
     loadCustomers()
-  }, [page])
+  }, [page, orderDirection, orderBy])
 
   return (
     <>
@@ -145,6 +152,10 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
               pages={pages}
               page={page}
               setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
               data={customers}
               onToggle={openAlert}
               onUpdate={onUpdateHandler}

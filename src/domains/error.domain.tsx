@@ -9,3 +9,7 @@ export default interface ServerException {
   message: string | string[]
   error: string
 }
+
+export interface ServiceException {
+  response: { data: ServerException }
+}

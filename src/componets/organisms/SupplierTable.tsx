@@ -12,6 +12,10 @@ type SupplierTableProps = {
   pages: number
   page: number
   setPage: (value: number) => void
+  orderBy: string
+  setOrderBy: (attribute: string) => void
+  orderDirection: 'asc' | 'desc'
+  setOrderDirection: (attribute: 'asc' | 'desc') => void
   data: SupplierItem[]
   onShow: (id: number) => void
   onToggle: (id: number) => void
@@ -22,6 +26,10 @@ export default function SupplierTable({
   pages,
   page,
   setPage,
+  orderBy,
+  setOrderBy,
+  orderDirection,
+  setOrderDirection,
   data,
   onShow,
   onToggle,
@@ -34,6 +42,10 @@ export default function SupplierTable({
       page={page}
       setPage={setPage}
       items={data}
+      orderBy={orderBy}
+      setOrderBy={setOrderBy}
+      orderDirection={orderDirection}
+      setOrderDirection={setOrderDirection}
       tableRows={propRows}
       onShow={onShow}
       onToggle={onToggle}

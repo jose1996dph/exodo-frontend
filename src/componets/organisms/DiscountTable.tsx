@@ -1,15 +1,11 @@
 import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
-import { CustomerItem } from '../../domains/customer.domain'
+import { DiscountItem } from '../../domains/discount.domain'
 
 const propRows: CustomTableRow[] = [
-  { title: 'Rif', key: 'dni' },
-  { title: 'Razón social', key: 'businessName' },
-  { title: 'Nombre del local', key: 'storeName' },
-  { title: 'Teléfono', key: 'phone' },
-  { title: 'Persona de contacto', key: 'contactName' },
+  { title: 'Porcentaje', key: 'percentage' },
+  { title: 'Tiempo limite', key: 'deadline' },
 ]
-
-type CustomerTableProps = {
+type DiscountTableProps = {
   pages: number
   page: number
   setPage: (value: number) => void
@@ -17,12 +13,12 @@ type CustomerTableProps = {
   setOrderBy: (attribute: string) => void
   orderDirection: 'asc' | 'desc'
   setOrderDirection: (attribute: 'asc' | 'desc') => void
-  data: CustomerItem[]
-  onToggle: (id: number) => void
-  onUpdate: (id: number) => void
+  data: DiscountItem[]
+  onDelete: (id: number) => void
+  onUpdate: (id: number, item: any) => void
 }
 
-export default function CustomerTable({
+export default function DiscountTable({
   pages,
   page,
   setPage,
@@ -31,12 +27,12 @@ export default function CustomerTable({
   orderDirection,
   setOrderDirection,
   data,
-  onToggle,
+  onDelete,
   onUpdate,
-}: CustomerTableProps) {
+}: DiscountTableProps) {
   return (
     <CustomTable
-      title='Clientes'
+      title='Descuentos'
       pages={pages}
       page={page}
       setPage={setPage}
@@ -46,7 +42,7 @@ export default function CustomerTable({
       orderDirection={orderDirection}
       setOrderDirection={setOrderDirection}
       tableRows={propRows}
-      onToggle={onToggle}
+      onDelete={onDelete}
       onUpdate={onUpdate}
     ></CustomTable>
   )

@@ -67,29 +67,7 @@ export default function CreateSupplier({ open, toggleDrawer }: CreateSupplierPag
               flexDirection: 'column',
             }}
           >
-            <SupplierForm
-              isLoading={isLoading}
-              /*
-              dni={dni}
-              businessName={businessName}
-              storeName={storeName}
-              address={address}
-              referencePoint={referencePoint}
-              phone={phone}
-              contactName={contactName}
-              contactPhone={contactPhone}
-              setDni={setDni}
-              setBusinessName={setBusinessName}
-              setStoreName={setStoreName}
-              setAddress={setAddress}
-              setReferencePoint={setReferencePoint}
-              setPhone={setPhone}
-              setContactName={setContactName}
-              setContactPhone={setContactPhone}
-              */
-              errors={errors}
-              onSubmit={handleSubmit}
-            />
+            <SupplierForm isLoading={isLoading} errors={errors} onSubmit={handleSubmit} />
             {errorMessage && (
               <Alert sx={{ mt: '10px' }} severity='error'>
                 {errorMessage}

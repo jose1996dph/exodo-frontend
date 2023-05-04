@@ -13,6 +13,10 @@ type UserTableProps = {
   pages: number
   page: number
   setPage: (value: number) => void
+  orderBy: string
+  setOrderBy: (attribute: string) => void
+  orderDirection: 'asc' | 'desc'
+  setOrderDirection: (attribute: 'asc' | 'desc') => void
   data: UserItem[]
   onToggle: (id: number) => void
   onUpdate: (id: number) => void
@@ -22,6 +26,10 @@ export default function UserTable({
   pages,
   page,
   setPage,
+  orderBy,
+  setOrderBy,
+  orderDirection,
+  setOrderDirection,
   data,
   onToggle,
   onUpdate,
@@ -33,6 +41,10 @@ export default function UserTable({
       page={page}
       setPage={setPage}
       items={data}
+      orderBy={orderBy}
+      setOrderBy={setOrderBy}
+      orderDirection={orderDirection}
+      setOrderDirection={setOrderDirection}
       tableRows={propRows}
       onToggle={onToggle}
       onUpdate={onUpdate}

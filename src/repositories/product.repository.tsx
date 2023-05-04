@@ -8,6 +8,8 @@ export interface IProductRepository {
     pageNum: number,
     search: string,
     notSupplierId: number,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[ProductItem[], number]>
 
   getById(id: number): Promise<ProductDetail>
@@ -27,11 +29,21 @@ class ProductRepository implements IProductRepository {
     pageNum: number,
     search: string,
     notSupplierId = 0,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[ProductItem[], number]> {
     let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
 
     if (notSupplierId > 0) {
       params = params + `&notSupplierId=${notSupplierId}`
+    }
+
+    if (orderBy) {
+      params += `&orderBy=${orderBy}`
+    }
+
+    if (orderDirection) {
+      params += `&orderDirection=${orderDirection}`
     }
 
     const { data } = await api.get(`${BackendURL}products/?${params}`)

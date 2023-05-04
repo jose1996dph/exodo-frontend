@@ -15,6 +15,10 @@ type SupplierProductTableProps = {
   pages: number
   page: number
   setPage: (value: number) => void
+  orderBy: string
+  setOrderBy: (attribute: string) => void
+  orderDirection: 'asc' | 'desc'
+  setOrderDirection: (attribute: 'asc' | 'desc') => void
   data: SupplierProductItem[]
   onDelete: (id: number) => void
   onUpdate: (id: number, item: any) => void
@@ -24,6 +28,10 @@ export default function SupplierProductTable({
   pages,
   page,
   setPage,
+  orderBy,
+  setOrderBy,
+  orderDirection,
+  setOrderDirection,
   data,
   onDelete,
   onUpdate,
@@ -35,6 +43,10 @@ export default function SupplierProductTable({
       page={page}
       setPage={setPage}
       items={data}
+      orderBy={orderBy}
+      setOrderBy={setOrderBy}
+      orderDirection={orderDirection}
+      setOrderDirection={setOrderDirection}
       tableRows={propRows}
       onDelete={onDelete}
       onUpdate={onUpdate}

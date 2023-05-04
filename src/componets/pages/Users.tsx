@@ -24,6 +24,8 @@ type UsersPageProps = {
 export default function Users({ open, toggleDrawer }: UsersPageProps) {
   const [searchText, setSearchText] = useState('')
   const [users, setUsers] = useState<UserItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('dni')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
@@ -35,7 +37,7 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
 
   const loadUsers = async () => {
     try {
-      const [_users, _pages] = await userService.getAll(page, searchText)
+      const [_users, _pages] = await userService.getAll(page, searchText, orderBy, orderDirection)
       setUsers(_users)
       setPages(_pages)
     } catch {
@@ -82,7 +84,7 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
 
   useEffect(() => {
     loadUsers()
-  }, [page])
+  }, [page, orderDirection, orderBy])
 
   return (
     <>
@@ -145,6 +147,10 @@ export default function Users({ open, toggleDrawer }: UsersPageProps) {
               pages={pages}
               page={page}
               setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
               data={users}
               onToggle={openAlert}
               onUpdate={onUpdateHandler}

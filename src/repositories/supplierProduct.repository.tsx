@@ -12,6 +12,8 @@ export interface ISupplierProductRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[SupplierProductItem[], number]>
 
   createSupplierProduct(
@@ -34,10 +36,20 @@ class SupplierProductRepository implements ISupplierProductRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[SupplierProductItem[], number]> {
-    const { data } = await api.get(
-      `${BackendURL}suppliers/${id}/product/?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`,
-    )
+    let params = `?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+
+    if (orderBy) {
+      params += `&orderBy=${orderBy}`
+    }
+
+    if (orderDirection) {
+      params += `&orderDirection=${orderDirection}`
+    }
+
+    const { data } = await api.get(`${BackendURL}suppliers/${id}/product/${params}`)
 
     const [product, count] = data
 

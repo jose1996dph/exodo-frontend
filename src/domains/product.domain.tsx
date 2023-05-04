@@ -6,7 +6,6 @@ export type ProductItem = {
   presentation: string
   category: CategoryItem
   categoryId: number
-  salesPercentages: number[]
 }
 
 export type ProductDetail = {
@@ -14,20 +13,17 @@ export type ProductDetail = {
   name: string
   presentation: string
   categoryId: number
-  salesPercentages: number[]
 }
 
 export class CreateProduct {
   public name: string
   public presentation: string
   public categoryId: number
-  public salesPercentages: number[]
 
-  constructor(name: string, presentation: string, categoryId: number, salesPercentages: number[]) {
+  constructor(name: string, presentation: string, categoryId: number) {
     this.name = name
     this.presentation = presentation
     this.categoryId = categoryId
-    this.salesPercentages = salesPercentages
   }
 
   public isValid(): Record<string, string> {
@@ -41,9 +37,6 @@ export class CreateProduct {
     if (!this.categoryId || this.categoryId <= 0) {
       errors['categoryId'] = 'Categoria es requerido'
     }
-    if (!this.salesPercentages || this.salesPercentages.length === 0) {
-      errors['salesPercentages'] = 'Los procentages de ventas son requeridos'
-    }
     return errors
   }
 }
@@ -52,13 +45,11 @@ export class UpdateProduct {
   public name: string
   public presentation: string
   public categoryId: number
-  public salesPercentages: number[]
 
-  constructor(name: string, presentation: string, categoryId: number, salesPercentages: number[]) {
+  constructor(name: string, presentation: string, categoryId: number) {
     this.name = name
     this.presentation = presentation
     this.categoryId = categoryId
-    this.salesPercentages = salesPercentages
   }
 
   public isValid(): Record<string, string> {
@@ -71,9 +62,6 @@ export class UpdateProduct {
     }
     if (!this.categoryId || this.categoryId <= 0) {
       errors['salesPercentages'] = 'Categoria es requerido'
-    }
-    if (!this.salesPercentages || this.salesPercentages.length === 0) {
-      errors['salesPercentages'] = 'Procentage de venta es requerido'
     }
     return errors
   }

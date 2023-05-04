@@ -4,12 +4,18 @@ import { ICustomerRepository, makeCustomerRepository } from '../repositories/cus
 class CustomerService {
   private customerRepo: ICustomerRepository = makeCustomerRepository()
 
-  async getAll(pageNum: number, search: string) {
+  async getAll(pageNum: number, search: string, orderBy?: string, orderDirection?: string) {
     try {
       const pageSize = 10
-      const customers = await this.customerRepo.getAll(pageSize, pageNum - 1, search)
+      const customers = await this.customerRepo.getAll(
+        pageSize,
+        pageNum - 1,
+        search,
+        orderBy,
+        orderDirection,
+      )
       return customers
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -19,7 +25,7 @@ class CustomerService {
     try {
       const customer = await this.customerRepo.getById(id)
       return customer
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -29,7 +35,7 @@ class CustomerService {
     try {
       const customer = await this.customerRepo.createCustomer(createUser)
       return customer
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -39,7 +45,7 @@ class CustomerService {
     try {
       const customer = await this.customerRepo.updateCustomer(id, updateUser)
       return customer
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -49,7 +55,7 @@ class CustomerService {
     try {
       const customer = await this.customerRepo.toggleStatus(id)
       return customer
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -59,7 +65,7 @@ class CustomerService {
     try {
       await this.customerRepo.deleteCustomer(id)
       return true
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }

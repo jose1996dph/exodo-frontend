@@ -4,11 +4,23 @@ import { ICategoryRepository, makeCategoryRepository } from '../repositories/cat
 class CategoryService {
   private categoryRepo: ICategoryRepository = makeCategoryRepository()
 
-  async getAll(pageNum: number, search: string, pageSize?: number) {
+  async getAll(
+    pageNum: number,
+    search: string,
+    pageSize?: number,
+    orderBy?: string,
+    orderDirection?: string,
+  ) {
     try {
-      const categories = await this.categoryRepo.getAll(pageNum - 1, search, pageSize)
+      const categories = await this.categoryRepo.getAll(
+        pageNum - 1,
+        search,
+        pageSize,
+        orderBy,
+        orderDirection,
+      )
       return categories
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -18,7 +30,7 @@ class CategoryService {
     try {
       const category = await this.categoryRepo.getById(id)
       return category
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -28,7 +40,7 @@ class CategoryService {
     try {
       const category = await this.categoryRepo.createCategory(createCategory)
       return category
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -38,7 +50,7 @@ class CategoryService {
     try {
       const category = await this.categoryRepo.updateCategory(id, updateCategory)
       return category
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -48,7 +60,7 @@ class CategoryService {
     try {
       await this.categoryRepo.deleteCategory(id)
       return true
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }

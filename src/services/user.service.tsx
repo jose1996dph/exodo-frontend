@@ -5,12 +5,18 @@ class UserService {
   [x: string]: any
   private userRepo: IUserRepository = makeUserRepository()
 
-  async getAll(pageNum: number, search: string) {
+  async getAll(pageNum: number, search: string, orderBy?: string, orderDirection?: string) {
     try {
       const pageSize = 10
-      const users = await this.userRepo.getAll(pageSize, pageNum - 1, search)
+      const users = await this.userRepo.getAll(
+        pageSize,
+        pageNum - 1,
+        search,
+        orderBy,
+        orderDirection,
+      )
       return users
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -20,7 +26,7 @@ class UserService {
     try {
       const user = await this.userRepo.getById(id)
       return user
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -30,7 +36,7 @@ class UserService {
     try {
       const user = await this.userRepo.createUser(createUser)
       return user
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -40,7 +46,7 @@ class UserService {
     try {
       const user = await this.userRepo.updateUser(id, updateUser)
       return user
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -50,7 +56,7 @@ class UserService {
     try {
       const user = await this.userRepo.toggleStatus(id)
       return user
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -60,7 +66,7 @@ class UserService {
     try {
       await this.userRepo.deleteUser(id)
       return true
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }

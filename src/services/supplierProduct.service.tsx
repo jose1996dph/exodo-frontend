@@ -7,7 +7,13 @@ import {
 class SupplierProductService {
   private supplierProductRepo: ISupplierProductRepository = makeSupplierProductRepository()
 
-  async getAll(id: number, pageNum: number, search: string) {
+  async getAll(
+    id: number,
+    pageNum: number,
+    search: string,
+    orderBy?: string,
+    orderDirection?: string,
+  ) {
     try {
       const pageSize = 10
       const suppliers = await this.supplierProductRepo.getAllSupplierProduct(
@@ -15,9 +21,11 @@ class SupplierProductService {
         pageSize,
         pageNum - 1,
         search,
+        orderBy,
+        orderDirection,
       )
       return suppliers
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -30,7 +38,7 @@ class SupplierProductService {
         createSupplierProduct,
       )
       return supplier
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -44,7 +52,7 @@ class SupplierProductService {
         updateSupplierProduct,
       )
       return supplier
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -54,7 +62,7 @@ class SupplierProductService {
     try {
       await this.supplierProductRepo.deleteSupplierProduct(id, productId)
       return true
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }

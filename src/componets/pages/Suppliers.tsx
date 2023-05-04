@@ -24,6 +24,8 @@ type SuppliersPageProps = {
 export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
   const [searchText, setSearchText] = useState('')
   const [suppliers, setSuppliers] = useState<SupplierItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('dni')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [openModal, setOpenModal] = useState(false)
   const [selectedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
@@ -35,7 +37,12 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
 
   const loadSuppliers = async () => {
     try {
-      const [_suppliers, _pages] = await supplierService.getAll(page, searchText)
+      const [_suppliers, _pages] = await supplierService.getAll(
+        page,
+        searchText,
+        orderBy,
+        orderDirection,
+      )
       setSuppliers(_suppliers)
       setPages(_pages)
     } catch {
@@ -90,7 +97,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
 
   useEffect(() => {
     loadSuppliers()
-  }, [page])
+  }, [page, orderDirection, orderBy])
 
   return (
     <>
@@ -153,6 +160,10 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
               pages={pages}
               page={page}
               setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
               data={suppliers}
               onShow={onShowHandler}
               onToggle={openAlert}

@@ -1,5 +1,4 @@
-import { MouseEvent } from 'react'
-import FunctionComponent from 'react/FunctionComponent'
+import { MouseEvent, FunctionComponent } from 'react'
 import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
 
 // Generate Order Data

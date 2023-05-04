@@ -7,7 +7,7 @@ class RoleService {
     try {
       const roles = await this.roleRepo.getAll()
       return roles
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }

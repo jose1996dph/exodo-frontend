@@ -27,16 +27,11 @@ export default function CreateProduct({ open, toggleDrawer }: CreateProductPageP
 
   const navigate = useNavigate()
 
-  const handleSubmit = async (
-    name: string,
-    presentation: string,
-    categoryId: string,
-    salesPercentages: number[],
-  ) => {
+  const handleSubmit = async (name: string, presentation: string, categoryId: string) => {
     setIsLoading(true)
     try {
       const _categoryId = parseInt(categoryId ?? 0)
-      const product = new CreateProductRequest(name, presentation, _categoryId, salesPercentages)
+      const product = new CreateProductRequest(name, presentation, _categoryId)
 
       const _errors = product.isValid()
 

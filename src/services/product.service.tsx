@@ -4,12 +4,25 @@ import { IProductRepository, makeProductRepository } from '../repositories/produ
 class ProductService {
   private productRepo: IProductRepository = makeProductRepository()
 
-  async getAll(pageNum: number, search: string, notSupplierId = 0) {
+  async getAll(
+    pageNum: number,
+    search: string,
+    notSupplierId = 0,
+    orderBy?: string,
+    orderDirection?: string,
+  ) {
     try {
       const pageSize = 10
-      const products = await this.productRepo.getAll(pageSize, pageNum - 1, search, notSupplierId)
+      const products = await this.productRepo.getAll(
+        pageSize,
+        pageNum - 1,
+        search,
+        notSupplierId,
+        orderBy,
+        orderDirection,
+      )
       return products
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -19,7 +32,7 @@ class ProductService {
     try {
       const product = await this.productRepo.getById(id)
       return product
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -29,7 +42,7 @@ class ProductService {
     try {
       const product = await this.productRepo.createProduct(createProduct)
       return product
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -39,7 +52,7 @@ class ProductService {
     try {
       const product = await this.productRepo.updateProduct(id, updateProduct)
       return product
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -49,7 +62,7 @@ class ProductService {
     try {
       const product = await this.productRepo.toggleStatus(id)
       return product
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }
@@ -59,7 +72,7 @@ class ProductService {
     try {
       await this.productRepo.deleteProduct(id)
       return true
-    } catch ({ response: { data } }) {
+    } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
     }

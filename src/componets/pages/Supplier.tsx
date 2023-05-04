@@ -1,8 +1,9 @@
-import { AutocompleteRenderInputParams, Grid, Paper, TextField } from '@mui/material'
+import { AutocompleteRenderInputParams, Grid, Paper, TextField, Alert } from '@mui/material'
 import { ReactNode, useEffect, useState } from 'react'
 import { SupplierDetail } from '../../domains/supplier.domain'
 import { makeSupplierProductService } from '../../services/supplierProduct.service'
 import { makeSupplierService } from '../../services/supplier.service'
+import { makeDiscountService } from '../../services/discount.service'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 import Content from '../organisms/Content'
 import SupplierDetails from '../organisms/SupplierDetails'
@@ -19,6 +20,10 @@ import { makeProductService } from '../../services/product.service'
 import CustomButton from '../atoms/CustomButton'
 import CustomAutocomplete from '../atoms/CustomAutocomplete'
 import ConfirmDialog from '../atoms/ConfirmDialog'
+import { CreateDiscount, DiscountItem, UpdateDiscount } from '../../domains/discount.domain'
+import DiscountForm from '../molecules/DiscountForm'
+import Title from '../atoms/Title'
+import DiscountTable from '../organisms/DiscountTable'
 
 type SupplierPageProps = {
   open: boolean
@@ -26,8 +31,19 @@ type SupplierPageProps = {
 }
 
 export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
+  const [discounts, setDiscounts] = useState<DiscountItem[]>([])
+  const [orderDiscountBy, setOrderDiscountBy] = useState<string>('percentage')
+  const [orderDiscountDirection, setOrderDiscountDirection] = useState<'asc' | 'desc'>('asc')
+  const [pageDiscounts, setPageDiscounts] = useState(1)
+  const [pagesDiscounts, setPagesDiscounts] = useState(0)
+  const [openModalToDeleteDiscount, setOpenModalToDeleteDiscount] = useState(false)
+  const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
+  const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
+
   const [supplier, setSupplier] = useState<SupplierDetail | undefined>(undefined)
   const [products, setProducts] = useState<SupplierProductItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('name')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [productsNoSupplier, setProductsNoSupplier] = useState<ProductItem[]>([])
   const [productSelected, setProductSelected] = useState<ProductItem>()
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -45,8 +61,101 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
   const supplierService = makeSupplierService()
   const supplierProductService = makeSupplierProductService()
   const productService = makeProductService()
+  const discountService = makeDiscountService()
 
   const { id } = useParams()
+
+  const loadDiscounts = async () => {
+    try {
+      if (!id) {
+        return
+      }
+      const supplierId = parseInt(id)
+      const [_discounts, _pages] = await discountService.getAll(
+        supplierId,
+        pageDiscounts,
+        '',
+        orderDiscountBy,
+        orderDiscountDirection,
+      )
+      setDiscounts(_discounts)
+      setPagesDiscounts(_pages)
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const submitDiscount = async (percentage: number, deadline: number) => {
+    if (selectedDiscountToEdit) {
+      await editDiscount(new UpdateDiscount(percentage, deadline))
+      return
+    }
+    await addDiscount(new CreateDiscount(percentage, deadline))
+  }
+
+  const editDiscount = async (discount: UpdateDiscount) => {
+    try {
+      if (!id) {
+        return
+      }
+      const _errors = discount.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        throw _errors
+      }
+
+      const supplierId = parseInt(id)
+      const _discountId = selectedDiscountToEdit?.id || 0
+      await discountService.update(supplierId, _discountId, discount)
+
+      loadDiscounts()
+      setSelectedDiscountToEdit(undefined)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const addDiscount = async (discount: CreateDiscount) => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const _errors = discount.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        throw _errors
+      }
+
+      const supplierId = parseInt(id)
+      await discountService.create(supplierId, discount)
+
+      loadDiscounts()
+      setSelectedDiscountToEdit(undefined)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const handleDeleteDiscount = async () => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const supplierId = parseInt(id)
+      await discountService.delete(supplierId, selectedDiscountIdToDelete)
+
+      loadDiscounts()
+      setSelectedDiscountIdToDelete(0)
+      setSelectedDiscountToEdit(undefined)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const loadSupplier = async () => {
     try {
@@ -68,7 +177,13 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
         return
       }
       const supplierId = parseInt(id)
-      const [_products, _pages] = await supplierProductService.getAll(supplierId, page, '')
+      const [_products, _pages] = await supplierProductService.getAll(
+        supplierId,
+        page,
+        '',
+        orderBy,
+        orderDirection,
+      )
       setProducts(_products)
       setPages(_pages)
     } catch {
@@ -80,13 +195,13 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
 
   const submitSupplierProduct = async () => {
     if (selectedToEdit) {
-      await EditSupplierProduct()
+      await editSupplierProduct()
       return
     }
-    await AddSupplierProduct()
+    await addSupplierProduct()
   }
 
-  const EditSupplierProduct = async () => {
+  const editSupplierProduct = async () => {
     try {
       if (!id) {
         return
@@ -113,7 +228,7 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
     }
   }
 
-  const AddSupplierProduct = async () => {
+  const addSupplierProduct = async () => {
     try {
       if (!id) {
         return
@@ -150,6 +265,7 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
       await supplierProductService.delete(supplierId, selectedIdToDelete)
       clearForm()
       loadProducts()
+      loadProductsNotSupplier()
     } catch {
       console.error('error')
     }
@@ -208,6 +324,11 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
     setSearchText(item.product.name + ' - ' + item.product.presentation)
   }
 
+  const openAlertToDeleteDiscount = (id: number) => {
+    setOpenModalToDeleteDiscount(true)
+    setSelectedDiscountIdToDelete(id)
+  }
+
   const openAlert = (id: number) => {
     setOpenModal(true)
     setSelectedIdToDelete(id)
@@ -218,8 +339,12 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
   }, [])
 
   useEffect(() => {
+    loadDiscounts()
+  }, [pageDiscounts, orderDiscountDirection, orderDiscountBy])
+
+  useEffect(() => {
     loadProducts()
-  }, [page])
+  }, [page, orderDirection, orderBy])
 
   useEffect(() => {
     setIsLoading(true)
@@ -229,6 +354,13 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
 
   return (
     <>
+      <ConfirmDialog
+        open={openModalToDeleteDiscount}
+        setOpen={setOpenModalToDeleteDiscount}
+        onCancel={() => setSelectedDiscountIdToDelete(0)}
+        content='¿Está seguro de eliminar este descuento del proveedor?'
+        onAcept={handleDeleteDiscount}
+      />
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
@@ -246,7 +378,53 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
               flexDirection: 'column',
             }}
           >
+            <DiscountForm
+              isLoading={isLoading}
+              discount={selectedDiscountToEdit}
+              submitDiscount={submitDiscount}
+              errors={errors}
+            ></DiscountForm>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <DiscountTable
+              pages={pagesDiscounts}
+              page={pageDiscounts}
+              setPage={setPageDiscounts}
+              data={discounts}
+              onDelete={openAlertToDeleteDiscount}
+              onUpdate={(_, item) => setSelectedDiscountToEdit(item)}
+              orderBy={orderDiscountBy}
+              setOrderBy={setOrderDiscountBy}
+              orderDirection={orderDiscountDirection}
+              setOrderDirection={setOrderDiscountDirection}
+            ></DiscountTable>
+            {errors['salesPercentages'] && (
+              <Alert sx={{ mt: '10px' }} severity='error'>
+                {errors['discounts']}
+              </Alert>
+            )}
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
             <Grid container spacing={0.5}>
+              <Grid item xs={12}>
+                <Title>Asignar producto</Title>
+              </Grid>
               <Grid item xs={12} sm={6} lg={8}>
                 <CustomAutocomplete
                   disableClearable
@@ -317,6 +495,10 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
               pages={pages}
               page={page}
               setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
               data={products}
               onDelete={(id) => openAlert(id)}
               onUpdate={(_, item) => handlerSelectToEdit(item)}

@@ -8,7 +8,13 @@ import api from '../framework/api'
 import { BackendURL } from '../config'
 
 export interface ICategoryRepository {
-  getAll(pageNum: number, search: string, pageSize?: number): Promise<[CategoryItem[], number]>
+  getAll(
+    pageNum: number,
+    search: string,
+    pageSize?: number,
+    orderBy?: string,
+    orderDirection?: string,
+  ): Promise<[CategoryItem[], number]>
 
   getById(id: number): Promise<CategoryDetail>
 
@@ -26,13 +32,23 @@ class CategoryRepository implements ICategoryRepository {
     pageNum: number,
     search: string,
     pageSize?: number,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[CategoryItem[], number]> {
-    let url = `${BackendURL}categories/?pageNum=${pageNum}&search=${search}`
+    let params = `pageNum=${pageNum}&search=${search}`
     if (pageSize) {
-      url += `&pageSize=${pageSize}`
+      params += `&pageSize=${pageSize}`
     }
 
-    const { data } = await api.get(url)
+    if (orderBy) {
+      params += `&orderBy=${orderBy}`
+    }
+
+    if (orderDirection) {
+      params += `&orderDirection=${orderDirection}`
+    }
+
+    const { data } = await api.get(`${BackendURL}categories/?${params}`)
 
     const [categories, count] = data
 

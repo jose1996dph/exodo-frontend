@@ -30,12 +30,7 @@ export default function EditProduct({ open, toggleDrawer }: EditProductPageProps
 
   const { id } = useParams()
 
-  const handleSubmit = async (
-    name: string,
-    presentation: string,
-    categoryId: string,
-    salesPercentages: number[],
-  ) => {
+  const handleSubmit = async (name: string, presentation: string, categoryId: string) => {
     setIsLoading(true)
     try {
       if (!id) {
@@ -45,7 +40,7 @@ export default function EditProduct({ open, toggleDrawer }: EditProductPageProps
 
       const _categoryId = parseInt(categoryId)
 
-      const product = new UpdateProduct(name, presentation, _categoryId, salesPercentages)
+      const product = new UpdateProduct(name, presentation, _categoryId)
 
       const _errors = product.isValid()
 
@@ -82,7 +77,6 @@ export default function EditProduct({ open, toggleDrawer }: EditProductPageProps
       }
       const productId = parseInt(id)
       const _product = await productService.getById(productId)
-      _product.salesPercentages = _product.salesPercentages.map((s) => parseInt(s.toString()))
       setProduct(_product)
     } catch {
       console.error('error')

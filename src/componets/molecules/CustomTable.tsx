@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 
 import Title from '../atoms/Title'
-import { Pagination, Switch } from '@mui/material'
+import { Pagination, Switch, TableSortLabel } from '@mui/material'
 
 export type CustomTableRow = {
   title: string
@@ -28,8 +28,12 @@ type CustomTableProps = {
   tableRows: CustomTableRow[]
   items: any[]
   identify?: string
+  orderBy?: string | undefined
+  orderDirection?: 'asc' | 'desc' | undefined
+  setOrderBy?: ((attribute: string) => void) | undefined
+  setOrderDirection?: ((attribute: 'asc' | 'desc') => void) | undefined
   onShow?: (id: number) => void | undefined
-  onDelete?: (id: number) => void | undefined
+  onDelete?: (id: number, item: any) => void | undefined
   onUpdate?: (id: number, item: any) => void | undefined
   onToggle?: (id: number) => void | undefined
 }
@@ -42,11 +46,32 @@ export default function CustomTable({
   tableRows,
   items,
   identify = 'id',
+  orderBy = undefined,
+  orderDirection = undefined,
+  setOrderBy = undefined,
+  setOrderDirection = undefined,
   onShow = undefined,
   onDelete = undefined,
   onUpdate = undefined,
   onToggle = undefined,
 }: CustomTableProps) {
+  const handlerTogglerSort = (attribute: string) => {
+    if (!orderBy) {
+      return
+    }
+    if (setOrderBy) {
+      setOrderBy(attribute)
+    }
+    if (!setOrderDirection) {
+      return
+    }
+    if (orderBy === attribute) {
+      setOrderDirection(orderDirection === 'asc' ? 'desc' : 'asc')
+      return
+    }
+    setOrderDirection('asc')
+  }
+
   return (
     <Fragment>
       <Title>{title}</Title>
@@ -55,7 +80,17 @@ export default function CustomTable({
           <TableRow>
             {tableRows.map((tableRow) => (
               <TableCell key={tableRow.key} {...tableRow.props}>
-                {tableRow.title}
+                {orderBy && orderDirection ? (
+                  <TableSortLabel
+                    active={orderBy === tableRow.key}
+                    direction={orderBy === tableRow.key ? orderDirection : 'asc'}
+                    onClick={() => handlerTogglerSort(tableRow.key)}
+                  >
+                    {tableRow.title}
+                  </TableSortLabel>
+                ) : (
+                  <>{tableRow.title}</>
+                )}
               </TableCell>
             ))}
             <TableCell></TableCell>
@@ -82,7 +117,7 @@ export default function CustomTable({
                     </IconButton>
                   )}
                   {onDelete && (
-                    <IconButton color='error' onClick={() => onDelete(item[identify])}>
+                    <IconButton color='error' onClick={() => onDelete(item[identify], item)}>
                       <DeleteIcon />
                     </IconButton>
                   )}

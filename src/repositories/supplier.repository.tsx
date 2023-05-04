@@ -8,7 +8,13 @@ import api from '../framework/api'
 import { BackendURL } from '../config'
 
 export interface ISupplierRepository {
-  getAll(pageSize: number, pageNum: number, search: string): Promise<[SupplierItem[], number]>
+  getAll(
+    pageSize: number,
+    pageNum: number,
+    search: string,
+    orderBy?: string,
+    orderDirection?: string,
+  ): Promise<[SupplierItem[], number]>
 
   getById(id: number): Promise<SupplierDetail>
 
@@ -26,10 +32,20 @@ class SupplierRepository implements ISupplierRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    orderBy?: string,
+    orderDirection?: string,
   ): Promise<[SupplierItem[], number]> {
-    const { data } = await api.get(
-      `${BackendURL}suppliers/?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`,
-    )
+    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+
+    if (orderBy) {
+      params += `&orderBy=${orderBy}`
+    }
+
+    if (orderDirection) {
+      params += `&orderDirection=${orderDirection}`
+    }
+
+    const { data } = await api.get(`${BackendURL}suppliers/?${params}`)
 
     const [user, count] = data
 
