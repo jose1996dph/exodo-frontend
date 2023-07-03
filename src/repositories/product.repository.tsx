@@ -1,12 +1,14 @@
 import { ProductItem, CreateProduct, UpdateProduct, ProductDetail } from '../domains/product.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
+import { formatUrlText } from '../framework/helpers/formatter.helper'
 
 export interface IProductRepository {
   getAll(
     pageSize: number,
     pageNum: number,
     search: string,
+    supplierId: number,
     notSupplierId: number,
     orderBy?: string,
     orderDirection?: string,
@@ -28,11 +30,16 @@ class ProductRepository implements IProductRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    supplierId = 0,
     notSupplierId = 0,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[ProductItem[], number]> {
-    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${formatUrlText(search)}`
+
+    if (supplierId > 0) {
+      params = params + `&supplierId=${supplierId}`
+    }
 
     if (notSupplierId > 0) {
       params = params + `&notSupplierId=${notSupplierId}`

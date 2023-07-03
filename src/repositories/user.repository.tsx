@@ -1,6 +1,7 @@
 import { UserItem, CreateUser, UpdateUser, UserDetail } from '../domains/user.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
+import { formatUrlText } from '../framework/helpers/formatter.helper'
 
 export interface IUserRepository {
   getAll(
@@ -30,7 +31,7 @@ class UserRepository implements IUserRepository {
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[UserItem[], number]> {
-    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${formatUrlText(search)}`
 
     if (orderBy) {
       params += `&orderBy=${orderBy}`

@@ -8,6 +8,7 @@ import SetPassword from './componets/pages/SetPassword'
 import ForgotPassword from './componets/pages/ForgotPassword'
 import CustomersPage from './componets/pages/Customers'
 import CreateCustomer from './componets/pages/CreateCustomer'
+import OrdersPage from './componets/pages/Orders'
 import UsersPage from './componets/pages/Users'
 import { getToken } from './framework/helpers/auth.helper'
 import ProtectedRoute from './framework/routes/ProtectRoute'
@@ -23,6 +24,7 @@ import CategoriesPage from './componets/pages/Categories'
 import CreateCategory from './componets/pages/CreateCategory'
 import EditCategory from './componets/pages/EditCategory'
 import SupplierPage from './componets/pages/Supplier'
+import CreateOrder from './componets/pages/CreateOrder'
 
 function App() {
   const location = useLocation()
@@ -72,6 +74,24 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <Dashboard open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.Orders}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <OrdersPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.CreateOrder}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateOrder open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

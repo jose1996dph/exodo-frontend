@@ -1,4 +1,5 @@
 import { CategoryItem } from './category.domain'
+import { SupplierProductItem } from './supplierProduct.domain'
 
 export type ProductItem = {
   id: number
@@ -13,6 +14,7 @@ export type ProductDetail = {
   name: string
   presentation: string
   categoryId: number
+  supplierProducts?: SupplierProductItem[]
 }
 
 export class CreateProduct {

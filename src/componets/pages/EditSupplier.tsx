@@ -47,7 +47,7 @@ export default function EditSupplier({ open, toggleDrawer }: EditSupplierPagePro
 
       clearForm()
 
-      navigate(UrlRoutes.Suppliers, { replace: true })
+      navigate(`${UrlRoutes.Supplier}${supplierId}`, { replace: true })
     } catch (error) {
       if (isServerException(error)) {
         const { message } = error as ServerException

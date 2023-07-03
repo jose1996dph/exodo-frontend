@@ -29,4 +29,9 @@ export enum UrlRoutes {
   Category = '/categories/:id ',
   CreateCategory = '/create/category',
   EditCategory = '/edit/category/',
+  // Order
+  Orders = '/orders',
+  Order = '/orders/:id ',
+  CreateOrder = '/create/order',
+  EditOrder = '/edit/order/',
 }

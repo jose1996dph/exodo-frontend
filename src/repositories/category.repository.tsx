@@ -6,6 +6,7 @@ import {
 } from '../domains/category.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
+import { formatUrlText } from '../framework/helpers/formatter.helper'
 
 export interface ICategoryRepository {
   getAll(
@@ -35,7 +36,7 @@ class CategoryRepository implements ICategoryRepository {
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[CategoryItem[], number]> {
-    let params = `pageNum=${pageNum}&search=${search}`
+    let params = `pageNum=${pageNum}&search=${formatUrlText(search)}`
     if (pageSize) {
       params += `&pageSize=${pageSize}`
     }

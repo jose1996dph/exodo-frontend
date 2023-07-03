@@ -6,6 +6,7 @@ import {
 } from '../domains/customer.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
+import { formatUrlText } from '../framework/helpers/formatter.helper'
 
 export interface ICustomerRepository {
   getAll(
@@ -35,7 +36,7 @@ class CustomerRepository implements ICustomerRepository {
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[CustomerItem[], number]> {
-    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+    let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${formatUrlText(search)}`
     if (orderBy) {
       params += `&orderBy=${orderBy}`
     }

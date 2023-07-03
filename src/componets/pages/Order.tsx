@@ -1,0 +1,511 @@
+import { AutocompleteRenderInputParams, Grid, Paper, TextField, Alert } from '@mui/material'
+import { ReactNode, useEffect, useState } from 'react'
+import { OrderDetail } from '../../domains/order.domain'
+import { makeOrderProductService } from '../../services/orderProduct.service'
+import { makeOrderService } from '../../services/order.service'
+import { makeDiscountService } from '../../services/discount.service'
+import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
+import Content from '../organisms/Content'
+import OrderDetails from '../organisms/OrderDetails'
+import {
+  OrderProductItem,
+  CreateOrderProduct,
+  UpdateOrderProduct,
+} from '../../domains/orderProduct.domain'
+import OrderProductTable from '../organisms/OrderProductTable'
+import CustomTextField from '../atoms/CustomTextField'
+import { ProductItem } from '../../domains/product.domain'
+import { useParams } from 'react-router-dom'
+import { makeProductService } from '../../services/product.service'
+import CustomButton from '../atoms/CustomButton'
+import CustomAutocomplete from '../atoms/CustomAutocomplete'
+import ConfirmDialog from '../atoms/ConfirmDialog'
+import { CreateDiscount, DiscountItem, UpdateDiscount } from '../../domains/discount.domain'
+import DiscountForm from '../molecules/DiscountForm'
+import Title from '../atoms/Title'
+import DiscountTable from '../organisms/DiscountTable'
+
+type OrderPageProps = {
+  open: boolean
+  toggleDrawer: ToggleDrawerHandler
+}
+
+export default function Order({ open, toggleDrawer }: OrderPageProps) {
+  const [discounts, setDiscounts] = useState<DiscountItem[]>([])
+  const [orderDiscountBy, setOrderDiscountBy] = useState<string>('percentage')
+  const [orderDiscountDirection, setOrderDiscountDirection] = useState<'asc' | 'desc'>('asc')
+  const [pageDiscounts, setPageDiscounts] = useState(1)
+  const [pagesDiscounts, setPagesDiscounts] = useState(0)
+  const [openModalToDeleteDiscount, setOpenModalToDeleteDiscount] = useState(false)
+  const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
+  const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
+
+  const [order, setOrder] = useState<OrderDetail | undefined>(undefined)
+  const [products, setProducts] = useState<OrderProductItem[]>([])
+  const [orderBy, setOrderBy] = useState<string>('name')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [productsNoOrder, setProductsNoOrder] = useState<ProductItem[]>([])
+  const [productSelected, setProductSelected] = useState<ProductItem>()
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [searchText, setSearchText] = useState<string>('')
+  const [price, setPrice] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [productPages, setProductPages] = useState(0)
+  const [productPage, setProductPage] = useState(1)
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState(0)
+  const [selectedToEdit, setSelectedToEdit] = useState<OrderProductItem>()
+  const [page, setPage] = useState(1)
+  const [pages, setPages] = useState(0)
+
+  const orderService = makeOrderService()
+  const orderProductService = makeOrderProductService()
+  const productService = makeProductService()
+  const discountService = makeDiscountService()
+
+  const { id } = useParams()
+
+  const loadDiscounts = async () => {
+    try {
+      if (!id) {
+        return
+      }
+      const orderId = parseInt(id)
+      const [_discounts, _pages] = await discountService.getAll(
+        orderId,
+        pageDiscounts,
+        '',
+        orderDiscountBy,
+        orderDiscountDirection,
+      )
+      setDiscounts(_discounts)
+      setPagesDiscounts(_pages)
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const submitDiscount = async (percentage: number, deadline: number) => {
+    if (selectedDiscountToEdit) {
+      await editDiscount(new UpdateDiscount(percentage, deadline))
+      return
+    }
+    await addDiscount(new CreateDiscount(percentage, deadline))
+  }
+
+  const editDiscount = async (discount: UpdateDiscount) => {
+    try {
+      if (!id) {
+        return
+      }
+      const _errors = discount.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        throw _errors
+      }
+
+      const orderId = parseInt(id)
+      const _discountId = selectedDiscountToEdit?.id || 0
+      await discountService.update(orderId, _discountId, discount)
+
+      loadDiscounts()
+      setSelectedDiscountToEdit(undefined)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const addDiscount = async (discount: CreateDiscount) => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const _errors = discount.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        throw _errors
+      }
+
+      const orderId = parseInt(id)
+      await discountService.create(orderId, discount)
+
+      loadDiscounts()
+      setSelectedDiscountToEdit(undefined)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const handleDeleteDiscount = async () => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const orderId = parseInt(id)
+      await discountService.delete(orderId, selectedDiscountIdToDelete)
+
+      loadDiscounts()
+      setSelectedDiscountIdToDelete(0)
+      setSelectedDiscountToEdit(undefined)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const loadOrder = async () => {
+    try {
+      if (!id) {
+        return
+      }
+      const orderId = parseInt(id)
+      const _order = await orderService.getById(orderId)
+      setOrder(_order)
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const loadProducts = async () => {
+    setIsLoading(true)
+    try {
+      if (!id) {
+        return
+      }
+      const orderId = parseInt(id)
+      const [_products, _pages] = await orderProductService.getAll(
+        orderId,
+        page,
+        '',
+        orderBy,
+        orderDirection,
+      )
+      setProducts(_products)
+      setPages(_pages)
+    } catch {
+      console.error('error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const submitOrderProduct = async () => {
+    if (selectedToEdit) {
+      await editOrderProduct()
+      return
+    }
+    await addOrderProduct()
+  }
+
+  const editOrderProduct = async () => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const orderId = parseInt(id)
+      const _price = parseFloat(price)
+      const _productId = selectedToEdit?.productId || 0
+
+      const orderProduct = new UpdateOrderProduct(_price)
+
+      const _errors = orderProduct.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        return
+      }
+
+      await orderProductService.update(orderId, _productId, orderProduct)
+      loadProducts()
+      clearForm()
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const addOrderProduct = async () => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const orderId = parseInt(id)
+      const _price = parseFloat(price)
+      const _productId = productSelected?.id || 0
+
+      const orderProduct = new CreateOrderProduct(orderId, _productId, _price)
+
+      const _errors = orderProduct.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        return
+      }
+
+      await orderProductService.create(orderId, orderProduct)
+      loadProducts()
+      clearForm()
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const handlerDeleteOrderProduct = async () => {
+    try {
+      if (!id) {
+        return
+      }
+
+      const orderId = parseInt(id)
+      await orderProductService.delete(orderId, selectedIdToDelete)
+      clearForm()
+      loadProducts()
+      loadProductsNotOrder()
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const clearForm = () => {
+    setErrors({})
+    setPrice('')
+    setProductSelected(undefined)
+    setSelectedToEdit(undefined)
+    setSearchText('')
+  }
+
+  const addMoreProductsNotOrder = async (pageNum: number) => {
+    try {
+      if (!id) {
+        return
+      }
+      const orderId = parseInt(id)
+      const _product = await productService.getAll(pageNum, searchText, orderId)
+      setProductsNoOrder([...productsNoOrder, ..._product[0]])
+      setProductPages(_product[1])
+      setProductPage(pageNum)
+      setErrors({})
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const loadProductsNotOrder = async () => {
+    try {
+      if (!id) {
+        return
+      }
+      const orderId = parseInt(id)
+      const _product = await productService.getAll(1, searchText, orderId)
+      setProductsNoOrder(_product[0])
+      setProductPages(_product[1])
+      setProductPage(1)
+      setErrors({})
+    } catch {
+      console.error('error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handlerSelectToEdit = (item: OrderProductItem) => {
+    if (!item) {
+      return
+    }
+    setProductSelected(item.product)
+    setPrice(item.price.toString())
+    setSelectedToEdit(item)
+    setProductsNoOrder([item.product])
+    setSearchText(item.product.name + ' - ' + item.product.presentation)
+  }
+
+  const openAlertToDeleteDiscount = (id: number) => {
+    setOpenModalToDeleteDiscount(true)
+    setSelectedDiscountIdToDelete(id)
+  }
+
+  const openAlert = (id: number) => {
+    setOpenModal(true)
+    setSelectedIdToDelete(id)
+  }
+
+  useEffect(() => {
+    loadOrder()
+  }, [])
+
+  useEffect(() => {
+    loadDiscounts()
+  }, [pageDiscounts, orderDiscountDirection, orderDiscountBy])
+
+  useEffect(() => {
+    loadProducts()
+  }, [page, orderDirection, orderBy])
+
+  useEffect(() => {
+    setIsLoading(true)
+    const timeOutId = setTimeout(() => loadProductsNotOrder(), 1000)
+    return () => clearTimeout(timeOutId)
+  }, [searchText])
+
+  return (
+    <>
+      <ConfirmDialog
+        open={openModalToDeleteDiscount}
+        setOpen={setOpenModalToDeleteDiscount}
+        onCancel={() => setSelectedDiscountIdToDelete(0)}
+        content='¿Está seguro de eliminar este descuento del proveedor?'
+        onAcept={handleDeleteDiscount}
+      />
+      <ConfirmDialog
+        open={openModal}
+        setOpen={setOpenModal}
+        onCancel={() => setSelectedIdToDelete(0)}
+        content='¿Está seguro de eliminar este producto del proveedor?'
+        onAcept={handlerDeleteOrderProduct}
+      />
+      <Content title='Proveedores' open={open} toggleDrawer={toggleDrawer}>
+        <OrderDetails title='Información del proveedor' obj={order}></OrderDetails>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <DiscountForm
+              isLoading={isLoading}
+              discount={selectedDiscountToEdit}
+              submitDiscount={submitDiscount}
+              errors={errors}
+            ></DiscountForm>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <DiscountTable
+              pages={pagesDiscounts}
+              page={pageDiscounts}
+              setPage={setPageDiscounts}
+              data={discounts}
+              onDelete={openAlertToDeleteDiscount}
+              onUpdate={(_, item) => setSelectedDiscountToEdit(item)}
+              orderBy={orderDiscountBy}
+              setOrderBy={setOrderDiscountBy}
+              orderDirection={orderDiscountDirection}
+              setOrderDirection={setOrderDiscountDirection}
+            ></DiscountTable>
+            {errors['salesPercentages'] && (
+              <Alert sx={{ mt: '10px' }} severity='error'>
+                {errors['discounts']}
+              </Alert>
+            )}
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Grid container spacing={0.5}>
+              <Grid item xs={12}>
+                <Title>Asignar producto</Title>
+              </Grid>
+              <Grid item xs={12} sm={6} lg={8}>
+                <CustomAutocomplete
+                  disableClearable
+                  id='products'
+                  disabled={selectedToEdit != undefined}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  setValue={(value) => setProductSelected(value)}
+                  searchText={searchText}
+                  setSearchText={setSearchText}
+                  getOptionLabel={(product) => `${product.name} - ${product.presentation}`}
+                  options={productsNoOrder}
+                  isLoading={isLoading}
+                  onScroll={() => {
+                    if (productPage === productPages) {
+                      return
+                    }
+                    addMoreProductsNotOrder(productPage + 1)
+                  }}
+                  renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
+                    <TextField
+                      label='Producto'
+                      margin='normal'
+                      error={errors['productId'] ? true : false}
+                      helperText={errors['productId']}
+                      {...params}
+                    ></TextField>
+                  )}
+                ></CustomAutocomplete>
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <CustomTextField
+                  id='price'
+                  label='Precio'
+                  value={price}
+                  disabled={isLoading}
+                  error={errors['price'] ? true : false}
+                  helperText={errors['price']}
+                  inputProps={{ inputMode: 'numeric' }}
+                  onChange={(event) => setPrice(event.target.value)}
+                ></CustomTextField>
+              </Grid>
+              <Grid item xs={12} sm={2} lg={1}>
+                <CustomButton
+                  id='AddProduct'
+                  text='Agregar'
+                  onClick={() => submitOrderProduct()}
+                ></CustomButton>
+              </Grid>
+              <Grid item xs={12} sm={2} lg={1}>
+                <CustomButton
+                  id='ClearForm'
+                  text='Cancelar'
+                  onClick={() => clearForm()}
+                ></CustomButton>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <OrderProductTable
+              pages={pages}
+              page={page}
+              setPage={setPage}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              orderDirection={orderDirection}
+              setOrderDirection={setOrderDirection}
+              data={products}
+              onDelete={(id) => openAlert(id)}
+              onUpdate={(_, item) => handlerSelectToEdit(item)}
+            ></OrderProductTable>
+          </Paper>
+        </Grid>
+      </Content>
+    </>
+  )
+}

@@ -7,6 +7,7 @@ class ProductService {
   async getAll(
     pageNum: number,
     search: string,
+    supplierId = 0,
     notSupplierId = 0,
     orderBy?: string,
     orderDirection?: string,
@@ -17,6 +18,7 @@ class ProductService {
         pageSize,
         pageNum - 1,
         search,
+        supplierId,
         notSupplierId,
         orderBy,
         orderDirection,

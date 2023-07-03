@@ -41,6 +41,7 @@ export default function Products({ open, toggleDrawer }: ProductsPageProps) {
         page,
         searchText,
         0,
+        0,
         orderBy,
         orderDirection,
       )

@@ -5,6 +5,7 @@ import {
 } from '../domains/supplierProduct.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
+import { formatUrlText } from '../framework/helpers/formatter.helper'
 
 export interface ISupplierProductRepository {
   getAllSupplierProduct(
@@ -39,7 +40,7 @@ class SupplierProductRepository implements ISupplierProductRepository {
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[SupplierProductItem[], number]> {
-    let params = `?pageSize=${pageSize}&pageNum=${pageNum}&search=${search}`
+    let params = `?pageSize=${pageSize}&pageNum=${pageNum}&search=${formatUrlText(search)}`
 
     if (orderBy) {
       params += `&orderBy=${orderBy}`

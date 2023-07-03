@@ -33,7 +33,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary='Facturas' />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate(UrlRoutes.Orders, { replace: true })}>
         <ListItemIcon>
           <ShoppingCartIcon />
         </ListItemIcon>

@@ -35,11 +35,11 @@ export default function CreateSupplier({ open, toggleDrawer }: CreateSupplierPag
         return
       }
 
-      await supplierService.create(supplier)
+      const newSupplier = await supplierService.create(supplier)
 
       clearForm()
 
-      navigate(UrlRoutes.Suppliers, { replace: true })
+      navigate(`${UrlRoutes.Supplier}${newSupplier.id}`, { replace: true })
     } catch (error) {
       if (isServerException(error)) {
         const { message } = error as ServerException
