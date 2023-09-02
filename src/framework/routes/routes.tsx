@@ -31,7 +31,7 @@ export enum UrlRoutes {
   EditCategory = '/edit/category/',
   // Order
   Orders = '/orders',
-  Order = '/orders/:id ',
+  Order = '/orders/',
   CreateOrder = '/create/order',
   EditOrder = '/edit/order/',
 }

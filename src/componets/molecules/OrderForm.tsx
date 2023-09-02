@@ -1,5 +1,4 @@
 import { AutocompleteRenderInputParams, Box, Grid, Paper, TextField } from '@mui/material'
-import CustomTextField from '../atoms/CustomTextField'
 import CustomButton from '../atoms/CustomButton'
 import Title from '../atoms/Title'
 import { ReactNode, useEffect, useState } from 'react'
@@ -8,12 +7,12 @@ import { CustomerItem } from '../../domains/customer.domain'
 import { SupplierItem } from '../../domains/supplier.domain'
 import { ProductItem } from '../../domains/product.domain'
 import { OrderProductItem } from '../../domains/orderProduct.domain'
-import OrderProductTable from '../organisms/OrderProductTable'
 import { OrderDetail } from '../../domains/order.domain'
 import { makeCustomerService } from '../../services/customer.service'
 import { makeSupplierService } from '../../services/supplier.service'
 import { makeProductService } from '../../services/product.service'
 import ConfirmDialog from '../atoms/ConfirmDialog'
+import OrderProductForm from './OrderProductForm'
 
 type SubmitHandler = (customerId: number, supplierId: number, products: OrderProductItem[]) => void
 type AddProductHandler = (product: ProductItem, quantity: number) => void
@@ -22,6 +21,7 @@ type OnDeleteProductHandler = (product: ProductItem) => void
 
 type CategoryFormProps = {
   orderProducts: OrderProductItem[]
+  setOrderProducts: (orderProduct: OrderProductItem[]) => void
   isLoading: boolean
   order?: OrderDetail | undefined
   errors: Record<string, string>
@@ -40,6 +40,7 @@ export default function OrderForm({
   onEditProduct,
   onDeleteProduct,
   orderProducts,
+  setOrderProducts,
 }: CategoryFormProps) {
   const [customers, setCustomers] = useState<CustomerItem[]>([])
   const [suppliers, setSuppliers] = useState<SupplierItem[]>([])
@@ -222,7 +223,12 @@ export default function OrderForm({
   useEffect(() => {
     const timeOutId = setTimeout(() => loadProducts(), 1000)
     return () => clearTimeout(timeOutId)
-  }, [searchProductText, supplierSelected])
+  }, [searchProductText])
+
+  useEffect(() => {
+    setOrderProducts([])
+    loadProducts()
+  }, [supplierSelected])
 
   return (
     <>
@@ -233,161 +239,111 @@ export default function OrderForm({
         content='¿Está seguro de eliminar este producto?'
         onAcept={handlerOnDeleteProduct}
       />
-      <Grid container spacing={0.5}>
-        <Grid item xs={12}>
-          <Title>Información de orden de venta</Title>
-        </Grid>
-        <Grid item xs={12}>
-          <CustomAutocomplete
-            disableClearable
-            id='customers'
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            setValue={(value) => setCustomerSelected(value)}
-            searchText={searchCustomerText}
-            setSearchText={setSearchCustomerText}
-            getOptionLabel={(customer) => customer.businessName}
-            options={customers}
-            isLoading={isLoading}
-            onScroll={() => {
-              if (customerPage === customerPages) {
-                return
-              }
-              addMoreCustomers(customerPage + 1)
-            }}
-            renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
-              <TextField
-                label='Cliente'
-                margin='normal'
-                error={errors['customerId'] ? true : false}
-                helperText={errors['customerId']}
-                {...params}
-              ></TextField>
-            )}
-          ></CustomAutocomplete>
-        </Grid>
-        <Grid item xs={12}>
-          <CustomAutocomplete
-            disableClearable
-            id='suppliers'
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            setValue={(value) => setSupplierSelected(value)}
-            searchText={searchSupplierText}
-            setSearchText={setSearchSupplierText}
-            getOptionLabel={(supplier) => supplier.name}
-            options={suppliers}
-            isLoading={isLoading}
-            onScroll={() => {
-              if (supplierPage === supplierPages) {
-                return
-              }
-              addMoreSuppliers(productPage + 1)
-            }}
-            renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
-              <TextField
-                label='Proveedor'
-                margin='normal'
-                error={errors['supplierId'] ? true : false}
-                helperText={errors['supplierId']}
-                {...params}
-              ></TextField>
-            )}
-          ></CustomAutocomplete>
-        </Grid>
+      <Grid item xs={12}>
+        <Paper
+          sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Grid container spacing={0.5}>
+            <Grid item xs={12}>
+              <Title>Información de orden de venta</Title>
+            </Grid>
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                disableClearable
+                id='customers'
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                setValue={(value) => setCustomerSelected(value)}
+                searchText={searchCustomerText}
+                setSearchText={setSearchCustomerText}
+                getOptionLabel={(customer) => customer.businessName}
+                options={customers}
+                isLoading={isLoading}
+                onScroll={() => {
+                  if (customerPage === customerPages) {
+                    return
+                  }
+                  addMoreCustomers(customerPage + 1)
+                }}
+                renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
+                  <TextField
+                    label='Cliente'
+                    margin='normal'
+                    error={errors['customerId'] ? true : false}
+                    helperText={errors['customerId']}
+                    {...params}
+                  ></TextField>
+                )}
+              ></CustomAutocomplete>
+            </Grid>
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                disableClearable
+                id='suppliers'
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                setValue={(value) => setSupplierSelected(value)}
+                searchText={searchSupplierText}
+                setSearchText={setSearchSupplierText}
+                getOptionLabel={(supplier) => supplier.name}
+                options={suppliers}
+                isLoading={isLoading}
+                onScroll={() => {
+                  if (supplierPage === supplierPages) {
+                    return
+                  }
+                  addMoreSuppliers(productPage + 1)
+                }}
+                renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
+                  <TextField
+                    label='Proveedor'
+                    margin='normal'
+                    error={errors['supplierId'] ? true : false}
+                    helperText={errors['supplierId']}
+                    {...params}
+                  ></TextField>
+                )}
+              ></CustomAutocomplete>
+            </Grid>
+          </Grid>
+        </Paper>
       </Grid>
-      <Grid container spacing={0.5}>
-        <Grid item xs={12}>
-          <Title>Productos</Title>
-        </Grid>
-        <Grid item xs={12}>
-          <CustomAutocomplete
-            disableClearable
-            id='products'
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            setValue={(value) => setProductSelected(value)}
-            searchText={searchProductText}
-            setSearchText={setSearchProductText}
-            getOptionLabel={(product) => product.name}
-            options={products}
-            isLoading={isLoading}
-            disabled={!supplierSelected || selectedToEdit != undefined}
-            onScroll={() => {
-              if (productPage === productPages) {
-                return
-              }
-              addMoreProductsSupplier(productPage + 1)
-            }}
-            renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
-              <TextField
-                label='Producto'
-                margin='normal'
-                error={errors['productId'] ? true : false}
-                helperText={errors['productId']}
-                {...params}
-              ></TextField>
-            )}
-          ></CustomAutocomplete>
-        </Grid>
-        <Grid item xs={12}>
-          <CustomTextField
-            id='quantity'
-            label='Cantidad'
-            placeholder='Cantidad'
-            value={quantity}
-            disabled={isLoading || !supplierSelected}
-            error={errors['quantity'] ? true : false}
-            helperText={errors['quantity']}
-            onChange={(event) => setQuantity(event.target.value)}
-          ></CustomTextField>
-        </Grid>
-        <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <CustomButton
-              fullWidth={false}
-              sx={{ mt: 2, ml: 1 }}
-              id='addProduct'
-              text='Agregar'
-              href=''
-              onClick={() => handlerOnAddProduct(productSelected, quantity)}
-              disabled={isLoading || !productSelected}
-            ></CustomButton>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <OrderProductTable
-              pages={pages}
-              page={page}
-              setPage={setPage}
-              orderBy={orderBy}
-              setOrderBy={setOrderBy}
-              orderDirection={orderDirection}
-              setOrderDirection={setOrderDirection}
-              data={orderProducts}
-              onDelete={(_, item) => openAlert(item)}
-              onUpdate={(_, item) => handlerSelectToEdit(item)}
-            ></OrderProductTable>
-          </Paper>
-        </Grid>
-      </Grid>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <CustomButton
-          fullWidth={false}
-          sx={{ mt: 2, ml: 1 }}
-          id='submit'
-          text='Guardar'
-          href=''
-          onClick={() =>
-            onSubmit(customerSelected?.id || 0, supplierSelected?.id || 0, orderProducts)
+      <OrderProductForm
+        pages={pages}
+        page={page}
+        setPage={setPage}
+        orderBy={orderBy}
+        setOrderBy={setOrderBy}
+        orderDirection={orderDirection}
+        setOrderDirection={setOrderDirection}
+        onDelete={(_, item) => openAlert(item)}
+        onUpdate={(_, item) => handlerSelectToEdit(item)}
+        products={products}
+        isLoading={isLoading}
+        searchProductText={searchProductText}
+        setSearchProductText={setSearchProductText}
+        productSelected={productSelected}
+        setProductSelected={setProductSelected}
+        orderProducts={orderProducts}
+        autoCompleteDisable={!supplierSelected || selectedToEdit != undefined}
+        autoCompleteOnScroll={() => {
+          if (productPage === productPages) {
+            return
           }
-          disabled={isLoading}
-        ></CustomButton>
-      </Box>
+          addMoreProductsSupplier(productPage + 1)
+        }}
+        quantity={quantity}
+        setQuantity={setQuantity}
+        quantityDisable={isLoading || !supplierSelected}
+        onAddHandler={() => handlerOnAddProduct(productSelected, quantity)}
+        errors={errors}
+        data={orderProducts}
+        onSubmit={() =>
+          onSubmit(customerSelected?.id || 0, supplierSelected?.id || 0, orderProducts)
+        }
+      ></OrderProductForm>
     </>
   )
 }

@@ -64,7 +64,10 @@ class OrderProductRepository implements IOrderProductRepository {
     id: number,
     createOrderProduct: CreateOrderProduct,
   ): Promise<OrderProductItem> {
-    const { data } = await api.post(`${BackendURL}orders/${id}/product`, createOrderProduct)
+    const { data } = await api.post(`${BackendURL}orders/${id}/product`, {
+      productId: createOrderProduct.productId,
+      quantity: createOrderProduct.quantity,
+    })
 
     return data as OrderProductItem
   }
@@ -74,10 +77,10 @@ class OrderProductRepository implements IOrderProductRepository {
     productId: number,
     updateOrderProduct: UpdateOrderProduct,
   ): Promise<OrderProductItem> {
-    const { data } = await api.put(
-      `${BackendURL}orders/${id}/product/${productId}`,
-      updateOrderProduct,
-    )
+    const { data } = await api.put(`${BackendURL}orders/${id}/product/${productId}`, {
+      productId: updateOrderProduct.productId,
+      quantity: updateOrderProduct.quantity,
+    })
 
     return data as OrderProductItem
   }

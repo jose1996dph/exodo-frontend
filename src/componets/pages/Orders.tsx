@@ -24,7 +24,7 @@ type OrdersPageProps = {
 export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
   const [searchText, setSearchText] = useState('')
   const [orders, setOrders] = useState<OrderItem[]>([])
-  const [orderBy, setOrderBy] = useState<string>('supplier')
+  const [orderBy, setOrderBy] = useState<string>('total')
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [openModal, setOpenModal] = useState(false)
   const [seletedId, setSelectedId] = useState(0)
@@ -69,9 +69,9 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
     navigate(UrlRoutes.CreateOrder, { replace: true })
   }
 
-  const onUpdateHandler = (id: number) => {
+  const onShowHandler = (id: number) => {
     try {
-      navigate(`${UrlRoutes.EditOrder}${id}`, { replace: true })
+      navigate(`${UrlRoutes.Order}${id}`, { replace: true })
     } catch {
       console.error('error')
     }
@@ -94,7 +94,7 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
         content='¿Está seguro de cambiar el estatus del ordero?'
         onAcept={handlerToggleStatus}
       />
-      <Content title='Orderos' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Órdenes' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
           <Paper
             sx={{
@@ -107,7 +107,7 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
             <CustomButton
               aria-label='delete'
               color='primary'
-              text='Crear Ordero'
+              text='Crear Orden'
               id='create_order'
               startIcon={<PersonAddIcon />}
               onClick={goToCreateOrder}
@@ -124,7 +124,7 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
             }}
           >
             <CustomTextField
-              label='Buscar ordero'
+              label='Buscar orden'
               aria-label='delete'
               color='primary'
               variant='outlined'
@@ -153,7 +153,7 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
               setOrderDirection={setOrderDirection}
               data={orders}
               onToggle={openAlert}
-              onUpdate={onUpdateHandler}
+              onShow={onShowHandler}
             />
           </Paper>
         </Grid>

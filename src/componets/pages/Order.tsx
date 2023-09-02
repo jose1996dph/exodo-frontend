@@ -1,5 +1,5 @@
-import { AutocompleteRenderInputParams, Grid, Paper, TextField, Alert } from '@mui/material'
-import { ReactNode, useEffect, useState } from 'react'
+import { Grid, Paper } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { OrderDetail } from '../../domains/order.domain'
 import { makeOrderProductService } from '../../services/orderProduct.service'
 import { makeOrderService } from '../../services/order.service'
@@ -12,18 +12,16 @@ import {
   CreateOrderProduct,
   UpdateOrderProduct,
 } from '../../domains/orderProduct.domain'
-import OrderProductTable from '../organisms/OrderProductTable'
-import CustomTextField from '../atoms/CustomTextField'
 import { ProductItem } from '../../domains/product.domain'
 import { useParams } from 'react-router-dom'
 import { makeProductService } from '../../services/product.service'
-import CustomButton from '../atoms/CustomButton'
-import CustomAutocomplete from '../atoms/CustomAutocomplete'
 import ConfirmDialog from '../atoms/ConfirmDialog'
 import { CreateDiscount, DiscountItem, UpdateDiscount } from '../../domains/discount.domain'
-import DiscountForm from '../molecules/DiscountForm'
-import Title from '../atoms/Title'
-import DiscountTable from '../organisms/DiscountTable'
+import OrderProductForm from '../molecules/OrderProductForm'
+import { SupplierDetail } from '../../domains/supplier.domain'
+import { makeSupplierService } from '../../services/supplier.service'
+import { makeCustomerService } from '../../services/customer.service'
+import { CustomerDetail } from '../../domains/customer.domain'
 
 type OrderPageProps = {
   open: boolean
@@ -41,14 +39,17 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
 
   const [order, setOrder] = useState<OrderDetail | undefined>(undefined)
-  const [products, setProducts] = useState<OrderProductItem[]>([])
+  const [supplier, setSupplier] = useState<SupplierDetail | undefined>(undefined)
+  const [customer, setCustomer] = useState<CustomerDetail | undefined>(undefined)
+  const [products, setProducts] = useState<ProductItem[]>([])
+  const [orderProducts, setOrderProducts] = useState<OrderProductItem[]>([])
   const [orderBy, setOrderBy] = useState<string>('name')
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
-  const [productsNoOrder, setProductsNoOrder] = useState<ProductItem[]>([])
+  // const [productsNoOrder, setProductsNoOrder] = useState<ProductItem[]>([])
   const [productSelected, setProductSelected] = useState<ProductItem>()
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [searchText, setSearchText] = useState<string>('')
-  const [price, setPrice] = useState<string>('')
+  const [quantity, setQuantity] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const [productPages, setProductPages] = useState(0)
   const [productPage, setProductPage] = useState(1)
@@ -62,6 +63,8 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   const orderProductService = makeOrderProductService()
   const productService = makeProductService()
   const discountService = makeDiscountService()
+  const supplierService = makeSupplierService()
+  const customerService = makeCustomerService()
 
   const { id } = useParams()
 
@@ -165,6 +168,28 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       const orderId = parseInt(id)
       const _order = await orderService.getById(orderId)
       setOrder(_order)
+
+      loadSupplier(_order.supplierId)
+      loadCustomer(_order.customerId)
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const loadSupplier = async (supplierId: number) => {
+    try {
+      const _supplier = await supplierService.getById(supplierId)
+      setSupplier(_supplier)
+      loadProductsNotOrder()
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const loadCustomer = async (customerId: number) => {
+    try {
+      const _customer = await customerService.getById(customerId)
+      setCustomer(_customer)
     } catch {
       console.error('error')
     }
@@ -177,14 +202,14 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
       const orderId = parseInt(id)
-      const [_products, _pages] = await orderProductService.getAll(
+      const [_orderProducts, _pages] = await orderProductService.getAll(
         orderId,
         page,
         '',
         orderBy,
         orderDirection,
       )
-      setProducts(_products)
+      setOrderProducts(_orderProducts)
       setPages(_pages)
     } catch {
       console.error('error')
@@ -207,11 +232,14 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
-      const orderId = parseInt(id)
-      const _price = parseFloat(price)
-      const _productId = selectedToEdit?.productId || 0
+      if (!selectedToEdit) {
+        return
+      }
 
-      const orderProduct = new UpdateOrderProduct(_price)
+      const orderId = parseInt(id)
+      const _quantity = parseFloat(quantity)
+
+      const orderProduct = new UpdateOrderProduct(selectedToEdit.product, _quantity)
 
       const _errors = orderProduct.isValid()
 
@@ -220,7 +248,10 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
+      const _productId = selectedToEdit?.productId || 0
       await orderProductService.update(orderId, _productId, orderProduct)
+
+      loadOrder()
       loadProducts()
       clearForm()
     } catch {
@@ -234,11 +265,14 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
-      const orderId = parseInt(id)
-      const _price = parseFloat(price)
-      const _productId = productSelected?.id || 0
+      if (!productSelected) {
+        return
+      }
 
-      const orderProduct = new CreateOrderProduct(orderId, _productId, _price)
+      const orderId = parseInt(id)
+      const _quantity = parseFloat(quantity)
+
+      const orderProduct = new CreateOrderProduct(productSelected, _quantity)
 
       const _errors = orderProduct.isValid()
 
@@ -248,8 +282,30 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       }
 
       await orderProductService.create(orderId, orderProduct)
+
+      loadOrder()
       loadProducts()
       clearForm()
+    } catch {
+      console.error('error')
+    }
+  }
+
+  const addMoreProductsSupplier = async (nextPage: number) => {
+    try {
+      if (!supplier) {
+        return
+      }
+      if (!id) {
+        return
+      }
+
+      const orderId = parseInt(id)
+      const supplierId = supplier.id
+      const _products = await productService.getAll(nextPage, searchText, supplierId, 0, orderId)
+      setProducts([...products, ..._products[0]])
+      setProductPages(_products[1])
+      setProductPage(nextPage)
     } catch {
       console.error('error')
     }
@@ -263,7 +319,9 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
 
       const orderId = parseInt(id)
       await orderProductService.delete(orderId, selectedIdToDelete)
+
       clearForm()
+      loadOrder()
       loadProducts()
       loadProductsNotOrder()
     } catch {
@@ -273,26 +331,10 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
 
   const clearForm = () => {
     setErrors({})
-    setPrice('')
+    setQuantity('')
     setProductSelected(undefined)
     setSelectedToEdit(undefined)
     setSearchText('')
-  }
-
-  const addMoreProductsNotOrder = async (pageNum: number) => {
-    try {
-      if (!id) {
-        return
-      }
-      const orderId = parseInt(id)
-      const _product = await productService.getAll(pageNum, searchText, orderId)
-      setProductsNoOrder([...productsNoOrder, ..._product[0]])
-      setProductPages(_product[1])
-      setProductPage(pageNum)
-      setErrors({})
-    } catch {
-      console.error('error')
-    }
   }
 
   const loadProductsNotOrder = async () => {
@@ -300,9 +342,12 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       if (!id) {
         return
       }
+      if (!supplier) {
+        return
+      }
       const orderId = parseInt(id)
-      const _product = await productService.getAll(1, searchText, orderId)
-      setProductsNoOrder(_product[0])
+      const _product = await productService.getAll(1, searchText, supplier.id, 0, orderId)
+      setProducts(_product[0])
       setProductPages(_product[1])
       setProductPage(1)
       setErrors({})
@@ -317,10 +362,12 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     if (!item) {
       return
     }
-    setProductSelected(item.product)
-    setPrice(item.price.toString())
+    const _product = item.product as ProductItem
+
+    setProductSelected(_product)
+    setQuantity(item.quantity.toString())
     setSelectedToEdit(item)
-    setProductsNoOrder([item.product])
+    setProducts([_product])
     setSearchText(item.product.name + ' - ' + item.product.presentation)
   }
 
@@ -350,7 +397,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     setIsLoading(true)
     const timeOutId = setTimeout(() => loadProductsNotOrder(), 1000)
     return () => clearTimeout(timeOutId)
-  }, [searchText])
+  }, [searchText, supplier])
 
   return (
     <>
@@ -370,141 +417,37 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       />
       <Content title='Proveedores' open={open} toggleDrawer={toggleDrawer}>
         <OrderDetails title='Información del proveedor' obj={order}></OrderDetails>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <DiscountForm
-              isLoading={isLoading}
-              discount={selectedDiscountToEdit}
-              submitDiscount={submitDiscount}
-              errors={errors}
-            ></DiscountForm>
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <DiscountTable
-              pages={pagesDiscounts}
-              page={pageDiscounts}
-              setPage={setPageDiscounts}
-              data={discounts}
-              onDelete={openAlertToDeleteDiscount}
-              onUpdate={(_, item) => setSelectedDiscountToEdit(item)}
-              orderBy={orderDiscountBy}
-              setOrderBy={setOrderDiscountBy}
-              orderDirection={orderDiscountDirection}
-              setOrderDirection={setOrderDiscountDirection}
-            ></DiscountTable>
-            {errors['salesPercentages'] && (
-              <Alert sx={{ mt: '10px' }} severity='error'>
-                {errors['discounts']}
-              </Alert>
-            )}
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Grid container spacing={0.5}>
-              <Grid item xs={12}>
-                <Title>Asignar producto</Title>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={8}>
-                <CustomAutocomplete
-                  disableClearable
-                  id='products'
-                  disabled={selectedToEdit != undefined}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  setValue={(value) => setProductSelected(value)}
-                  searchText={searchText}
-                  setSearchText={setSearchText}
-                  getOptionLabel={(product) => `${product.name} - ${product.presentation}`}
-                  options={productsNoOrder}
-                  isLoading={isLoading}
-                  onScroll={() => {
-                    if (productPage === productPages) {
-                      return
-                    }
-                    addMoreProductsNotOrder(productPage + 1)
-                  }}
-                  renderInput={(params: AutocompleteRenderInputParams): ReactNode => (
-                    <TextField
-                      label='Producto'
-                      margin='normal'
-                      error={errors['productId'] ? true : false}
-                      helperText={errors['productId']}
-                      {...params}
-                    ></TextField>
-                  )}
-                ></CustomAutocomplete>
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <CustomTextField
-                  id='price'
-                  label='Precio'
-                  value={price}
-                  disabled={isLoading}
-                  error={errors['price'] ? true : false}
-                  helperText={errors['price']}
-                  inputProps={{ inputMode: 'numeric' }}
-                  onChange={(event) => setPrice(event.target.value)}
-                ></CustomTextField>
-              </Grid>
-              <Grid item xs={12} sm={2} lg={1}>
-                <CustomButton
-                  id='AddProduct'
-                  text='Agregar'
-                  onClick={() => submitOrderProduct()}
-                ></CustomButton>
-              </Grid>
-              <Grid item xs={12} sm={2} lg={1}>
-                <CustomButton
-                  id='ClearForm'
-                  text='Cancelar'
-                  onClick={() => clearForm()}
-                ></CustomButton>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <OrderProductTable
-              pages={pages}
-              page={page}
-              setPage={setPage}
-              orderBy={orderBy}
-              setOrderBy={setOrderBy}
-              orderDirection={orderDirection}
-              setOrderDirection={setOrderDirection}
-              data={products}
-              onDelete={(id) => openAlert(id)}
-              onUpdate={(_, item) => handlerSelectToEdit(item)}
-            ></OrderProductTable>
-          </Paper>
-        </Grid>
+        <OrderProductForm
+          pages={pages}
+          page={page}
+          setPage={setPage}
+          orderBy={orderBy}
+          setOrderBy={setOrderBy}
+          orderDirection={orderDirection}
+          setOrderDirection={setOrderDirection}
+          onDelete={(_, item: OrderProductItem) => openAlert(item.productId)}
+          onUpdate={(_, item: OrderProductItem) => handlerSelectToEdit(item)}
+          products={products}
+          isLoading={isLoading}
+          searchProductText={searchText}
+          setSearchProductText={setSearchText}
+          productSelected={productSelected}
+          setProductSelected={setProductSelected}
+          orderProducts={orderProducts}
+          autoCompleteDisable={selectedToEdit != undefined}
+          autoCompleteOnScroll={() => {
+            if (productPage === productPages) {
+              return
+            }
+            addMoreProductsSupplier(productPage + 1)
+          }}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          quantityDisable={isLoading}
+          onAddHandler={() => submitOrderProduct()}
+          errors={errors}
+          data={orderProducts}
+        ></OrderProductForm>
       </Content>
     </>
   )

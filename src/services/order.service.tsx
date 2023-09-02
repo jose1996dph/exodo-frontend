@@ -1,4 +1,4 @@
-import { CreateOrder, UpdateOrder } from '../domains/order.domain'
+import { CreateOrder } from '../domains/order.domain'
 import { IOrderRepository, makeOrderRepository } from '../repositories/order.repository'
 
 class OrderService {
@@ -34,16 +34,6 @@ class OrderService {
   async create(createUser: CreateOrder) {
     try {
       const order = await this.orderRepo.createOrder(createUser)
-      return order
-    } catch ({ response: { data } }: any) {
-      console.error(data)
-      throw data
-    }
-  }
-
-  async update(id: number, updateUser: UpdateOrder) {
-    try {
-      const order = await this.orderRepo.updateOrder(id, updateUser)
       return order
     } catch ({ response: { data } }: any) {
       console.error(data)

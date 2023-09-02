@@ -15,12 +15,17 @@ export type OrderItem = {
   supplier: SupplierItem
 }
 
-export type OrderDetail = {
+export type OrderDetail = OrderItem & {
   id: number
-  dni: string
-  name: string
-  address: string
-  phone: string
+  total: number
+  isActive: boolean
+  updateAt: string
+  createAt: string
+  userId: number
+  customerId: number
+  supplierId: number
+  customer: CustomerItem
+  supplier: SupplierItem
 }
 
 class OrderProductRequest {

@@ -1,4 +1,4 @@
-import { Alert, Grid, Paper } from '@mui/material'
+import { Alert } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CreateOrder as CreateOrderRequest } from '../../domains/order.domain'
@@ -137,30 +137,21 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
   return (
     <>
       <Content title='Nuevo ordero' open={open} toggleDrawer={toggleDrawer}>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <OrderForm
-              isLoading={isLoading}
-              errors={errors}
-              onSubmit={handleSubmit}
-              onAddProduct={handlerOnAddProduct}
-              onEditProduct={handlerOnEditProduct}
-              onDeleteProduct={handlerOnDeleteProduct}
-              orderProducts={orderProducts}
-            />
-            {errorMessage && (
-              <Alert sx={{ mt: '10px' }} severity='error'>
-                {errorMessage}
-              </Alert>
-            )}
-          </Paper>
-        </Grid>
+        <OrderForm
+          isLoading={isLoading}
+          errors={errors}
+          onSubmit={handleSubmit}
+          onAddProduct={handlerOnAddProduct}
+          onEditProduct={handlerOnEditProduct}
+          onDeleteProduct={handlerOnDeleteProduct}
+          orderProducts={orderProducts}
+          setOrderProducts={setOrderProducts}
+        />
+        {errorMessage && (
+          <Alert sx={{ mt: '10px' }} severity='error'>
+            {errorMessage}
+          </Alert>
+        )}
       </Content>
     </>
   )

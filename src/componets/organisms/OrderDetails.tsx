@@ -1,18 +1,23 @@
-import { SupplierDetail } from '../../domains/supplier.domain'
+import { OrderDetail } from '../../domains/order.domain'
+import { formatDate } from '../../framework/helpers/formatter.helper'
 import Details, { DetailsItem } from '../molecules/Details'
 
 const ObjectFields: DetailsItem[] = [
-  { title: 'Nombre', render: (_, supplier) => supplier.name },
-  { title: 'Rif', render: (_, supplier) => supplier.dni },
-  { title: 'Dirección', render: (_, supplier) => supplier.address },
-  { title: 'Teléfono', render: (_, supplier) => supplier.phone },
+  { title: 'Proveedor', render: (_, order) => order.supplier.name },
+  { title: 'Tel. del Proveedor', render: (_, order) => order.supplier.phone },
+  { title: 'Nombre del Negocio', render: (_, order) => order.customer.businessName },
+  { title: 'Tel. del Negocio', render: (_, order) => order.customer.phone },
+  { title: 'Nombre del Contacto', render: (_, order) => order.customer.contactName },
+  { title: 'Tel. del Contacto', render: (_, order) => order.customer.contactPhone },
+  { title: 'Total', render: (_, order) => order.total },
+  { title: 'Fecha', render: (_, order) => formatDate(order.createAt) },
 ]
 
-type SupplierDetailsProps = {
+type OrderDetailsProps = {
   title: string
-  obj: SupplierDetail | undefined
+  obj: OrderDetail | undefined
 }
 
-export default function SupplierDetails({ title, obj }: SupplierDetailsProps) {
+export default function OrderDetails({ title, obj }: OrderDetailsProps) {
   return <Details title={title} obj={obj} items={ObjectFields} />
 }

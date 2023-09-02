@@ -9,6 +9,7 @@ class ProductService {
     search: string,
     supplierId = 0,
     notSupplierId = 0,
+    notOrderId = 0,
     orderBy?: string,
     orderDirection?: string,
   ) {
@@ -20,6 +21,7 @@ class ProductService {
         search,
         supplierId,
         notSupplierId,
+        notOrderId,
         orderBy,
         orderDirection,
       )

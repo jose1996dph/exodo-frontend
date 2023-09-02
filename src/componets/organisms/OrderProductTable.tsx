@@ -32,7 +32,7 @@ const propRows: CustomTableRow[] = [
   },
 ]
 
-type OrderProductTableProps = {
+export type OrderProductTableProps = {
   pages: number
   page: number
   setPage: (value: number) => void

@@ -9,7 +9,7 @@ export type ProductItem = {
   categoryId: number
 }
 
-export type ProductDetail = {
+export type ProductDetail = ProductItem & {
   id: number
   name: string
   presentation: string

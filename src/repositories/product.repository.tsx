@@ -10,6 +10,7 @@ export interface IProductRepository {
     search: string,
     supplierId: number,
     notSupplierId: number,
+    notOrderId: number,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[ProductItem[], number]>
@@ -32,6 +33,7 @@ class ProductRepository implements IProductRepository {
     search: string,
     supplierId = 0,
     notSupplierId = 0,
+    notOrderId: number,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[ProductItem[], number]> {
@@ -43,6 +45,10 @@ class ProductRepository implements IProductRepository {
 
     if (notSupplierId > 0) {
       params = params + `&notSupplierId=${notSupplierId}`
+    }
+
+    if (notOrderId > 0) {
+      params = params + `&notOrderId=${notOrderId}`
     }
 
     if (orderBy) {

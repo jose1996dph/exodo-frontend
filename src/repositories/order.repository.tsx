@@ -1,4 +1,4 @@
-import { OrderItem, CreateOrder, UpdateOrder, OrderDetail } from '../domains/order.domain'
+import { OrderItem, CreateOrder, OrderDetail } from '../domains/order.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
 import { formatUrlText } from '../framework/helpers/formatter.helper'
@@ -15,8 +15,6 @@ export interface IOrderRepository {
   getById(id: number): Promise<OrderDetail>
 
   createOrder(createOrder: CreateOrder): Promise<OrderItem>
-
-  updateOrder(id: number, updateOrder: UpdateOrder): Promise<OrderItem>
 
   toggleStatus(id: number): Promise<OrderItem>
 
@@ -62,12 +60,6 @@ class OrderRepository implements IOrderRepository {
 
   async createOrder(createOrder: CreateOrder): Promise<OrderItem> {
     const { data } = await api.post(`${BackendURL}orders/`, createOrder)
-
-    return data as OrderItem
-  }
-
-  async updateOrder(id: number, updateOrder: UpdateOrder): Promise<OrderItem> {
-    const { data } = await api.put(`${BackendURL}orders/${id}`, updateOrder)
 
     return data as OrderItem
   }
