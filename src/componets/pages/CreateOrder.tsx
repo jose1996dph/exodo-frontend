@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CreateOrder as CreateOrderRequest } from '../../domains/order.domain'
 import ServerException, { isServerException } from '../../domains/error.domain'
@@ -23,21 +23,35 @@ type CreateOrderPageProps = {
 export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps) {
   const [errorMessage, setErrorMessage] = useState<string | string[]>('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [total, setTotal] = useState<number>(0)
+  const [page, setPage] = useState(1)
+  const [pages, setPages] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [orderProducts, setOrderProducts] = useState<OrderProductItem[]>([])
+  const [displayableOrderProduct, setDisplayableOrderProduct] = useState<OrderProductItem[]>([])
 
   const orderService = makeOrderService()
 
   const navigate = useNavigate()
 
-  const handleSubmit = async (
-    customerId: number,
-    supplierId: number,
-    products: OrderProductItem[],
-  ) => {
+  const calculatePages = (lengthOrderProduct: number) => {
+    if (lengthOrderProduct === 0) {
+      setPage(1)
+      setPages(0)
+    }
+
+    const _pages = ((lengthOrderProduct - 1) / 10 + 1) >> 0
+    if (page > _pages) {
+      setPage(_pages)
+    }
+
+    setPages(_pages)
+  }
+
+  const handleSubmit = async (customerId: number, supplierId: number) => {
     setIsLoading(true)
     try {
-      const order = new CreateOrderRequest(customerId, supplierId, products)
+      const order = new CreateOrderRequest(customerId, supplierId, orderProducts)
 
       const _errors = order.isValid()
 
@@ -79,7 +93,12 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
       }
 
       orderProducts.push(orderProductItem.toOrderProductItem())
+      orderProducts.length
       setOrderProducts(orderProducts)
+      let _total = 0
+      orderProducts.forEach((op) => (_total = _total + op.calculatePrice()))
+      calculatePages(orderProducts.length)
+      setTotal(_total)
     } catch (error) {
       console.error(error)
       throw error
@@ -106,8 +125,11 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
       )
 
       _orderProducts.push(newOrderProductItem)
-
       setOrderProducts(_orderProducts)
+      let _total = 0
+      orderProducts.forEach((op) => (_total = _total + op.calculatePrice()))
+      calculatePages(orderProducts.length)
+      setTotal(_total)
     } catch (error) {
       console.error(error)
       throw error
@@ -121,6 +143,10 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
     try {
       const _orderProducts = orderProducts.filter((o) => o.productId != product.id)
       setOrderProducts(_orderProducts)
+      let _total = 0
+      orderProducts.forEach((op) => (_total = _total + op.calculatePrice()))
+      calculatePages(orderProducts.length)
+      setTotal(_total)
     } catch (error) {
       console.error(error)
       throw error
@@ -134,17 +160,33 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
     setErrorMessage('')
   }
 
+  useEffect(() => {
+    const numberOfRecords = 10
+    const _page = (page - 1) * numberOfRecords
+
+    if (orderProducts.length <= _page + numberOfRecords) {
+      setDisplayableOrderProduct(orderProducts.slice(_page))
+      return
+    }
+
+    setDisplayableOrderProduct(orderProducts.slice(_page, _page + numberOfRecords))
+  }, [page, total])
+
   return (
     <>
       <Content title='Nuevo ordero' open={open} toggleDrawer={toggleDrawer}>
         <OrderForm
           isLoading={isLoading}
+          page={page}
+          pages={pages}
+          setPage={setPage}
           errors={errors}
+          total={total}
           onSubmit={handleSubmit}
           onAddProduct={handlerOnAddProduct}
           onEditProduct={handlerOnEditProduct}
           onDeleteProduct={handlerOnDeleteProduct}
-          orderProducts={orderProducts}
+          orderProducts={displayableOrderProduct}
           setOrderProducts={setOrderProducts}
         />
         {errorMessage && (

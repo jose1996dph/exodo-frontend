@@ -34,7 +34,6 @@ export default function CustomAutocomplete<
       fullWidth
       onChange={(_, value) => {
         const item = value as T
-        console.log(item)
         if (!item) {
           return
         }

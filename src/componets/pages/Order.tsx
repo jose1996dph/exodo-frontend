@@ -1,4 +1,3 @@
-import { Grid, Paper } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { OrderDetail } from '../../domains/order.domain'
 import { makeOrderProductService } from '../../services/orderProduct.service'
@@ -70,12 +69,11 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
 
   const loadDiscounts = async () => {
     try {
-      if (!id) {
+      if (!supplier) {
         return
       }
-      const orderId = parseInt(id)
       const [_discounts, _pages] = await discountService.getAll(
-        orderId,
+        supplier.id,
         pageDiscounts,
         '',
         orderDiscountBy,
@@ -371,11 +369,6 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     setSearchText(item.product.name + ' - ' + item.product.presentation)
   }
 
-  const openAlertToDeleteDiscount = (id: number) => {
-    setOpenModalToDeleteDiscount(true)
-    setSelectedDiscountIdToDelete(id)
-  }
-
   const openAlert = (id: number) => {
     setOpenModal(true)
     setSelectedIdToDelete(id)
@@ -387,7 +380,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
 
   useEffect(() => {
     loadDiscounts()
-  }, [pageDiscounts, orderDiscountDirection, orderDiscountBy])
+  }, [pageDiscounts, orderDiscountDirection, orderDiscountBy, supplier])
 
   useEffect(() => {
     loadProducts()
@@ -402,24 +395,18 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   return (
     <>
       <ConfirmDialog
-        open={openModalToDeleteDiscount}
-        setOpen={setOpenModalToDeleteDiscount}
-        onCancel={() => setSelectedDiscountIdToDelete(0)}
-        content='¿Está seguro de eliminar este descuento del proveedor?'
-        onAcept={handleDeleteDiscount}
-      />
-      <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
         onCancel={() => setSelectedIdToDelete(0)}
-        content='¿Está seguro de eliminar este producto del proveedor?'
+        content='¿Está seguro de eliminar este producto de la orden?'
         onAcept={handlerDeleteOrderProduct}
       />
-      <Content title='Proveedores' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Orden' open={open} toggleDrawer={toggleDrawer}>
         <OrderDetails title='Información del proveedor' obj={order}></OrderDetails>
         <OrderProductForm
           pages={pages}
           page={page}
+          orderTotal={order?.total ?? 0}
           setPage={setPage}
           orderBy={orderBy}
           setOrderBy={setOrderBy}
@@ -447,6 +434,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
           onAddHandler={() => submitOrderProduct()}
           errors={errors}
           data={orderProducts}
+          discounts={discounts}
         ></OrderProductForm>
       </Content>
     </>

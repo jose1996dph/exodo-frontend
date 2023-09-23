@@ -1,5 +1,4 @@
-import { AutocompleteRenderInputParams, Box, Grid, Paper, TextField } from '@mui/material'
-import CustomButton from '../atoms/CustomButton'
+import { AutocompleteRenderInputParams, Grid, Paper, TextField } from '@mui/material'
 import Title from '../atoms/Title'
 import { ReactNode, useEffect, useState } from 'react'
 import CustomAutocomplete from '../atoms/CustomAutocomplete'
@@ -7,14 +6,15 @@ import { CustomerItem } from '../../domains/customer.domain'
 import { SupplierItem } from '../../domains/supplier.domain'
 import { ProductItem } from '../../domains/product.domain'
 import { OrderProductItem } from '../../domains/orderProduct.domain'
-import { OrderDetail } from '../../domains/order.domain'
 import { makeCustomerService } from '../../services/customer.service'
 import { makeSupplierService } from '../../services/supplier.service'
 import { makeProductService } from '../../services/product.service'
 import ConfirmDialog from '../atoms/ConfirmDialog'
 import OrderProductForm from './OrderProductForm'
+import { makeDiscountService } from '../../services/discount.service'
+import { DiscountItem } from '../../domains/discount.domain'
 
-type SubmitHandler = (customerId: number, supplierId: number, products: OrderProductItem[]) => void
+type SubmitHandler = (customerId: number, supplierId: number) => void
 type AddProductHandler = (product: ProductItem, quantity: number) => void
 type OnEditProductHandler = (product: ProductItem, quantity: number) => void
 type OnDeleteProductHandler = (product: ProductItem) => void
@@ -23,8 +23,11 @@ type CategoryFormProps = {
   orderProducts: OrderProductItem[]
   setOrderProducts: (orderProduct: OrderProductItem[]) => void
   isLoading: boolean
-  order?: OrderDetail | undefined
+  total: number
   errors: Record<string, string>
+  page: number
+  pages: number
+  setPage: (page: number) => void
   onSubmit: SubmitHandler
   onAddProduct: AddProductHandler
   onEditProduct: OnEditProductHandler
@@ -33,8 +36,11 @@ type CategoryFormProps = {
 
 export default function OrderForm({
   isLoading,
-  order,
+  total,
+  page,
+  pages,
   errors,
+  setPage,
   onSubmit,
   onAddProduct,
   onEditProduct,
@@ -66,11 +72,12 @@ export default function OrderForm({
   const [orderBy, setOrderBy] = useState<string>('description')
   const [openModal, setOpenModal] = useState(false)
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
-  const [page, setPage] = useState(1)
-  const [pages, setPages] = useState(0)
   const [selectedToEdit, setSelectedToEdit] = useState<OrderProductItem>()
   const [selectedToDelete, setSelectedToDelete] = useState<OrderProductItem>()
 
+  const [discounts, setDiscounts] = useState<DiscountItem[]>([])
+
+  const discountService = makeDiscountService()
   const customerService = makeCustomerService()
   const supplierService = makeSupplierService()
   const productService = makeProductService()
@@ -92,6 +99,24 @@ export default function OrderForm({
     setSelectedToEdit(orderProduct)
     setSearchProductText(orderProduct.product.name)
     setProductSelected(orderProduct.product as ProductItem)
+  }
+
+  const loadDiscounts = async () => {
+    try {
+      if (!supplierSelected) {
+        return
+      }
+      const [_discounts, _pages] = await discountService.getAll(
+        supplierSelected.id,
+        1,
+        '',
+        'percentage',
+        'asc',
+      )
+      setDiscounts(_discounts)
+    } catch {
+      console.error('error')
+    }
   }
 
   const loadCustomers = async () => {
@@ -205,12 +230,6 @@ export default function OrderForm({
   }
 
   useEffect(() => {
-    if (order) {
-      return
-    }
-  }, [order])
-
-  useEffect(() => {
     const timeOutId = setTimeout(() => loadCustomers(), 1000)
     return () => clearTimeout(timeOutId)
   }, [searchCustomerText])
@@ -228,6 +247,7 @@ export default function OrderForm({
   useEffect(() => {
     setOrderProducts([])
     loadProducts()
+    loadDiscounts()
   }, [supplierSelected])
 
   return (
@@ -311,6 +331,8 @@ export default function OrderForm({
         </Paper>
       </Grid>
       <OrderProductForm
+        orderTotal={total}
+        discounts={discounts}
         pages={pages}
         page={page}
         setPage={setPage}
@@ -340,9 +362,7 @@ export default function OrderForm({
         onAddHandler={() => handlerOnAddProduct(productSelected, quantity)}
         errors={errors}
         data={orderProducts}
-        onSubmit={() =>
-          onSubmit(customerSelected?.id || 0, supplierSelected?.id || 0, orderProducts)
-        }
+        onSubmit={() => onSubmit(customerSelected?.id || 0, supplierSelected?.id || 0)}
       ></OrderProductForm>
     </>
   )

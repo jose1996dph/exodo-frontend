@@ -5,7 +5,7 @@ class DiscountService {
   private discountRepo: IDiscountRepository = makeDiscountRepository()
 
   async getAll(
-    id: number,
+    supplierId: number,
     pageNum: number,
     search: string,
     orderBy?: string,
@@ -14,7 +14,7 @@ class DiscountService {
     try {
       const pageSize = 10
       const suppliers = await this.discountRepo.getAllDiscount(
-        id,
+        supplierId,
         pageSize,
         pageNum - 1,
         search,

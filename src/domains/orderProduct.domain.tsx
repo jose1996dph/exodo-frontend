@@ -1,22 +1,39 @@
 import { ProductDetail, ProductItem } from './product.domain'
 
-export type OrderProductItem = {
+export class OrderProductItem {
   productId: number
   quantity: number
   product: ProductDetail
+
+  constructor(product: ProductItem, quantity: number) {
+    this.product = product
+    this.productId = product.id
+    this.quantity = quantity
+  }
+
+  public calculatePrice(): number {
+    const _product = this.product as ProductDetail
+    if (!_product) {
+      throw 'Product invalid'
+    }
+
+    if (!_product.supplierProducts || _product.supplierProducts.length === 0) {
+      throw 'Price product invalid'
+    }
+
+    return _product.supplierProducts[0].price * this.quantity
+  }
 }
 
 export class CreateOrderProduct {
-  orderId?: number
   productId: number
   quantity: number
   product: ProductItem
 
-  constructor(product: ProductItem, quantity: number, orderId: number | undefined = undefined) {
+  constructor(product: ProductItem, quantity: number) {
     this.product = product
     this.productId = product.id
     this.quantity = quantity
-    this.orderId = orderId
   }
 
   public isValid(): Record<string, string> {
@@ -31,20 +48,7 @@ export class CreateOrderProduct {
   }
 
   public toOrderProductItem() {
-    if (this.orderId) {
-      return {
-        productId: this.productId,
-        quantity: this.quantity,
-        product: this.product,
-        orderId: this.orderId,
-      } as OrderProductItem
-    }
-
-    return {
-      productId: this.productId,
-      quantity: this.quantity,
-      product: this.product,
-    } as OrderProductItem
+    return new OrderProductItem(this.product, this.quantity)
   }
 }
 
@@ -71,10 +75,6 @@ export class UpdateOrderProduct {
   }
 
   public toOrderProductItem() {
-    return {
-      productId: this.productId,
-      quantity: this.quantity,
-      product: this.product,
-    } as OrderProductItem
+    return new OrderProductItem(this.product, this.quantity)
   }
 }

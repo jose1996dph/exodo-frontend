@@ -3,14 +3,18 @@ import CustomAutocomplete from '../atoms/CustomAutocomplete'
 import CustomButton from '../atoms/CustomButton'
 import CustomTextField from '../atoms/CustomTextField'
 import OrderProductTable, { OrderProductTableProps } from '../organisms/OrderProductTable'
-import { ReactNode } from 'react'
-import { ProductItem } from '../../domains/product.domain'
+import { ReactNode, useEffect, useState } from 'react'
+import { ProductDetail, ProductItem } from '../../domains/product.domain'
 import { OrderProductItem } from '../../domains/orderProduct.domain'
 import Title from '../atoms/Title'
+import { DiscountItem } from '../../domains/discount.domain'
+import Prices from '../organisms/Prices'
 
 type OrderProductFormProps = OrderProductTableProps & {
   products: ProductItem[]
+  discounts: DiscountItem[]
   isLoading: boolean
+  orderTotal: number
   searchProductText: string
   setSearchProductText: (value: string) => void
   productSelected: ProductItem | undefined
@@ -28,7 +32,9 @@ type OrderProductFormProps = OrderProductTableProps & {
 
 export default function OrderProductForm({
   products,
+  discounts,
   isLoading,
+  orderTotal,
   searchProductText,
   setSearchProductText,
   productSelected,
@@ -52,6 +58,68 @@ export default function OrderProductForm({
   onUpdate,
   onSubmit = undefined,
 }: OrderProductFormProps) {
+  const [total, setTotal] = useState(0)
+  const [productPrice, setProductPrice] = useState(0)
+
+  useEffect(() => {
+    if (!productSelected) {
+      setProductPrice(0)
+      setTotal(0)
+      return
+    }
+
+    const product = productSelected as ProductDetail
+    if (!product) {
+      setProductPrice(0)
+      setTotal(0)
+      return
+    }
+
+    if (!product.supplierProducts || product.supplierProducts.length === 0) {
+      setProductPrice(0)
+      setTotal(0)
+      return
+    }
+    const supplierProduct = product.supplierProducts[0]
+    setProductPrice(supplierProduct.price)
+
+    const _quantity = parseInt(quantity)
+    if (!_quantity || _quantity === 0) {
+      setTotal(supplierProduct.price)
+      return
+    }
+
+    setTotal(supplierProduct.price * _quantity)
+  }, [productSelected])
+
+  useEffect(() => {
+    if (!productSelected) {
+      setTotal(0)
+      return
+    }
+
+    const product = productSelected as ProductDetail
+    if (!product) {
+      setTotal(0)
+      return
+    }
+
+    if (!product.supplierProducts || product.supplierProducts.length === 0) {
+      setTotal(0)
+      return
+    }
+    const supplierProduct = product.supplierProducts[0]
+    setProductPrice(supplierProduct.price)
+
+    const _quantity = parseInt(quantity)
+    if (!_quantity || _quantity === 0) {
+      setTotal(supplierProduct.price)
+      return
+    }
+
+    setTotal(supplierProduct.price * _quantity)
+  }, [quantity])
+
   return (
     <>
       <Grid item xs={12}>
@@ -102,6 +170,7 @@ export default function OrderProductForm({
                 onChange={(event) => setQuantity(event.target.value)}
               ></CustomTextField>
             </Grid>
+            <Prices discounts={discounts} total={total} productPrice={productPrice}></Prices>
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <CustomButton
@@ -141,6 +210,7 @@ export default function OrderProductForm({
                 onUpdate={onUpdate}
               ></OrderProductTable>
             </Grid>
+            <Prices discounts={discounts} total={orderTotal}></Prices>
             {onSubmit && (
               <Grid item xs={12}>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
