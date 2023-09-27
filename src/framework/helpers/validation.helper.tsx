@@ -1,3 +1,8 @@
+export const isNumeric = (value: string): boolean => {
+  const expresiton = '^[0-9]$'
+  return value.match(expresiton) !== null
+}
+
 export const isEmail = (value: string): boolean => {
   const expresiton = '^[\\w-\\.]+[\\w-+\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'
   return value.match(expresiton) !== null

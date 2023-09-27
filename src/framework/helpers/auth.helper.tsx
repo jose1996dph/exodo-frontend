@@ -1,7 +1,11 @@
 const TOKEN_KEY = 'ACCESS_TOKEN'
 const REMEMBER_ME = 'REMEMBER_ME'
 
-export function setToken(value: string): void {
+export function setToken(value: string | null): void {
+  if (!value) {
+    return localStorage.removeItem(TOKEN_KEY)
+  }
+
   return localStorage.setItem(TOKEN_KEY, value)
 }
 

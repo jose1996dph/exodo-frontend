@@ -69,7 +69,7 @@ export default function SetPassword() {
       setPassword('')
       setConfirmPassword('')
       setOpen(true)
-    } catch ({ message }) {
+    } catch ({ message }: any) {
       if (message) setError(message as string)
     } finally {
       setIsLoading(false)

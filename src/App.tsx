@@ -26,6 +26,7 @@ import EditCategory from './componets/pages/EditCategory'
 import SupplierPage from './componets/pages/Supplier'
 import CreateOrder from './componets/pages/CreateOrder'
 import Order from './componets/pages/Order'
+import Profile from './componets/pages/Profile'
 
 function App() {
   const location = useLocation()
@@ -75,6 +76,14 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <Dashboard open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={UrlRoutes.Profile}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <Profile open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

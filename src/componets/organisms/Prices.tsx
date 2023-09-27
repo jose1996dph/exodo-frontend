@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material'
-import CustomTable from '../molecules/CustomTable'
+import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
 import { DiscountItem } from '../../domains/discount.domain'
 
 type PricesProp = {
@@ -9,7 +9,7 @@ type PricesProp = {
 }
 
 export default function Prices({ discounts, total, productPrice = undefined }: PricesProp) {
-  const tableRows = [
+  const tableRows: CustomTableRow[] = [
     {
       title: 'Tiempo limite',
       key: 'deadline',

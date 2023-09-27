@@ -1,6 +1,7 @@
 export enum UrlRoutes {
   Home = '/',
   Login = '/login',
+  Profile = '/Profile',
   SetPassword = '/reset/:token',
   ForgotPassword = '/forgot',
   Dashboard = '/dashboard',

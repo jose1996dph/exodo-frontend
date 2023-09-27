@@ -2,6 +2,8 @@ import { setToken } from '../framework/helpers/auth.helper'
 import { IAuthRepository, makeAuthRepository } from '../repositories/auth.repository'
 
 class AuthService {
+  private authRepo: IAuthRepository = makeAuthRepository()
+
   async setPassword(token: string, password: string, confirmPassword: string) {
     try {
       return await this.authRepo.setPassword(token, password, confirmPassword)
@@ -10,13 +12,21 @@ class AuthService {
       throw data
     }
   }
-  private authRepo: IAuthRepository = makeAuthRepository()
 
   async login(email: string, password: string) {
     try {
       const token = await this.authRepo.login(email, password)
       setToken(token.accessToken)
       return token
+    } catch ({ response: { data } }: any) {
+      console.error(data)
+      throw data
+    }
+  }
+
+  async logout() {
+    try {
+      setToken(null)
     } catch ({ response: { data } }: any) {
       console.error(data)
       throw data
