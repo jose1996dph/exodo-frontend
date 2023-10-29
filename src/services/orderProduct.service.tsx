@@ -11,16 +11,16 @@ class OrderProductService {
     id: number,
     pageNum: number,
     search: string,
+    pageSize?: number,
     orderBy?: string,
     orderDirection?: string,
   ) {
     try {
-      const pageSize = 10
       const orders = await this.orderProductRepo.getAllOrderProduct(
         id,
-        pageSize,
         pageNum - 1,
         search,
+        pageSize,
         orderBy,
         orderDirection,
       )

@@ -8,7 +8,6 @@ import SetPassword from './componets/pages/SetPassword'
 import ForgotPassword from './componets/pages/ForgotPassword'
 import CustomersPage from './componets/pages/Customers'
 import CreateCustomer from './componets/pages/CreateCustomer'
-import OrdersPage from './componets/pages/Orders'
 import UsersPage from './componets/pages/Users'
 import { getToken } from './framework/helpers/auth.helper'
 import ProtectedRoute from './framework/routes/ProtectRoute'
@@ -26,6 +25,10 @@ import EditCategory from './componets/pages/EditCategory'
 import SupplierPage from './componets/pages/Supplier'
 import CreateOrder from './componets/pages/CreateOrder'
 import Order from './componets/pages/Order'
+import OrdersPage from './componets/pages/Orders'
+import CreateInvoice from './componets/pages/CreateInvoice'
+import Invoice from './componets/pages/Invoice'
+import InvoicesPage from './componets/pages/Invoices'
 import Profile from './componets/pages/Profile'
 
 function App() {
@@ -111,6 +114,33 @@ function App() {
             element={
               <ProtectedRoute isLoged={isLoged}>
                 <CreateOrder open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.Invoices}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <InvoicesPage open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={`${UrlRoutes.Invoice}:id`}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <Invoice open={open} toggleDrawer={toggleDrawer} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={UrlRoutes.CreateInvoice}
+            element={
+              <ProtectedRoute isLoged={isLoged}>
+                <CreateInvoice open={open} toggleDrawer={toggleDrawer} />
               </ProtectedRoute>
             }
           />

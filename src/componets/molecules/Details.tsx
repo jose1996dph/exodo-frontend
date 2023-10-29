@@ -1,6 +1,12 @@
 import { Grid, GridProps, Paper } from '@mui/material'
 import SubTitle from '../atoms/SubTitle'
 import Title from '../atoms/Title'
+import CustomButton from '../atoms/CustomButton'
+
+export type OptionDetails = {
+  title: string
+  action: () => void
+}
 
 export type DetailsItem = {
   title: string
@@ -12,9 +18,10 @@ export type DetailsProps<T> = {
   title: string
   obj: T | undefined
   items: DetailsItem[]
+  option?: OptionDetails
 }
 
-export default function Details<T>({ title, obj, items }: DetailsProps<T>) {
+export default function Details<T>({ title, obj, items, option }: DetailsProps<T>) {
   if (obj === undefined) {
     return <></>
   }
@@ -29,9 +36,19 @@ export default function Details<T>({ title, obj, items }: DetailsProps<T>) {
         }}
       >
         <Grid container spacing={0.5}>
-          <Grid item xs={12}>
+          <Grid item xs={option !== undefined ? 11 : 12}>
             <Title>{title}</Title>
           </Grid>
+          {option && (
+            <Grid item xs={1}>
+              <CustomButton
+                id={option.title}
+                text={option.title}
+                style={{ marginTop: 0, marginBottom: 0 }}
+                onClick={() => option.action()}
+              ></CustomButton>
+            </Grid>
+          )}
           {items.map((item) => {
             return (
               <Grid key={item.title} item xs={12} sm={6} md={4} lg={3} {...item.props}>

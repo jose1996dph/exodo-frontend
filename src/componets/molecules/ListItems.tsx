@@ -27,7 +27,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary='Indicadores' />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate(UrlRoutes.Invoices, { replace: true })}>
         <ListItemIcon>
           <ReceiptLongIcon />
         </ListItemIcon>

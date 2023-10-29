@@ -1,6 +1,6 @@
 import { OrderDetail } from '../../domains/order.domain'
 import { formatDate } from '../../framework/helpers/formatter.helper'
-import Details, { DetailsItem } from '../molecules/Details'
+import Details, { DetailsItem, OptionDetails } from '../molecules/Details'
 
 const ObjectFields: DetailsItem[] = [
   { title: 'Proveedor', render: (_, order) => order.supplier.name },
@@ -16,8 +16,9 @@ const ObjectFields: DetailsItem[] = [
 type OrderDetailsProps = {
   title: string
   obj: OrderDetail | undefined
+  option: OptionDetails
 }
 
-export default function OrderDetails({ title, obj }: OrderDetailsProps) {
-  return <Details title={title} obj={obj} items={ObjectFields} />
+export default function OrderDetails({ title, obj, option }: OrderDetailsProps) {
+  return <Details title={title} obj={obj} items={ObjectFields} option={option} />
 }

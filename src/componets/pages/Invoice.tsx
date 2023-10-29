@@ -1,34 +1,36 @@
 import { useEffect, useState } from 'react'
-import { OrderDetail } from '../../domains/order.domain'
-import { makeOrderProductService } from '../../services/orderProduct.service'
-import { makeOrderService } from '../../services/order.service'
+import { InvoiceDetail } from '../../domains/invoice.domain'
+import { makeInvoiceProductService } from '../../services/invoiceProduct.service'
+import { makeInvoiceService } from '../../services/invoice.service'
 import { makeDiscountService } from '../../services/discount.service'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 import Content from '../organisms/Content'
-import OrderDetails from '../organisms/OrderDetails'
+import InvoiceDetails from '../organisms/InvoiceDetails'
 import {
-  OrderProductItem,
-  CreateOrderProduct,
-  UpdateOrderProduct,
-} from '../../domains/orderProduct.domain'
+  InvoiceProductItem,
+  CreateInvoiceProduct,
+  UpdateInvoiceProduct,
+} from '../../domains/invoiceProduct.domain'
 import { ProductItem } from '../../domains/product.domain'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { makeProductService } from '../../services/product.service'
 import ConfirmDialog from '../atoms/ConfirmDialog'
 import { CreateDiscount, DiscountItem, UpdateDiscount } from '../../domains/discount.domain'
-import OrderProductForm from '../molecules/OrderProductForm'
+import InvoiceProductForm from '../molecules/InvoiceProductForm'
 import { SupplierDetail } from '../../domains/supplier.domain'
 import { makeSupplierService } from '../../services/supplier.service'
 import { makeCustomerService } from '../../services/customer.service'
 import { CustomerDetail } from '../../domains/customer.domain'
-import { UrlRoutes } from '../../framework/routes/routes'
+import { Grid, Paper } from '@mui/material'
+import InvoiceProductTable from '../organisms/InvoiceProductTable'
+import Prices from '../organisms/Prices'
 
-type OrderPageProps = {
+type InvoicePageProps = {
   open: boolean
   toggleDrawer: ToggleDrawerHandler
 }
 
-export default function Order({ open, toggleDrawer }: OrderPageProps) {
+export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
   const [discounts, setDiscounts] = useState<DiscountItem[]>([])
   const [orderDiscountBy, setOrderDiscountBy] = useState<string>('percentage')
   const [orderDiscountDirection, setOrderDiscountDirection] = useState<'asc' | 'desc'>('asc')
@@ -38,14 +40,14 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
   const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
 
-  const [order, setOrder] = useState<OrderDetail | undefined>(undefined)
+  const [invoice, setInvoice] = useState<InvoiceDetail | undefined>(undefined)
   const [supplier, setSupplier] = useState<SupplierDetail | undefined>(undefined)
   const [customer, setCustomer] = useState<CustomerDetail | undefined>(undefined)
   const [products, setProducts] = useState<ProductItem[]>([])
-  const [orderProducts, setOrderProducts] = useState<OrderProductItem[]>([])
+  const [invoiceProducts, setInvoiceProducts] = useState<InvoiceProductItem[]>([])
   const [orderBy, setOrderBy] = useState<string>('name')
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
-  // const [productsNoOrder, setProductsNoOrder] = useState<ProductItem[]>([])
+  // const [productsNoInvoice, setProductsNoInvoice] = useState<ProductItem[]>([])
   const [productSelected, setProductSelected] = useState<ProductItem>()
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [searchText, setSearchText] = useState<string>('')
@@ -55,13 +57,12 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   const [productPage, setProductPage] = useState(1)
   const [openModal, setOpenModal] = useState(false)
   const [selectedIdToDelete, setSelectedIdToDelete] = useState(0)
-  const [selectedToEdit, setSelectedToEdit] = useState<OrderProductItem>()
+  const [selectedToEdit, setSelectedToEdit] = useState<InvoiceProductItem>()
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 
-  const navigate = useNavigate()
-  const orderService = makeOrderService()
-  const orderProductService = makeOrderProductService()
+  const invoiceService = makeInvoiceService()
+  const invoiceProductService = makeInvoiceProductService()
   const productService = makeProductService()
   const discountService = makeDiscountService()
   const supplierService = makeSupplierService()
@@ -108,9 +109,9 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         throw _errors
       }
 
-      const orderId = parseInt(id)
+      const invoiceId = parseInt(id)
       const _discountId = selectedDiscountToEdit?.id || 0
-      await discountService.update(orderId, _discountId, discount)
+      await discountService.update(invoiceId, _discountId, discount)
 
       loadDiscounts()
       setSelectedDiscountToEdit(undefined)
@@ -132,8 +133,8 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         throw _errors
       }
 
-      const orderId = parseInt(id)
-      await discountService.create(orderId, discount)
+      const invoiceId = parseInt(id)
+      await discountService.create(invoiceId, discount)
 
       loadDiscounts()
       setSelectedDiscountToEdit(undefined)
@@ -149,8 +150,8 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
-      const orderId = parseInt(id)
-      await discountService.delete(orderId, selectedDiscountIdToDelete)
+      const invoiceId = parseInt(id)
+      await discountService.delete(invoiceId, selectedDiscountIdToDelete)
 
       loadDiscounts()
       setSelectedDiscountIdToDelete(0)
@@ -160,17 +161,17 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     }
   }
 
-  const loadOrder = async () => {
+  const loadInvoice = async () => {
     try {
       if (!id) {
         return
       }
-      const orderId = parseInt(id)
-      const _order = await orderService.getById(orderId)
-      setOrder(_order)
+      const invoiceId = parseInt(id)
+      const _invoice = await invoiceService.getById(invoiceId)
+      setInvoice(_invoice)
 
-      loadSupplier(_order.supplierId)
-      loadCustomer(_order.customerId)
+      loadSupplier(_invoice.supplierId)
+      loadCustomer(_invoice.customerId)
     } catch {
       console.error('error')
     }
@@ -180,7 +181,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     try {
       const _supplier = await supplierService.getById(supplierId)
       setSupplier(_supplier)
-      loadProductsNotOrder()
+      loadProductsNotInvoice()
     } catch {
       console.error('error')
     }
@@ -201,16 +202,15 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       if (!id) {
         return
       }
-      const orderId = parseInt(id)
-      const [_orderProducts, _pages] = await orderProductService.getAll(
-        orderId,
+      const invoiceId = parseInt(id)
+      const [_invoiceProducts, _pages] = await invoiceProductService.getAll(
+        invoiceId,
         page,
         '',
-        10,
         orderBy,
         orderDirection,
       )
-      setOrderProducts(_orderProducts)
+      setInvoiceProducts(_invoiceProducts)
       setPages(_pages)
     } catch {
       console.error('error')
@@ -219,15 +219,15 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     }
   }
 
-  const submitOrderProduct = async () => {
+  const submitInvoiceProduct = async () => {
     if (selectedToEdit) {
-      await editOrderProduct()
+      await editInvoiceProduct()
       return
     }
-    await addOrderProduct()
+    await addInvoiceProduct()
   }
 
-  const editOrderProduct = async () => {
+  const editInvoiceProduct = async () => {
     try {
       if (!id) {
         return
@@ -237,12 +237,12 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
-      const orderId = parseInt(id)
+      const invoiceId = parseInt(id)
       const _quantity = parseFloat(quantity)
 
-      const orderProduct = new UpdateOrderProduct(selectedToEdit.product, _quantity)
+      const invoiceProduct = new UpdateInvoiceProduct(selectedToEdit.product, _quantity)
 
-      const _errors = orderProduct.isValid()
+      const _errors = invoiceProduct.isValid()
 
       setErrors(_errors)
       if (Object.keys(_errors).length) {
@@ -250,9 +250,9 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       }
 
       const _productId = selectedToEdit?.productId || 0
-      await orderProductService.update(orderId, _productId, orderProduct)
+      await invoiceProductService.update(invoiceId, _productId, invoiceProduct)
 
-      loadOrder()
+      loadInvoice()
       loadProducts()
       clearForm()
     } catch {
@@ -260,7 +260,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     }
   }
 
-  const addOrderProduct = async () => {
+  const addInvoiceProduct = async () => {
     try {
       if (!id) {
         return
@@ -270,21 +270,21 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
-      const orderId = parseInt(id)
+      const invoiceId = parseInt(id)
       const _quantity = parseFloat(quantity)
 
-      const orderProduct = new CreateOrderProduct(productSelected, _quantity)
+      const invoiceProduct = new CreateInvoiceProduct(productSelected, _quantity)
 
-      const _errors = orderProduct.isValid()
+      const _errors = invoiceProduct.isValid()
 
       setErrors(_errors)
       if (Object.keys(_errors).length) {
         return
       }
 
-      await orderProductService.create(orderId, orderProduct)
+      await invoiceProductService.create(invoiceId, invoiceProduct)
 
-      loadOrder()
+      loadInvoice()
       loadProducts()
       clearForm()
     } catch {
@@ -301,9 +301,9 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
 
-      const orderId = parseInt(id)
+      const invoiceId = parseInt(id)
       const supplierId = supplier.id
-      const _products = await productService.getAll(nextPage, searchText, supplierId, 0, orderId)
+      const _products = await productService.getAll(nextPage, searchText, supplierId, 0, invoiceId)
       setProducts([...products, ..._products[0]])
       setProductPages(_products[1])
       setProductPage(nextPage)
@@ -312,19 +312,19 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     }
   }
 
-  const handlerDeleteOrderProduct = async () => {
+  const handlerDeleteInvoiceProduct = async () => {
     try {
       if (!id) {
         return
       }
 
-      const orderId = parseInt(id)
-      await orderProductService.delete(orderId, selectedIdToDelete)
+      const invoiceId = parseInt(id)
+      await invoiceProductService.delete(invoiceId, selectedIdToDelete)
 
       clearForm()
-      loadOrder()
+      loadInvoice()
       loadProducts()
-      loadProductsNotOrder()
+      loadProductsNotInvoice()
     } catch {
       console.error('error')
     }
@@ -338,7 +338,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     setSearchText('')
   }
 
-  const loadProductsNotOrder = async () => {
+  const loadProductsNotInvoice = async () => {
     try {
       if (!id) {
         return
@@ -346,8 +346,8 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
       if (!supplier) {
         return
       }
-      const orderId = parseInt(id)
-      const _product = await productService.getAll(1, searchText, supplier.id, 0, orderId)
+      const invoiceId = parseInt(id)
+      const _product = await productService.getAll(1, searchText, supplier.id, 0, invoiceId)
       setProducts(_product[0])
       setProductPages(_product[1])
       setProductPage(1)
@@ -359,7 +359,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     }
   }
 
-  const handlerSelectToEdit = (item: OrderProductItem) => {
+  const handlerSelectToEdit = (item: InvoiceProductItem) => {
     if (!item) {
       return
     }
@@ -378,7 +378,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   }
 
   useEffect(() => {
-    loadOrder()
+    loadInvoice()
   }, [])
 
   useEffect(() => {
@@ -391,7 +391,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
 
   useEffect(() => {
     setIsLoading(true)
-    const timeOutId = setTimeout(() => loadProductsNotOrder(), 1000)
+    const timeOutId = setTimeout(() => loadProductsNotInvoice(), 1000)
     return () => clearTimeout(timeOutId)
   }, [searchText, supplier])
 
@@ -402,35 +402,29 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         setOpen={setOpenModal}
         onCancel={() => setSelectedIdToDelete(0)}
         content='¿Está seguro de eliminar este producto de la orden?'
-        onAcept={handlerDeleteOrderProduct}
+        onAcept={handlerDeleteInvoiceProduct}
       />
-      <Content title='Orden' open={open} toggleDrawer={toggleDrawer}>
-        <OrderDetails
-          title='Información del proveedor'
-          obj={order}
-          option={{
-            title: 'Facturar',
-            action: () => navigate(`${UrlRoutes.CreateInvoice}?orderId=${id}`),
-          }}
-        ></OrderDetails>
-        <OrderProductForm
+      <Content title='Factura' open={open} toggleDrawer={toggleDrawer}>
+        <InvoiceDetails title='Información del proveedor' obj={invoice}></InvoiceDetails>
+        {/*
+        <InvoiceProductForm
           pages={pages}
           page={page}
-          orderTotal={order?.total ?? 0}
+          invoiceTotal={invoice?.total ?? 0}
           setPage={setPage}
           orderBy={orderBy}
           setOrderBy={setOrderBy}
           orderDirection={orderDirection}
           setOrderDirection={setOrderDirection}
-          onDelete={(_, item: OrderProductItem) => openAlert(item.productId)}
-          onUpdate={(_, item: OrderProductItem) => handlerSelectToEdit(item)}
+          onDelete={(_, item: InvoiceProductItem) => openAlert(item.productId)}
+          onUpdate={(_, item: InvoiceProductItem) => handlerSelectToEdit(item)}
           products={products}
           isLoading={isLoading}
           searchProductText={searchText}
           setSearchProductText={setSearchText}
           productSelected={productSelected}
           setProductSelected={setProductSelected}
-          orderProducts={orderProducts}
+          invoiceProducts={invoiceProducts}
           autoCompleteDisable={selectedToEdit != undefined}
           autoCompleteOnScroll={() => {
             if (productPage === productPages) {
@@ -441,11 +435,36 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
           quantity={quantity}
           setQuantity={setQuantity}
           quantityDisable={isLoading}
-          onAddHandler={() => submitOrderProduct()}
+          onAddHandler={() => submitInvoiceProduct()}
           errors={errors}
-          data={orderProducts}
+          data={invoiceProducts}
           discounts={discounts}
-        ></OrderProductForm>
+        ></InvoiceProductForm>*/}
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Grid container spacing={0.5}>
+              <Grid item xs={12} sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                <InvoiceProductTable
+                  page={page}
+                  pages={pages}
+                  setPage={setPage}
+                  orderBy={orderBy}
+                  setOrderBy={setOrderBy}
+                  orderDirection={orderDirection}
+                  setOrderDirection={setOrderDirection}
+                  data={invoiceProducts}
+                ></InvoiceProductTable>
+              </Grid>
+              <Prices discounts={discounts} total={invoice?.total ?? 0}></Prices>
+            </Grid>
+          </Paper>
+        </Grid>
       </Content>
     </>
   )

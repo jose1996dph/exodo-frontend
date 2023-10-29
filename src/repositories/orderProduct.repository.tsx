@@ -10,9 +10,9 @@ import { formatUrlText } from '../framework/helpers/formatter.helper'
 export interface IOrderProductRepository {
   getAllOrderProduct(
     orderId: number,
-    pageSize: number,
     pageNum: number,
     search: string,
+    pageSize?: number,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[OrderProductItem[], number]>
@@ -31,13 +31,17 @@ export interface IOrderProductRepository {
 class OrderProductRepository implements IOrderProductRepository {
   async getAllOrderProduct(
     id: number,
-    pageSize: number,
     pageNum: number,
     search: string,
+    pageSize?: number,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[OrderProductItem[], number]> {
-    let params = `?pageSize=${pageSize}&pageNum=${pageNum}&search=${formatUrlText(search)}`
+    let params = `?pageNum=${pageNum}&search=${formatUrlText(search)}`
+
+    if (pageSize) {
+      params += `&pageSize=${pageSize}`
+    }
 
     if (orderBy) {
       params += `&orderBy=${orderBy}`
@@ -51,13 +55,13 @@ class OrderProductRepository implements IOrderProductRepository {
 
     const [product, count] = data
 
-    let _count: number = (count / pageSize) >> 0
+    let _count: number = pageSize ? (count / pageSize) >> 0 : 0
 
-    if (count % pageSize > 0) {
+    if (pageSize && count % pageSize > 0) {
       _count += 1
     }
 
-    return [product as OrderProductItem[], _count]
+    return [product.map((p: any) => new OrderProductItem(p.product, p.quantity)), _count]
   }
 
   async createOrderProduct(

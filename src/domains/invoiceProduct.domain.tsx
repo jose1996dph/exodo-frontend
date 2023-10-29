@@ -1,7 +1,6 @@
-import { InvoiceProductItem } from './invoiceProduct.domain'
 import { ProductDetail, ProductItem } from './product.domain'
 
-export class OrderProductItem {
+export class InvoiceProductItem {
   productId: number
   quantity: number
   product: ProductDetail
@@ -24,13 +23,9 @@ export class OrderProductItem {
 
     return _product.supplierProducts[0].price * this.quantity
   }
-
-  public toInvoiceProduct(): InvoiceProductItem {
-    return new InvoiceProductItem(this.product, this.quantity)
-  }
 }
 
-export class CreateOrderProduct {
+export class CreateInvoiceProduct {
   productId: number
   quantity: number
   product: ProductItem
@@ -52,12 +47,12 @@ export class CreateOrderProduct {
     return errors
   }
 
-  public toOrderProductItem() {
-    return new OrderProductItem(this.product, this.quantity)
+  public toInvoiceProductItem() {
+    return new InvoiceProductItem(this.product, this.quantity)
   }
 }
 
-export class UpdateOrderProduct {
+export class UpdateInvoiceProduct {
   productId: number
   quantity: number
   private product: ProductItem
@@ -79,7 +74,7 @@ export class UpdateOrderProduct {
     return errors
   }
 
-  public toOrderProductItem() {
-    return new OrderProductItem(this.product, this.quantity)
+  public toInvoiceProductItem() {
+    return new InvoiceProductItem(this.product, this.quantity)
   }
 }
