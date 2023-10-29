@@ -257,7 +257,7 @@ export default function InvoiceForm({
   }, [searchProductText])
 
   useEffect(() => {
-    // setInvoiceProducts([])
+    setInvoiceProducts([])
     loadProducts()
     loadDiscounts()
   }, [supplierSelected])
@@ -281,7 +281,7 @@ export default function InvoiceForm({
         >
           <Grid container spacing={0.5}>
             <Grid item xs={12}>
-              <Title>Información de orden de venta</Title>
+              <Title>Información de factura de venta</Title>
             </Grid>
             <Grid item xs={12}>
               <CustomAutocomplete

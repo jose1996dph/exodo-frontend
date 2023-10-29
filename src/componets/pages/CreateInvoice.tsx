@@ -226,6 +226,16 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
     loadDisplayableInvoiceProduct(invoiceProducts)
   }, [page, total])
 
+  useEffect(() => {
+    if (invoiceProducts.length > 0) {
+      return
+    }
+    setDisplayableInvoiceProduct([])
+    setTotal(0)
+    setPages(0)
+    setPage(1)
+  }, [invoiceProducts])
+
   return (
     <>
       <Content title='Nuevo invoiceo' open={open} toggleDrawer={toggleDrawer}>

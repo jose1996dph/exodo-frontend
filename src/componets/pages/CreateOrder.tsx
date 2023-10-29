@@ -172,6 +172,16 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
     setDisplayableOrderProduct(orderProducts.slice(_page, _page + numberOfRecords))
   }, [page, total])
 
+  useEffect(() => {
+    if (orderProducts.length > 0) {
+      return
+    }
+    setDisplayableOrderProduct([])
+    setTotal(0)
+    setPages(0)
+    setPage(1)
+  }, [orderProducts])
+
   return (
     <>
       <Content title='Nuevo ordero' open={open} toggleDrawer={toggleDrawer}>
