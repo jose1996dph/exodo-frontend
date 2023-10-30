@@ -268,7 +268,7 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
 
   return (
     <>
-      <Content title='Nuevo invoiceo' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Nueva factura' open={open} toggleDrawer={toggleDrawer}>
         <InvoiceForm
           isLoading={isLoading}
           page={page}
