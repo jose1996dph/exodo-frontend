@@ -27,6 +27,10 @@ type CategoryFormProps = {
   errors: Record<string, string>
   page: number
   pages: number
+  orderBy: string
+  setOrderBy: (value: string) => void
+  orderDirection: 'asc' | 'desc'
+  setOrderDirection: (value: 'asc' | 'desc') => void
   customerSelected: CustomerItem | undefined
   setCustomerSelected: (customer: CustomerItem) => void
   supplierSelected: SupplierItem | undefined
@@ -48,6 +52,10 @@ export default function InvoiceForm({
   page,
   pages,
   errors,
+  orderBy,
+  setOrderBy,
+  orderDirection,
+  setOrderDirection,
   customerSelected,
   setCustomerSelected,
   supplierSelected,
@@ -81,9 +89,7 @@ export default function InvoiceForm({
   const [productPages, setProductPages] = useState(1)
 
   const [quantity, setQuantity] = useState('')
-  const [orderBy, setOrderBy] = useState<string>('description')
   const [openModal, setOpenModal] = useState(false)
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [selectedToEdit, setSelectedToEdit] = useState<InvoiceProductItem>()
   const [selectedToDelete, setSelectedToDelete] = useState<InvoiceProductItem>()
 

@@ -27,6 +27,8 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [orderBy, setOrderBy] = useState<string>('name')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [orderProducts, setOrderProducts] = useState<OrderProductItem[]>([])
   const [displayableOrderProduct, setDisplayableOrderProduct] = useState<OrderProductItem[]>([])
 
@@ -160,16 +162,48 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
     setErrorMessage('')
   }
 
-  useEffect(() => {
+  const loadDisplayableOrderProduct = (_orderProducts: OrderProductItem[]) => {
     const numberOfRecords = 10
     const _page = (page - 1) * numberOfRecords
 
-    if (orderProducts.length <= _page + numberOfRecords) {
-      setDisplayableOrderProduct(orderProducts.slice(_page))
+    if (_orderProducts.length <= _page + numberOfRecords) {
+      setDisplayableOrderProduct(_orderProducts.slice(_page))
       return
     }
 
-    setDisplayableOrderProduct(orderProducts.slice(_page, _page + numberOfRecords))
+    setDisplayableOrderProduct(_orderProducts.slice(_page, _page + numberOfRecords))
+  }
+
+  const sortOrderProducts = (a: OrderProductItem, b: OrderProductItem) => {
+    let nameA = ''
+    let nameB = ''
+    if (orderBy === 'price' && a.product.supplierProducts && b.product.supplierProducts) {
+      nameA = a.product.supplierProducts[0].price.toString()
+      nameB = b.product.supplierProducts[0].price.toString()
+    } else if (orderBy === 'total' && a.product.supplierProducts && b.product.supplierProducts) {
+      nameA = (a.product.supplierProducts[0].price * a.quantity).toString()
+      nameB = (b.product.supplierProducts[0].price * b.quantity).toString()
+    } else {
+      nameA = a.product[orderBy].toUpperCase()
+      nameB = b.product[orderBy].toUpperCase()
+    }
+
+    if (nameA === nameB) {
+      return 0
+    }
+    if (nameA < nameB && orderDirection == 'asc') {
+      return -1
+    } else {
+      return 1
+    }
+  }
+
+  useEffect(() => {
+    loadDisplayableOrderProduct(orderProducts.sort(sortOrderProducts))
+  }, [orderBy, orderDirection])
+
+  useEffect(() => {
+    loadDisplayableOrderProduct(orderProducts.sort(sortOrderProducts))
   }, [page, total])
 
   useEffect(() => {
@@ -192,6 +226,10 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
           setPage={setPage}
           errors={errors}
           total={total}
+          orderBy={orderBy}
+          setOrderBy={setOrderBy}
+          orderDirection={orderDirection}
+          setOrderDirection={setOrderDirection}
           onSubmit={handleSubmit}
           onAddProduct={handlerOnAddProduct}
           onEditProduct={handlerOnEditProduct}

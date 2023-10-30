@@ -27,6 +27,10 @@ type CategoryFormProps = {
   errors: Record<string, string>
   page: number
   pages: number
+  orderBy: string
+  setOrderBy: (value: string) => void
+  orderDirection: 'asc' | 'desc'
+  setOrderDirection: (value: 'asc' | 'desc') => void
   setPage: (page: number) => void
   onSubmit: SubmitHandler
   onAddProduct: AddProductHandler
@@ -40,6 +44,10 @@ export default function OrderForm({
   page,
   pages,
   errors,
+  orderBy,
+  setOrderBy,
+  orderDirection,
+  setOrderDirection,
   setPage,
   onSubmit,
   onAddProduct,
@@ -69,9 +77,7 @@ export default function OrderForm({
   const [productPages, setProductPages] = useState(1)
 
   const [quantity, setQuantity] = useState('')
-  const [orderBy, setOrderBy] = useState<string>('description')
   const [openModal, setOpenModal] = useState(false)
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [selectedToEdit, setSelectedToEdit] = useState<OrderProductItem>()
   const [selectedToDelete, setSelectedToDelete] = useState<OrderProductItem>()
 

@@ -30,6 +30,8 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
   const [total, setTotal] = useState<number>(0)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
+  const [orderBy, setOrderBy] = useState<string>('name')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
   const [isLoading, setIsLoading] = useState(false)
   const [invoiceProducts, setInvoiceProducts] = useState<InvoiceProductItem[]>([])
   const [displayableInvoiceProduct, setDisplayableInvoiceProduct] = useState<InvoiceProductItem[]>(
@@ -208,6 +210,30 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
     setDisplayableInvoiceProduct(_invoiceProducts.slice(_page, _page + numberOfRecords))
   }
 
+  const sortInvoiceProducts = (a: InvoiceProductItem, b: InvoiceProductItem) => {
+    let nameA = ''
+    let nameB = ''
+    if (orderBy === 'price' && a.product.supplierProducts && b.product.supplierProducts) {
+      nameA = a.product.supplierProducts[0].price.toString()
+      nameB = b.product.supplierProducts[0].price.toString()
+    } else if (orderBy === 'total' && a.product.supplierProducts && b.product.supplierProducts) {
+      nameA = (a.product.supplierProducts[0].price * a.quantity).toString()
+      nameB = (b.product.supplierProducts[0].price * b.quantity).toString()
+    } else {
+      nameA = a.product[orderBy].toUpperCase()
+      nameB = b.product[orderBy].toUpperCase()
+    }
+
+    if (nameA === nameB) {
+      return 0
+    }
+    if (nameA < nameB && orderDirection == 'asc') {
+      return -1
+    } else {
+      return 1
+    }
+  }
+
   const clearForm = () => {
     setErrors({})
     setErrorMessage('')
@@ -223,7 +249,11 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
   }, [])
 
   useEffect(() => {
-    loadDisplayableInvoiceProduct(invoiceProducts)
+    loadDisplayableInvoiceProduct(invoiceProducts.sort(sortInvoiceProducts))
+  }, [orderBy, orderDirection])
+
+  useEffect(() => {
+    loadDisplayableInvoiceProduct(invoiceProducts.sort(sortInvoiceProducts))
   }, [page, total])
 
   useEffect(() => {
@@ -246,6 +276,10 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
           setPage={setPage}
           errors={errors}
           total={total}
+          orderBy={orderBy}
+          setOrderBy={setOrderBy}
+          orderDirection={orderDirection}
+          setOrderDirection={setOrderDirection}
           customerSelected={customerSelected}
           setCustomerSelected={setCustomerSelected}
           supplierSelected={supplierSelected}
