@@ -214,14 +214,21 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
     let nameA = ''
     let nameB = ''
     if (orderBy === 'price' && a.product.supplierProducts && b.product.supplierProducts) {
-      nameA = a.product.supplierProducts[0].price.toString()
-      nameB = b.product.supplierProducts[0].price.toString()
+      const valueA = a.product.supplierProducts[0].price
+      const valueB = b.product.supplierProducts[0].price
+      return orderDirection === 'asc' ? valueA - valueB : valueB - valueA
     } else if (orderBy === 'total' && a.product.supplierProducts && b.product.supplierProducts) {
-      nameA = (a.product.supplierProducts[0].price * a.quantity).toString()
-      nameB = (b.product.supplierProducts[0].price * b.quantity).toString()
+      const valueA = a.product.supplierProducts[0].price * a.quantity
+      const valueB = b.product.supplierProducts[0].price * b.quantity
+      return orderDirection === 'asc' ? valueA - valueB : valueB - valueA
+    } else if (orderBy === 'name') {
+      nameA = a.product.name.toUpperCase()
+      nameB = b.product.name.toUpperCase()
+    } else if (orderBy === 'presentation') {
+      nameA = a.product.presentation.toUpperCase()
+      nameB = b.product.presentation.toUpperCase()
     } else {
-      nameA = a.product[orderBy].toUpperCase()
-      nameB = b.product[orderBy].toUpperCase()
+      throw 'orderBy is invalid'
     }
 
     if (nameA === nameB) {

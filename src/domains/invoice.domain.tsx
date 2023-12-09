@@ -5,6 +5,7 @@ import { SupplierItem } from './supplier.domain'
 export type InvoiceItem = {
   id: number
   total: number
+  mountPayed: number
   isActive: boolean
   updateAt: string
   createAt: string
@@ -13,11 +14,13 @@ export type InvoiceItem = {
   supplierId: number
   customer: CustomerItem
   supplier: SupplierItem
+  currentDiscountPercentage: number
 }
 
 export type InvoiceDetail = InvoiceItem & {
   id: number
   total: number
+  mountPayed: number
   isActive: boolean
   updateAt: string
   createAt: string
@@ -26,6 +29,7 @@ export type InvoiceDetail = InvoiceItem & {
   supplierId: number
   customer: CustomerItem
   supplier: SupplierItem
+  currentDiscountPercentage: number
 }
 
 class InvoiceProductRequest {

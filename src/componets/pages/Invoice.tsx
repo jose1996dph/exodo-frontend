@@ -8,15 +8,18 @@ import Content from '../organisms/Content'
 import InvoiceDetails from '../organisms/InvoiceDetails'
 import {
   InvoiceProductItem,
-  CreateInvoiceProduct,
-  UpdateInvoiceProduct,
+  // CreateInvoiceProduct,
+  // UpdateInvoiceProduct,
 } from '../../domains/invoiceProduct.domain'
 import { ProductItem } from '../../domains/product.domain'
 import { useParams } from 'react-router-dom'
 import { makeProductService } from '../../services/product.service'
 import ConfirmDialog from '../atoms/ConfirmDialog'
-import { CreateDiscount, DiscountItem, UpdateDiscount } from '../../domains/discount.domain'
-import InvoiceProductForm from '../molecules/InvoiceProductForm'
+import {
+  // CreateDiscount,
+  DiscountItem,
+  // UpdateDiscount
+} from '../../domains/discount.domain'
 import { SupplierDetail } from '../../domains/supplier.domain'
 import { makeSupplierService } from '../../services/supplier.service'
 import { makeCustomerService } from '../../services/customer.service'
@@ -24,6 +27,10 @@ import { CustomerDetail } from '../../domains/customer.domain'
 import { Grid, Paper } from '@mui/material'
 import InvoiceProductTable from '../organisms/InvoiceProductTable'
 import Prices from '../organisms/Prices'
+import PaymentForm from '../molecules/PaymentForm'
+import { CreatePayment, PaymentType, PaymentItem } from '../../domains/payment.domain'
+import { makePaymentService } from '../../services/payment.service'
+import PaymentTable from '../organisms/PaymentTable'
 
 type InvoicePageProps = {
   open: boolean
@@ -36,17 +43,22 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
   const [orderDiscountDirection, setOrderDiscountDirection] = useState<'asc' | 'desc'>('asc')
   const [pageDiscounts, setPageDiscounts] = useState(1)
   const [pagesDiscounts, setPagesDiscounts] = useState(0)
-  const [openModalToDeleteDiscount, setOpenModalToDeleteDiscount] = useState(false)
-  const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
-  const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
+  // const [openModalToDeleteDiscount, setOpenModalToDeleteDiscount] = useState(false)
+  // const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
+  // const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
 
   const [invoice, setInvoice] = useState<InvoiceDetail | undefined>(undefined)
   const [supplier, setSupplier] = useState<SupplierDetail | undefined>(undefined)
   const [customer, setCustomer] = useState<CustomerDetail | undefined>(undefined)
   const [products, setProducts] = useState<ProductItem[]>([])
+  const [payments, setPayments] = useState<PaymentItem[]>([])
   const [invoiceProducts, setInvoiceProducts] = useState<InvoiceProductItem[]>([])
   const [orderBy, setOrderBy] = useState<string>('name')
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [paymentsOrderBy, setPaymentsOrderBy] = useState<string>('paymentType')
+  const [paymentsOrderDirection, setPaymentsOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [paymentsPage, setPaymentsPage] = useState(1)
+  const [paymentsPages, setPaymentsPages] = useState(0)
   // const [productsNoInvoice, setProductsNoInvoice] = useState<ProductItem[]>([])
   const [productSelected, setProductSelected] = useState<ProductItem>()
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -64,6 +76,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
   const invoiceService = makeInvoiceService()
   const invoiceProductService = makeInvoiceProductService()
   const productService = makeProductService()
+  const paymentService = makePaymentService()
   const discountService = makeDiscountService()
   const supplierService = makeSupplierService()
   const customerService = makeCustomerService()
@@ -89,6 +102,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
   }
 
+  /*
   const submitDiscount = async (percentage: number, deadline: number) => {
     if (selectedDiscountToEdit) {
       await editDiscount(new UpdateDiscount(percentage, deadline))
@@ -96,7 +110,9 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
     await addDiscount(new CreateDiscount(percentage, deadline))
   }
+  */
 
+  /*
   const editDiscount = async (discount: UpdateDiscount) => {
     try {
       if (!id) {
@@ -119,7 +135,9 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       console.error(error)
     }
   }
+  */
 
+  /*
   const addDiscount = async (discount: CreateDiscount) => {
     try {
       if (!id) {
@@ -143,7 +161,9 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       throw error
     }
   }
+  */
 
+  /*
   const handleDeleteDiscount = async () => {
     try {
       if (!id) {
@@ -160,6 +180,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       console.error(e)
     }
   }
+  */
 
   const loadInvoice = async () => {
     try {
@@ -219,6 +240,30 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
   }
 
+  const loadPayments = async () => {
+    setIsLoading(true)
+    try {
+      if (!id) {
+        return
+      }
+      const invoiceId = parseInt(id)
+      const [_payments, _pages] = await paymentService.getAll(
+        invoiceId,
+        paymentsPage,
+        '',
+        paymentsOrderBy,
+        paymentsOrderDirection,
+      )
+      setPayments(_payments)
+      setPaymentsPages(_pages)
+    } catch {
+      console.error('error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  /*
   const submitInvoiceProduct = async () => {
     if (selectedToEdit) {
       await editInvoiceProduct()
@@ -226,7 +271,9 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
     await addInvoiceProduct()
   }
+  */
 
+  /*
   const editInvoiceProduct = async () => {
     try {
       if (!id) {
@@ -259,7 +306,9 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       console.error('error')
     }
   }
+  */
 
+  /*
   const addInvoiceProduct = async () => {
     try {
       if (!id) {
@@ -291,7 +340,9 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       console.error('error')
     }
   }
+  */
 
+  /*
   const addMoreProductsSupplier = async (nextPage: number) => {
     try {
       if (!supplier) {
@@ -311,6 +362,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       console.error('error')
     }
   }
+  */
 
   const handlerDeleteInvoiceProduct = async () => {
     try {
@@ -359,6 +411,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
   }
 
+  /*
   const handlerSelectToEdit = (item: InvoiceProductItem) => {
     if (!item) {
       return
@@ -371,11 +424,47 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     setProducts([_product])
     setSearchText(item.product.name + ' - ' + item.product.presentation)
   }
+  */
 
+  const handlerSubmitPayment = async (
+    mount: number,
+    paymentType: PaymentType,
+    referenceCode?: string | undefined,
+    tranferDate?: Date | undefined,
+  ) => {
+    try {
+      if (!id) {
+        return
+      }
+      const invoiceId = parseInt(id)
+
+      const payment = new CreatePayment(mount, paymentType, referenceCode, tranferDate)
+
+      const _errors = payment.isValid()
+
+      setErrors(_errors)
+      if (Object.keys(_errors).length) {
+        throw _errors
+      }
+
+      await paymentService.create(invoiceId, payment)
+
+      clearForm()
+
+      await loadPayments()
+      await loadInvoice()
+    } catch (e) {
+      console.error('error')
+      throw e
+    }
+  }
+
+  /*
   const openAlert = (id: number) => {
     setOpenModal(true)
     setSelectedIdToDelete(id)
   }
+  */
 
   useEffect(() => {
     loadInvoice()
@@ -388,6 +477,10 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
   useEffect(() => {
     loadProducts()
   }, [page, orderDirection, orderBy])
+
+  useEffect(() => {
+    loadPayments()
+  }, [paymentsPage, paymentsOrderDirection, paymentsOrderBy])
 
   useEffect(() => {
     setIsLoading(true)
@@ -406,6 +499,44 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       />
       <Content title='Factura' open={open} toggleDrawer={toggleDrawer}>
         <InvoiceDetails title='Información del proveedor' obj={invoice}></InvoiceDetails>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <PaymentForm
+              isLoading={false}
+              submitPayment={handlerSubmitPayment}
+              errors={errors}
+              total={invoice?.total ?? 0}
+              mountPayed={invoice?.mountPayed ?? 0}
+              discountPercentage={invoice?.currentDiscountPercentage ?? 0}
+            ></PaymentForm>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <PaymentTable
+              pages={paymentsPages}
+              page={paymentsPage}
+              setPage={setPaymentsPage}
+              orderBy={paymentsOrderBy}
+              setOrderBy={setPaymentsOrderBy}
+              orderDirection={paymentsOrderDirection}
+              setOrderDirection={setPaymentsOrderDirection}
+              data={payments}
+            ></PaymentTable>
+          </Paper>
+        </Grid>
         {/*
         <InvoiceProductForm
           pages={pages}

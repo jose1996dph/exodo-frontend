@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { InternalAxiosRequestConfig } from 'axios'
 import { BackendURL } from '../config'
 import { getToken, setToken } from './helpers/auth.helper'
 import { UrlRoutes } from './routes/routes'
@@ -17,7 +17,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(
-  function (config: AxiosRequestConfig) {
+  function (config: InternalAxiosRequestConfig) {
     const token = getToken()
     if (token && config.headers) {
       config.headers['Authorization'] = `Bearer ${token}`

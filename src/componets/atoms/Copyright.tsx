@@ -1,7 +1,7 @@
 import Typography, { TypographyProps } from '@mui/material/Typography'
 import Link from '@mui/material/Link'
 import { SxProps } from '@mui/system'
-import { Theme } from '../styles'
+import { Theme } from '@mui/material/styles/createTheme'
 
 type CopyrightProps = TypographyProps & {
   /** */

@@ -30,6 +30,8 @@ import CreateInvoice from './componets/pages/CreateInvoice'
 import Invoice from './componets/pages/Invoice'
 import InvoicesPage from './componets/pages/Invoices'
 import Profile from './componets/pages/Profile'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
   const location = useLocation()
@@ -58,239 +60,241 @@ function App() {
 
   return (
     <div className='App'>
-      <Routes>
-        <Route
-          path={UrlRoutes.ForgotPassword}
-          element={<>{isLogedRedirectTo(<ForgotPassword />)}</>}
-        />
-        <Route path={UrlRoutes.SetPassword} element={<>{isLogedRedirectTo(<SetPassword />)}</>} />
-        <Route path={UrlRoutes.Login} element={<>{isLogedRedirectTo(<Login />)}</>} />
-        <Route path={UrlRoutes.Home}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Routes>
           <Route
-            path={UrlRoutes.Home}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <Dashboard open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
+            path={UrlRoutes.ForgotPassword}
+            element={<>{isLogedRedirectTo(<ForgotPassword />)}</>}
           />
-          <Route
-            path={UrlRoutes.Dashboard}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <Dashboard open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={UrlRoutes.Profile}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <Profile open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+          <Route path={UrlRoutes.SetPassword} element={<>{isLogedRedirectTo(<SetPassword />)}</>} />
+          <Route path={UrlRoutes.Login} element={<>{isLogedRedirectTo(<Login />)}</>} />
+          <Route path={UrlRoutes.Home}>
+            <Route
+              path={UrlRoutes.Home}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <Dashboard open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={UrlRoutes.Dashboard}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <Dashboard open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={UrlRoutes.Profile}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <Profile open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Orders}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <OrdersPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Orders}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <OrdersPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.Order}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <Order open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.Order}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <Order open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateOrder}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateOrder open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateOrder}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateOrder open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Invoices}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <InvoicesPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Invoices}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <InvoicesPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.Invoice}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <Invoice open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.Invoice}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <Invoice open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateInvoice}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateInvoice open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateInvoice}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateInvoice open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Customers}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CustomersPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Customers}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CustomersPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateCustomer}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateCustomer open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateCustomer}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateCustomer open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.EditCustomer}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <EditCustomer open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.EditCustomer}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <EditCustomer open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Suppliers}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <SuppliersPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Suppliers}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <SuppliersPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.Supplier}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <SupplierPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.Supplier}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <SupplierPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateSupplier}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateSupplier open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateSupplier}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateSupplier open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.EditSupplier}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <EditSupplier open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.EditSupplier}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <EditSupplier open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Products}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <ProductsPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Products}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <ProductsPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateProduct}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateProduct open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateProduct}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateProduct open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.EditProduct}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <EditProduct open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.EditProduct}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <EditProduct open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Categories}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CategoriesPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Categories}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CategoriesPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateCategory}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateCategory open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateCategory}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateCategory open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.EditCategory}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <EditCategory open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={`${UrlRoutes.EditCategory}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <EditCategory open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.Users}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <UsersPage open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.Users}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <UsersPage open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={UrlRoutes.CreateUser}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <CreateUser open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path={UrlRoutes.CreateUser}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <CreateUser open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path={`${UrlRoutes.EditUser}:id`}
-            element={
-              <ProtectedRoute isLoged={isLoged}>
-                <EditUser open={open} toggleDrawer={toggleDrawer} />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-        {/* <Route path='*' element={<Navigate to={UrlRoutes.Home} />} />*/}
-      </Routes>
+            <Route
+              path={`${UrlRoutes.EditUser}:id`}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <EditUser open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+          {/* <Route path='*' element={<Navigate to={UrlRoutes.Home} />} />*/}
+        </Routes>
+      </LocalizationProvider>
     </div>
   )
 }

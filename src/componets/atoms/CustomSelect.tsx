@@ -9,19 +9,19 @@ export type CustomSelectItem<T = unknown> = {
   description: string
 }
 
-type CustomSelectProps = SelectProps & {
-  items: CustomSelectItem[]
+type CustomSelectProps<T> = SelectProps & {
+  items: CustomSelectItem<T>[]
   helperText: string | undefined
 }
 
-export default function CustomSelect({
+export default function CustomSelect<T>({
   items,
   label,
   id,
   helperText,
   error,
   ...props
-}: CustomSelectProps) {
+}: CustomSelectProps<T>) {
   return (
     <FormControl fullWidth margin='normal'>
       <InputLabel id={`${id}-label`} error={error}>
@@ -29,7 +29,7 @@ export default function CustomSelect({
       </InputLabel>
       <Select label={label} id={id} labelId={`${id}-label`} error={error} {...props}>
         {items.map((item, index) => (
-          <MenuItem key={index} value={item.value}>
+          <MenuItem key={index} value={item.value as any}>
             {item.description}
           </MenuItem>
         ))}
