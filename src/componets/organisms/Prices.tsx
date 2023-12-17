@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material'
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { DiscountItem } from '../../domains/discount.domain'
 
 type PricesProp = {
@@ -9,20 +9,23 @@ type PricesProp = {
 }
 
 export default function Prices({ discounts, total, productPrice = undefined }: PricesProp) {
-  const tableRows: CustomTableRow[] = [
+  const tableRows: CustomRow[] = [
     {
       title: 'Tiempo limite',
       key: 'deadline',
+      isImportant: true,
       render: (_, item: DiscountItem) => `${item.deadline} días`,
     },
     {
       title: 'Porcentage',
       key: 'percentage',
+      isImportant: true,
       render: (_, item: DiscountItem) => `${item.percentage}%`,
     },
     {
       title: 'Total',
       key: 'total',
+      isImportant: true,
       render: (_, item: DiscountItem) => {
         return total - (total * item.percentage) / 100
       },
@@ -33,7 +36,8 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
     tableRows.splice(2, 0, {
       title: 'Precio c/u',
       key: 'unitPrice',
-      render: (_, item: DiscountItem) => {
+      isImportant: true,
+      render: (_: CustomRow, item: DiscountItem) => {
         return productPrice - (productPrice * item.percentage) / 100
       },
     })

@@ -32,12 +32,17 @@ import InvoicesPage from './componets/pages/Invoices'
 import Profile from './componets/pages/Profile'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 function App() {
   const location = useLocation()
   const [isLoged, setIsloged] = useState(getToken() !== null)
 
-  const [open, setOpen] = useState(true)
+  const theme = useTheme()
+  const isNotXS = useMediaQuery(theme.breakpoints.up('sm'))
+
+  const [open, setOpen] = useState(isNotXS)
   const toggleDrawer = () => {
     setOpen(!open)
   }

@@ -1,7 +1,7 @@
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { CategoryItem } from '../../domains/category.domain'
 
-const propRows: CustomTableRow[] = [{ title: 'Descripción', key: 'description' }]
+const propRows: CustomRow[] = [{ title: 'Descripción', key: 'description', isImportant: true }]
 
 type CategoryTableProps = {
   pages: number

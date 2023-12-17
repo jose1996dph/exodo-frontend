@@ -66,7 +66,6 @@ export default function PaymentForm({
           helperText={errors['paymentType']}
           onChange={(event) => {
             if (!event.target.value) {
-              console.log(event)
               return
             }
             setPaymentType(event.target.value as PaymentType)

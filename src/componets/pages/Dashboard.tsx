@@ -1,5 +1,8 @@
 import Content from '../organisms/Content'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
+import { Grid, Paper } from '@mui/material'
+import Chart from '../molecules/Chart'
+import Deposits from '../molecules/Deposits'
 
 type DashboardProps = {
   open: boolean
@@ -9,7 +12,6 @@ type DashboardProps = {
 export default function Dashboard({ open, toggleDrawer }: DashboardProps) {
   return (
     <Content title='Indicadores' open={open} toggleDrawer={toggleDrawer}>
-      {/*
       <Grid item xs={12} md={8} lg={9}>
         <Paper
           sx={{
@@ -34,12 +36,13 @@ export default function Dashboard({ open, toggleDrawer }: DashboardProps) {
           <Deposits />
         </Paper>
       </Grid>
+      {/**
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
           <OrderTable />
         </Paper>
       </Grid>
-      */}
+       */}
     </Content>
   )
 }

@@ -1,11 +1,11 @@
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { SupplierItem } from '../../domains/supplier.domain'
 
-const propRows: CustomTableRow[] = [
-  { title: 'Rif', key: 'dni' },
-  { title: 'Nombre', key: 'name' },
-  { title: 'Dirección', key: 'address' },
-  { title: 'Teléfono', key: 'phone' },
+const propRows: CustomRow[] = [
+  { title: 'Rif', key: 'dni', isImportant: true },
+  { title: 'Nombre', key: 'name', isImportant: true },
+  { title: 'Dirección', key: 'address', isImportant: false },
+  { title: 'Teléfono', key: 'phone', isImportant: false },
 ]
 
 type SupplierTableProps = {

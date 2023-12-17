@@ -1,9 +1,9 @@
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { DiscountItem } from '../../domains/discount.domain'
 
-const propRows: CustomTableRow[] = [
-  { title: 'Porcentaje', key: 'percentage' },
-  { title: 'Tiempo limite', key: 'deadline' },
+const propRows: CustomRow[] = [
+  { title: 'Porcentaje', key: 'percentage', isImportant: true },
+  { title: 'Tiempo limite', key: 'deadline', isImportant: true },
 ]
 type DiscountTableProps = {
   pages: number

@@ -20,6 +20,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
+      [theme.breakpoints.down('sm')]: {
+        position: 'absolute',
+      },
       boxSizing: 'border-box',
       ...(!open && {
         overflowX: 'hidden',
@@ -27,9 +30,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
         }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
+        width: theme.spacing(9),
+        [theme.breakpoints.down('sm')]: {
+          width: theme.spacing(0),
         },
       }),
     },
@@ -58,7 +61,7 @@ export default function SiderBar({ open, toggleDrawer }: SiderBarProps) {
       </Toolbar>
       <Divider />
       <List component='nav'>
-        <MainListItems />
+        <MainListItems toggleDrawer={toggleDrawer} />
         {/** <Divider sx={{ my: 1 }} /> */}
         {/** secondaryListItems */}
       </List>

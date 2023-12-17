@@ -1,11 +1,12 @@
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { PaymentItem, PaymentType } from '../../domains/payment.domain'
 import { formatDate } from '../../framework/helpers/formatter.helper'
 
-const propRows: CustomTableRow[] = [
+const propRows: CustomRow[] = [
   {
     title: 'Tipo de pago',
     key: 'paymentType',
+    isImportant: true,
     render: (_, item: PaymentItem) => {
       if (item.paymentType === PaymentType.CASH) {
         return 'Efectivo'
@@ -17,18 +18,25 @@ const propRows: CustomTableRow[] = [
       return ''
     },
   },
-  { title: 'Codigo de referencia', key: 'referenceCode' },
+  { title: 'Codigo de referencia', isImportant: false, key: 'referenceCode' },
   {
     title: 'Fecha de transferencia',
     key: 'transferDate',
+    isImportant: false,
     render: (_, item: PaymentItem) => item.transferDate && formatDate(item.transferDate),
   },
   {
     title: 'Fecha de recibimiento',
     key: 'createAt',
+    isImportant: true,
     render: (_, item: PaymentItem) => formatDate(item.createAt),
   },
-  { title: 'Monto', key: 'mount', render: (_, item: PaymentItem) => item.mount.toFixed(2) },
+  {
+    title: 'Monto',
+    key: 'mount',
+    isImportant: true,
+    render: (_, item: PaymentItem) => item.mount.toFixed(2),
+  },
 ]
 
 type PaymentTableProps = {

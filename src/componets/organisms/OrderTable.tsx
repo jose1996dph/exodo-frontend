@@ -1,12 +1,27 @@
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { OrderItem } from '../../domains/order.domain'
 import { formatDate } from '../../framework/helpers/formatter.helper'
 
-const propRows: CustomTableRow[] = [
-  { title: 'Proveedor', key: 'supplier', render: (_, item: OrderItem) => item.supplier.name },
-  { title: 'Cliente', key: 'customer', render: (_, item: OrderItem) => item.customer.businessName },
-  { title: 'Total', key: 'total' },
-  { title: 'Fecha', key: 'createAt', render: (_, item: OrderItem) => formatDate(item.createAt) },
+const propRows: CustomRow[] = [
+  {
+    title: 'Proveedor',
+    key: 'supplier',
+    isImportant: true,
+    render: (_, item: OrderItem) => item.supplier.name,
+  },
+  {
+    title: 'Cliente',
+    key: 'customer',
+    isImportant: true,
+    render: (_, item: OrderItem) => item.customer.businessName,
+  },
+  { title: 'Total', key: 'total', isImportant: false },
+  {
+    title: 'Fecha',
+    key: 'createAt',
+    isImportant: false,
+    render: (_, item: OrderItem) => formatDate(item.createAt),
+  },
 ]
 
 type OrderTableProps = {

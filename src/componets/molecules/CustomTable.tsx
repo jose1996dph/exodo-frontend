@@ -5,18 +5,16 @@ import TableCell, { TableCellProps } from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 
 import Title from '../atoms/Title'
-import { Pagination, Switch, TableSortLabel } from '@mui/material'
+import CustomTableRow from '../atoms/CustomTableRow'
+import { Box, Pagination, TableSortLabel, useMediaQuery } from '@mui/material'
 
-export type CustomTableRow = {
+export type CustomRow = {
   title: string
   key: string
-  render?: (tableRow: CustomTableRow, item: any) => ReactNode
+  isImportant: boolean
+  render?: (tableRow: CustomRow, item: any) => ReactNode
   props?: TableCellProps | undefined
 }
 
@@ -25,7 +23,7 @@ type CustomTableProps = {
   pages: number
   page: number
   setPage: (value: number) => void
-  tableRows: CustomTableRow[]
+  tableRows: CustomRow[]
   items: any[]
   identify?: string
   orderBy?: string | undefined
@@ -55,6 +53,10 @@ export default function CustomTable({
   onUpdate = undefined,
   onToggle = undefined,
 }: CustomTableProps) {
+  const isNotAllImportant = tableRows.some((tr) => !tr.isImportant)
+  const isXs = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
+  const doShowCollapse = isNotAllImportant && isXs
+
   const handlerTogglerSort = (attribute: string) => {
     if (!orderBy) {
       return
@@ -75,61 +77,82 @@ export default function CustomTable({
   return (
     <Fragment>
       <Title>{title}</Title>
-      <Table size='small'>
-        <TableHead>
-          <TableRow>
-            {tableRows.map((tableRow) => (
-              <TableCell key={tableRow.key} {...tableRow.props}>
-                {orderBy && orderDirection ? (
-                  <TableSortLabel
-                    active={orderBy === tableRow.key}
-                    direction={orderBy === tableRow.key ? orderDirection : 'asc'}
-                    onClick={() => handlerTogglerSort(tableRow.key)}
-                  >
-                    {tableRow.title}
-                  </TableSortLabel>
-                ) : (
-                  <>{tableRow.title}</>
+      <Box sx={{ overflowX: 'auto' }}>
+        <Box sx={{ width: '100%', display: 'table', tableLayout: 'fixed' }}>
+          <Table size='small'>
+            <TableHead>
+              <TableRow>
+                {doShowCollapse && <TableCell size='small'></TableCell>}
+                {tableRows.map(
+                  (tableRow) =>
+                    (!doShowCollapse || tableRow.isImportant) && (
+                      <TableCell size='small' key={tableRow.key} {...tableRow.props}>
+                        {orderBy && orderDirection ? (
+                          <TableSortLabel
+                            active={orderBy === tableRow.key}
+                            direction={orderBy === tableRow.key ? orderDirection : 'asc'}
+                            onClick={() => handlerTogglerSort(tableRow.key)}
+                          >
+                            {tableRow.title}
+                          </TableSortLabel>
+                        ) : (
+                          <>{tableRow.title}</>
+                        )}
+                      </TableCell>
+                    ),
+                )}
+                <TableCell size='small'></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {items.map((item) => (
+                <>
+                  <CustomTableRow
+                    doShowCollapse={doShowCollapse}
+                    item={item}
+                    identify={identify}
+                    tableRows={tableRows}
+                    key={item[identify]}
+                    onDelete={onDelete}
+                    onShow={onShow}
+                    onToggle={onToggle}
+                    onUpdate={onUpdate}
+                  ></CustomTableRow>
+                  {/**
+            <TableRow key={item[identify]}>
+              {tableRows.map((tableRow) => (
+                <TableCell key={tableRow.key} {...tableRow.props}>
+                  {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
+                </TableCell>
+              ))}
+              <TableCell align='right'>
+                {onShow && (
+                  <IconButton color='primary' onClick={() => onShow(item[identify])}>
+                    <VisibilityIcon />
+                  </IconButton>
+                )}
+                {onUpdate && (
+                  <IconButton color='primary' onClick={() => onUpdate(item[identify], item)}>
+                    <EditIcon />
+                  </IconButton>
+                )}
+                {onDelete && (
+                  <IconButton color='error' onClick={() => onDelete(item[identify], item)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+                {onToggle && (
+                  <Switch checked={item['isActive']} onChange={() => onToggle(item[identify])} />
                 )}
               </TableCell>
-            ))}
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item) => {
-            return (
-              <TableRow key={item[identify]}>
-                {tableRows.map((tableRow) => (
-                  <TableCell key={tableRow.key} {...tableRow.props}>
-                    {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
-                  </TableCell>
-                ))}
-                <TableCell align='right'>
-                  {onShow && (
-                    <IconButton color='primary' onClick={() => onShow(item[identify])}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  )}
-                  {onUpdate && (
-                    <IconButton color='primary' onClick={() => onUpdate(item[identify], item)}>
-                      <EditIcon />
-                    </IconButton>
-                  )}
-                  {onDelete && (
-                    <IconButton color='error' onClick={() => onDelete(item[identify], item)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
-                  {onToggle && (
-                    <Switch checked={item['isActive']} onChange={() => onToggle(item[identify])} />
-                  )}
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+            </TableRow>
+           */}
+                </>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+      </Box>
       {items.length == 0 && (
         <Typography variant='body2' color='text.secondary' align='center'>
           {'No se encontraron registros'}

@@ -1,14 +1,20 @@
-import CustomTable, { CustomTableRow } from '../molecules/CustomTable'
+import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { SupplierProductItem } from '../../domains/supplierProduct.domain'
 
-const propRows: CustomTableRow[] = [
-  { title: 'Nombre', key: 'name', render: (_, item: SupplierProductItem) => item.product.name },
+const propRows: CustomRow[] = [
+  {
+    title: 'Nombre',
+    key: 'name',
+    isImportant: true,
+    render: (_, item: SupplierProductItem) => item.product.name,
+  },
   {
     title: 'Presentación',
     key: 'presentation',
+    isImportant: true,
     render: (_, item: SupplierProductItem) => item.product.presentation,
   },
-  { title: 'Precio', key: 'price' },
+  { title: 'Precio', key: 'price', isImportant: false },
 ]
 
 type SupplierProductTableProps = {

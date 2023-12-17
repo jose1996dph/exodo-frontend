@@ -16,48 +16,62 @@ import WorkIcon from '@mui/icons-material/Work'
 import { useNavigate } from 'react-router-dom'
 
 import { UrlRoutes } from '../../framework/routes/routes'
+import { useMediaQuery } from '@mui/material'
 
-export const MainListItems = () => {
+type MainListItemsProps = {
+  toggleDrawer: () => void
+}
+
+export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
+  const isXs = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
   const navigate = useNavigate()
+
+  const navegateTo = (page: string) => {
+    if (isXs) {
+      toggleDrawer()
+    }
+    navigate(page)
+  }
+
   return (
     <Fragment>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Dashboard, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Dashboard)}>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary='Indicadores' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Invoices, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Invoices)}>
         <ListItemIcon>
           <ReceiptLongIcon />
         </ListItemIcon>
         <ListItemText primary='Facturas' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Orders, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Orders)}>
         <ListItemIcon>
           <ShoppingCartIcon />
         </ListItemIcon>
         <ListItemText primary='Órdenes' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Customers, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Customers)}>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary='Clientes' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Suppliers, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Suppliers)}>
         <ListItemIcon>
           <LocalShippingIcon />
         </ListItemIcon>
         <ListItemText primary='Proveedores' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Products, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Products)}>
         <ListItemIcon>
           <InventoryIcon />
         </ListItemIcon>
         <ListItemText primary='Productos' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Categories, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Categories)}>
         <ListItemIcon>
           <CategoryIcon />
         </ListItemIcon>
@@ -69,7 +83,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary='Reportes' />
       </ListItemButton>
-      <ListItemButton onClick={() => navigate(UrlRoutes.Users, { replace: true })}>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.Users)}>
         <ListItemIcon>
           <WorkIcon />
         </ListItemIcon>
