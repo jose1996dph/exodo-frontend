@@ -5,7 +5,7 @@ import { styled } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import { MainListItems } from '../molecules/ListItems'
+import { MainListItems, SecondaryListItems } from '../molecules/ListItems'
 import Toolbar from '@mui/material/Toolbar'
 
 const drawerWidth = 240
@@ -62,8 +62,8 @@ export default function SiderBar({ open, toggleDrawer }: SiderBarProps) {
       <Divider />
       <List component='nav'>
         <MainListItems toggleDrawer={toggleDrawer} />
-        {/** <Divider sx={{ my: 1 }} /> */}
-        {/** secondaryListItems */}
+        <Divider sx={{ my: 1 }} />
+        <SecondaryListItems toggleDrawer={toggleDrawer} />
       </List>
     </Drawer>
   )

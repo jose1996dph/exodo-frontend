@@ -34,6 +34,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import SupplierReports from './componets/pages/SupplierReports'
+import SellerReports from './componets/pages/SellerReports'
 
 function App() {
   const location = useLocation()
@@ -293,6 +295,24 @@ function App() {
               element={
                 <ProtectedRoute isLoged={isLoged}>
                   <EditUser open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path={UrlRoutes.SellerReports}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <SellerReports open={open} toggleDrawer={toggleDrawer} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path={UrlRoutes.SupplierReports}
+              element={
+                <ProtectedRoute isLoged={isLoged}>
+                  <SupplierReports open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
             />

@@ -40,4 +40,8 @@ export enum UrlRoutes {
   Invoice = '/invoices/',
   CreateInvoice = '/create/invoice',
   EditInvoice = '/edit/invoice/',
+  // Seller Reports
+  SellerReports = '/reports/seller',
+  // Supplier Reports
+  SupplierReports = '/reports/supplier',
 }

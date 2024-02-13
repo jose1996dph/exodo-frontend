@@ -41,7 +41,7 @@ class InvoiceRepository implements IInvoiceRepository {
 
     const { data } = await api.get(`${BackendURL}invoices/?${params}`)
 
-    const [user, count] = data
+    const [invoices, count] = data
 
     let _count: number = (count / pageSize) >> 0
 
@@ -49,7 +49,7 @@ class InvoiceRepository implements IInvoiceRepository {
       _count += 1
     }
 
-    return [user as InvoiceItem[], _count]
+    return [invoices as InvoiceItem[], _count]
   }
 
   async getById(id: number): Promise<InvoiceDetail> {

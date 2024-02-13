@@ -1,5 +1,6 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { SupplierProductItem } from '../../domains/supplierProduct.domain'
+import { formatFloat } from '../../framework/helpers/formatter.helper'
 
 const propRows: CustomRow[] = [
   {
@@ -14,7 +15,12 @@ const propRows: CustomRow[] = [
     isImportant: true,
     render: (_, item: SupplierProductItem) => item.product.presentation,
   },
-  { title: 'Precio', key: 'price', isImportant: false },
+  {
+    title: 'Precio',
+    key: 'price',
+    isImportant: false,
+    render: (_, item: SupplierProductItem) => formatFloat(item.price),
+  },
 ]
 
 type SupplierProductTableProps = {

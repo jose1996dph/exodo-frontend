@@ -7,3 +7,11 @@ export function formatDate(value: Date | string) {
 
   return _value.toLocaleDateString()
 }
+
+export function formatFloat(value: number) {
+  return value.toLocaleString('es-VE', { minimumFractionDigits: 2 })
+}
+
+export function formatInteger(value: number) {
+  return value.toLocaleString('es-VE', { minimumFractionDigits: 0 })
+}

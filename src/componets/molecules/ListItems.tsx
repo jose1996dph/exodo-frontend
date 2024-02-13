@@ -77,12 +77,14 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
         </ListItemIcon>
         <ListItemText primary='Categorías' />
       </ListItemButton>
-      <ListItemButton>
+      {/*
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.SellerReport)}>
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary='Reportes' />
       </ListItemButton>
+      */}
       <ListItemButton onClick={() => navegateTo(UrlRoutes.Users)}>
         <ListItemIcon>
           <WorkIcon />
@@ -93,28 +95,33 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
   )
 }
 
-export const secondaryListItems = (
-  <Fragment>
-    <ListSubheader component='div' inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary='Current month' />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary='Last quarter' />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary='Year-end sale' />
-    </ListItemButton>
-  </Fragment>
-)
+export const SecondaryListItems = ({ toggleDrawer }: MainListItemsProps) => {
+  const isXs = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
+  const navigate = useNavigate()
+
+  const navegateTo = (page: string) => {
+    if (isXs) {
+      toggleDrawer()
+    }
+    navigate(page)
+  }
+  return (
+    <Fragment>
+      <ListSubheader component='div' inset>
+        Reportes
+      </ListSubheader>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.SellerReports)}>
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary='Vendedores' />
+      </ListItemButton>
+      <ListItemButton onClick={() => navegateTo(UrlRoutes.SupplierReports)}>
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+        <ListItemText primary='Proveedores' />
+      </ListItemButton>
+    </Fragment>
+  )
+}

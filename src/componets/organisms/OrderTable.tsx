@@ -1,6 +1,6 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { OrderItem } from '../../domains/order.domain'
-import { formatDate } from '../../framework/helpers/formatter.helper'
+import { formatDate, formatFloat } from '../../framework/helpers/formatter.helper'
 
 const propRows: CustomRow[] = [
   {
@@ -15,7 +15,12 @@ const propRows: CustomRow[] = [
     isImportant: true,
     render: (_, item: OrderItem) => item.customer.businessName,
   },
-  { title: 'Total', key: 'total', isImportant: false },
+  {
+    title: 'Total',
+    key: 'total',
+    isImportant: false,
+    render: (_, item: OrderItem) => formatFloat(item.total),
+  },
   {
     title: 'Fecha',
     key: 'createAt',

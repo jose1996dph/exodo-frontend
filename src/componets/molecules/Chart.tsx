@@ -1,25 +1,19 @@
 import { Fragment } from 'react'
 import { useTheme } from '@mui/material'
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import Title from '../atoms/Title'
+import { Balance } from '../../domains/balance.domain'
+import { formatFloat } from '../../framework/helpers/formatter.helper'
 
-export default function Chart() {
+type ChartProp = {
+  data: Balance[]
+}
+
+export default function Chart({ data }: ChartProp) {
   const theme = useTheme()
-
-  const data = [
-    { time: '00:00', amount: 0, amount2: 10 },
-    { time: '03:00', amount: 300, amount2: 410 },
-    { time: '06:00', amount: 600, amount2: 710 },
-    { time: '09:00', amount: 800, amount2: 910 },
-    { time: '12:00', amount: 1500, amount2: 1610 },
-    { time: '15:00', amount: 2000, amount2: 2110 },
-    { time: '18:00', amount: 2400, amount2: 2510 },
-    { time: '21:00', amount: 2400, amount2: 2510 },
-    { time: '24:00', amount: undefined, amount2: undefined },
-  ]
   return (
     <Fragment>
-      <Title>Today</Title>
+      <Title>Ventas en el año</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -31,37 +25,51 @@ export default function Chart() {
           }}
         >
           <XAxis
+            tickFormatter={(value: Date) => {
+              return value
+                .toLocaleDateString('es-VE', { month: 'short' })
+                .replace(/^\w/, (c) => c.toUpperCase())
+                .trim()
+            }}
             dataKey='time'
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
           />
-          <YAxis stroke={theme.palette.text.secondary} style={theme.typography.body2}>
-            <Label
-              angle={270}
-              position='left'
-              style={{
-                textAnchor: 'middle',
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
-            >
-              Ventas ($)
-            </Label>
-          </YAxis>
-          <Line
-            isAnimationActive={false}
-            type='monotone'
-            dataKey='amount'
-            stroke={theme.palette.primary.main}
-            dot={false}
+          <YAxis
+            tickFormatter={(value: number) => formatFloat(value)}
+            dataKey='total'
+            stroke={theme.palette.text.secondary}
+            style={theme.typography.body2}
+          />
+          <Tooltip
+            labelFormatter={(value: Date) => {
+              return value
+                .toLocaleDateString('es', { month: 'long', year: 'numeric' })
+                .replace(/^\w/, (c) => c.toUpperCase())
+                .trim()
+            }}
+            formatter={(value: string) => {
+              const _value = parseFloat(value)
+              return formatFloat(_value)
+            }}
           />
           <Line
             isAnimationActive={false}
             type='linear'
-            dataKey='amount2'
+            dataKey='total'
+            name='Monto'
+            stroke={theme.palette.primary.main}
+            dot={false}
+          />
+          {/**
+          <Line
+            isAnimationActive={false}
+            type='linear'
+            dataKey='month'
             stroke={theme.palette.secondary.main}
             dot={false}
           />
+           */}
         </LineChart>
       </ResponsiveContainer>
     </Fragment>

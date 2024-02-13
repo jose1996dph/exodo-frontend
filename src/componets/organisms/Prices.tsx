@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material'
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { DiscountItem } from '../../domains/discount.domain'
+import { formatFloat } from '../../framework/helpers/formatter.helper'
 
 type PricesProp = {
   discounts: DiscountItem[]
@@ -69,7 +70,7 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
             fontSize: 18,
           }}
         >
-          <b>Precio c/u: {productPrice}</b>
+          <b>Precio c/u: {formatFloat(productPrice)}</b>
         </Grid>
       )}
       <Grid
@@ -82,7 +83,7 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
           fontSize: 18,
         }}
       >
-        <b>Total: {total}</b>
+        <b>Total: {formatFloat(total)}</b>
       </Grid>
     </>
   )
