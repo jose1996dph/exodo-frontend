@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { ReactElement, useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Dashboard from './componets/pages/Dashboard'
 import CreateUser from './componets/pages/CreateUser'
 import EditUser from './componets/pages/EditUser'
@@ -9,7 +9,6 @@ import ForgotPassword from './componets/pages/ForgotPassword'
 import CustomersPage from './componets/pages/Customers'
 import CreateCustomer from './componets/pages/CreateCustomer'
 import UsersPage from './componets/pages/Users'
-import { getToken } from './framework/helpers/auth.helper'
 import ProtectedRoute from './framework/routes/ProtectRoute'
 import { UrlRoutes } from './framework/routes/routes'
 import EditCustomer from './componets/pages/EditCustomer'
@@ -36,10 +35,11 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import SupplierReports from './componets/pages/SupplierReports'
 import SellerReports from './componets/pages/SellerReports'
+import useAuth from './hooks/auth.hook'
+import { Role } from './domains/role.domain'
 
 function App() {
-  const location = useLocation()
-  const [isLoged, setIsloged] = useState(getToken() !== null)
+  const [isLoged, isAuthorized] = useAuth()
 
   const theme = useTheme()
   const isNotXS = useMediaQuery(theme.breakpoints.up('sm'))
@@ -48,14 +48,6 @@ function App() {
   const toggleDrawer = () => {
     setOpen(!open)
   }
-
-  useEffect(() => {
-    if (getToken()) {
-      setIsloged(true)
-    } else {
-      setIsloged(false)
-    }
-  }, [location])
 
   const isLogedRedirectTo = (page: ReactElement) => {
     if (isLoged) {
@@ -185,7 +177,7 @@ function App() {
             <Route
               path={UrlRoutes.Suppliers}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <SuppliersPage open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -194,7 +186,7 @@ function App() {
             <Route
               path={`${UrlRoutes.Supplier}:id`}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <SupplierPage open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -203,7 +195,7 @@ function App() {
             <Route
               path={UrlRoutes.CreateSupplier}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <CreateSupplier open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -212,7 +204,7 @@ function App() {
             <Route
               path={`${UrlRoutes.EditSupplier}:id`}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <EditSupplier open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -275,7 +267,7 @@ function App() {
             <Route
               path={UrlRoutes.Users}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <UsersPage open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -284,7 +276,7 @@ function App() {
             <Route
               path={UrlRoutes.CreateUser}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <CreateUser open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -293,7 +285,7 @@ function App() {
             <Route
               path={`${UrlRoutes.EditUser}:id`}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <EditUser open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -302,7 +294,7 @@ function App() {
             <Route
               path={UrlRoutes.SellerReports}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <SellerReports open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }
@@ -311,7 +303,7 @@ function App() {
             <Route
               path={UrlRoutes.SupplierReports}
               element={
-                <ProtectedRoute isLoged={isLoged}>
+                <ProtectedRoute isLoged={isLoged} isAuthorized={isAuthorized(Role.ADMIN)}>
                   <SupplierReports open={open} toggleDrawer={toggleDrawer} />
                 </ProtectedRoute>
               }

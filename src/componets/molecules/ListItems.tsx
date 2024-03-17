@@ -17,14 +17,18 @@ import { useNavigate } from 'react-router-dom'
 
 import { UrlRoutes } from '../../framework/routes/routes'
 import { useMediaQuery } from '@mui/material'
+import useAuth from '../../hooks/auth.hook'
+import { Role } from '../../domains/role.domain'
 
 type MainListItemsProps = {
   toggleDrawer: () => void
 }
 
 export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
+  const [isLoged, isAuthorized] = useAuth()
   const isXs = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
   const navigate = useNavigate()
+  const _isAuthorized = isAuthorized(Role.ADMIN)
 
   const navegateTo = (page: string) => {
     if (isXs) {
@@ -59,12 +63,14 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
         </ListItemIcon>
         <ListItemText primary='Clientes' />
       </ListItemButton>
-      <ListItemButton onClick={() => navegateTo(UrlRoutes.Suppliers)}>
-        <ListItemIcon>
-          <LocalShippingIcon />
-        </ListItemIcon>
-        <ListItemText primary='Proveedores' />
-      </ListItemButton>
+      {_isAuthorized && (
+        <ListItemButton onClick={() => navegateTo(UrlRoutes.Suppliers)}>
+          <ListItemIcon>
+            <LocalShippingIcon />
+          </ListItemIcon>
+          <ListItemText primary='Proveedores' />
+        </ListItemButton>
+      )}
       <ListItemButton onClick={() => navegateTo(UrlRoutes.Products)}>
         <ListItemIcon>
           <InventoryIcon />
@@ -85,12 +91,14 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
         <ListItemText primary='Reportes' />
       </ListItemButton>
       */}
-      <ListItemButton onClick={() => navegateTo(UrlRoutes.Users)}>
-        <ListItemIcon>
-          <WorkIcon />
-        </ListItemIcon>
-        <ListItemText primary='Usuarios' />
-      </ListItemButton>
+      {_isAuthorized && (
+        <ListItemButton onClick={() => navegateTo(UrlRoutes.Users)}>
+          <ListItemIcon>
+            <WorkIcon />
+          </ListItemIcon>
+          <ListItemText primary='Usuarios' />
+        </ListItemButton>
+      )}
     </Fragment>
   )
 }

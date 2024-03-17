@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import { MainListItems, SecondaryListItems } from '../molecules/ListItems'
 import Toolbar from '@mui/material/Toolbar'
+import useAuth from '../../hooks/auth.hook'
+import { Role } from '../../domains/role.domain'
 
 const drawerWidth = 240
 
@@ -45,6 +47,9 @@ type SiderBarProps = {
 }
 
 export default function SiderBar({ open, toggleDrawer }: SiderBarProps) {
+  const [isLoged, isAuthorized] = useAuth()
+
+  const _isAuthorized = isAuthorized(Role.ADMIN)
   return (
     <Drawer variant='permanent' open={open}>
       <Toolbar
@@ -62,8 +67,12 @@ export default function SiderBar({ open, toggleDrawer }: SiderBarProps) {
       <Divider />
       <List component='nav'>
         <MainListItems toggleDrawer={toggleDrawer} />
-        <Divider sx={{ my: 1 }} />
-        <SecondaryListItems toggleDrawer={toggleDrawer} />
+        {_isAuthorized && (
+          <>
+            <Divider sx={{ my: 1 }} />
+            <SecondaryListItems toggleDrawer={toggleDrawer} />
+          </>
+        )}
       </List>
     </Drawer>
   )
