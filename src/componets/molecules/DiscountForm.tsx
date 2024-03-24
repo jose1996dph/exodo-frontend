@@ -73,7 +73,7 @@ export default function DiscountForm({
             }
             setPercentage(event.target.value)
           }}
-          inputProps={{ inputMode: 'decimal' }}
+          inputProps={{ inputMode: 'decimal', lang: 'es-VE' }}
         ></CustomTextField>
       </Grid>
       <Grid item xs={12} sm={4} lg={5}>

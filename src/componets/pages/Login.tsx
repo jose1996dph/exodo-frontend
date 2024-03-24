@@ -78,7 +78,7 @@ export default function Login() {
         setStoreRememberMe('')
       }
       navigate(UrlRoutes.Dashboard, { replace: true })
-    } catch ({ message }) {
+    } catch ({ message }: any) {
       if (message) setError(message as string)
     } finally {
       setIsLoading(false)

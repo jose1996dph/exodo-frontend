@@ -1,25 +1,17 @@
 import { useEffect, useState } from 'react'
-import { InvoiceDetail } from '../../domains/invoice.domain'
+import { InvoiceDetail, InvoiceStatus } from '../../domains/invoice.domain'
 import { makeInvoiceProductService } from '../../services/invoiceProduct.service'
 import { makeInvoiceService } from '../../services/invoice.service'
 import { makeDiscountService } from '../../services/discount.service'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 import Content from '../organisms/Content'
 import InvoiceDetails from '../organisms/InvoiceDetails'
-import {
-  InvoiceProductItem,
-  // CreateInvoiceProduct,
-  // UpdateInvoiceProduct,
-} from '../../domains/invoiceProduct.domain'
+import { InvoiceProductItem } from '../../domains/invoiceProduct.domain'
 import { ProductItem } from '../../domains/product.domain'
 import { useParams } from 'react-router-dom'
 import { makeProductService } from '../../services/product.service'
 import ConfirmDialog from '../atoms/ConfirmDialog'
-import {
-  // CreateDiscount,
-  DiscountItem,
-  // UpdateDiscount
-} from '../../domains/discount.domain'
+import { DiscountItem } from '../../domains/discount.domain'
 import { SupplierDetail } from '../../domains/supplier.domain'
 import { makeSupplierService } from '../../services/supplier.service'
 import { makeCustomerService } from '../../services/customer.service'
@@ -43,9 +35,6 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
   const [orderDiscountDirection, setOrderDiscountDirection] = useState<'asc' | 'desc'>('asc')
   const [pageDiscounts, setPageDiscounts] = useState(1)
   const [pagesDiscounts, setPagesDiscounts] = useState(0)
-  // const [openModalToDeleteDiscount, setOpenModalToDeleteDiscount] = useState(false)
-  // const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
-  // const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
 
   const [invoice, setInvoice] = useState<InvoiceDetail | undefined>(undefined)
   const [supplier, setSupplier] = useState<SupplierDetail | undefined>(undefined)
@@ -101,86 +90,6 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       console.error('error')
     }
   }
-
-  /*
-  const submitDiscount = async (percentage: number, deadline: number) => {
-    if (selectedDiscountToEdit) {
-      await editDiscount(new UpdateDiscount(percentage, deadline))
-      return
-    }
-    await addDiscount(new CreateDiscount(percentage, deadline))
-  }
-  */
-
-  /*
-  const editDiscount = async (discount: UpdateDiscount) => {
-    try {
-      if (!id) {
-        return
-      }
-      const _errors = discount.isValid()
-
-      setErrors(_errors)
-      if (Object.keys(_errors).length) {
-        throw _errors
-      }
-
-      const invoiceId = parseInt(id)
-      const _discountId = selectedDiscountToEdit?.id || 0
-      await discountService.update(invoiceId, _discountId, discount)
-
-      loadDiscounts()
-      setSelectedDiscountToEdit(undefined)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  */
-
-  /*
-  const addDiscount = async (discount: CreateDiscount) => {
-    try {
-      if (!id) {
-        return
-      }
-
-      const _errors = discount.isValid()
-
-      setErrors(_errors)
-      if (Object.keys(_errors).length) {
-        throw _errors
-      }
-
-      const invoiceId = parseInt(id)
-      await discountService.create(invoiceId, discount)
-
-      loadDiscounts()
-      setSelectedDiscountToEdit(undefined)
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
-  */
-
-  /*
-  const handleDeleteDiscount = async () => {
-    try {
-      if (!id) {
-        return
-      }
-
-      const invoiceId = parseInt(id)
-      await discountService.delete(invoiceId, selectedDiscountIdToDelete)
-
-      loadDiscounts()
-      setSelectedDiscountIdToDelete(0)
-      setSelectedDiscountToEdit(undefined)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  */
 
   const loadInvoice = async () => {
     try {
@@ -263,107 +172,6 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
   }
 
-  /*
-  const submitInvoiceProduct = async () => {
-    if (selectedToEdit) {
-      await editInvoiceProduct()
-      return
-    }
-    await addInvoiceProduct()
-  }
-  */
-
-  /*
-  const editInvoiceProduct = async () => {
-    try {
-      if (!id) {
-        return
-      }
-
-      if (!selectedToEdit) {
-        return
-      }
-
-      const invoiceId = parseInt(id)
-      const _quantity = parseFloat(quantity)
-
-      const invoiceProduct = new UpdateInvoiceProduct(selectedToEdit.product, _quantity)
-
-      const _errors = invoiceProduct.isValid()
-
-      setErrors(_errors)
-      if (Object.keys(_errors).length) {
-        return
-      }
-
-      const _productId = selectedToEdit?.productId || 0
-      await invoiceProductService.update(invoiceId, _productId, invoiceProduct)
-
-      loadInvoice()
-      loadProducts()
-      clearForm()
-    } catch {
-      console.error('error')
-    }
-  }
-  */
-
-  /*
-  const addInvoiceProduct = async () => {
-    try {
-      if (!id) {
-        return
-      }
-
-      if (!productSelected) {
-        return
-      }
-
-      const invoiceId = parseInt(id)
-      const _quantity = parseFloat(quantity)
-
-      const invoiceProduct = new CreateInvoiceProduct(productSelected, _quantity)
-
-      const _errors = invoiceProduct.isValid()
-
-      setErrors(_errors)
-      if (Object.keys(_errors).length) {
-        return
-      }
-
-      await invoiceProductService.create(invoiceId, invoiceProduct)
-
-      loadInvoice()
-      loadProducts()
-      clearForm()
-    } catch {
-      console.error('error')
-    }
-  }
-  */
-
-  /*
-  const addMoreProductsSupplier = async (nextPage: number) => {
-    try {
-      if (!supplier) {
-        return
-      }
-      if (!id) {
-        return
-      }
-
-      const invoiceId = parseInt(id)
-      const supplierId = supplier.id
-      const _products = await productService.getAll(nextPage, searchText, supplierId, 0, invoiceId)
-      setProducts([...products, ..._products[0]])
-      setProductPages(_products[1])
-      setProductPage(nextPage)
-    } catch {
-      console.error('error')
-    }
-  }
-  */
-
   const handlerDeleteInvoiceProduct = async () => {
     try {
       if (!id) {
@@ -411,21 +219,6 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     }
   }
 
-  /*
-  const handlerSelectToEdit = (item: InvoiceProductItem) => {
-    if (!item) {
-      return
-    }
-    const _product = item.product as ProductItem
-
-    setProductSelected(_product)
-    setQuantity(item.quantity.toString())
-    setSelectedToEdit(item)
-    setProducts([_product])
-    setSearchText(item.product.name + ' - ' + item.product.presentation)
-  }
-  */
-
   const handlerSubmitPayment = async (
     mount: number,
     paymentType: PaymentType,
@@ -440,7 +233,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
 
       const payment = new CreatePayment(mount, paymentType, referenceCode, tranferDate)
 
-      const _errors = payment.isValid()
+      const _errors = payment.isValid(invoice?.totalToPay ?? 0)
 
       setErrors(_errors)
       if (Object.keys(_errors).length) {
@@ -453,18 +246,14 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
 
       await loadPayments()
       await loadInvoice()
-    } catch (e) {
+    } catch (e: any) {
+      if (e.message) {
+        setErrors(e)
+      }
       console.error('error')
       throw e
     }
   }
-
-  /*
-  const openAlert = (id: number) => {
-    setOpenModal(true)
-    setSelectedIdToDelete(id)
-  }
-  */
 
   useEffect(() => {
     loadInvoice()
@@ -514,6 +303,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
               total={invoice?.total ?? 0}
               mountPayed={invoice?.mountPayed ?? 0}
               discountPercentage={invoice?.currentDiscountPercentage ?? 0}
+              totalToPay={invoice?.totalToPay ?? 0}
             ></PaymentForm>
           </Paper>
         </Grid>
@@ -537,40 +327,6 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
             ></PaymentTable>
           </Paper>
         </Grid>
-        {/*
-        <InvoiceProductForm
-          pages={pages}
-          page={page}
-          invoiceTotal={invoice?.total ?? 0}
-          setPage={setPage}
-          orderBy={orderBy}
-          setOrderBy={setOrderBy}
-          orderDirection={orderDirection}
-          setOrderDirection={setOrderDirection}
-          onDelete={(_, item: InvoiceProductItem) => openAlert(item.productId)}
-          onUpdate={(_, item: InvoiceProductItem) => handlerSelectToEdit(item)}
-          products={products}
-          isLoading={isLoading}
-          searchProductText={searchText}
-          setSearchProductText={setSearchText}
-          productSelected={productSelected}
-          setProductSelected={setProductSelected}
-          invoiceProducts={invoiceProducts}
-          autoCompleteDisable={selectedToEdit != undefined}
-          autoCompleteOnScroll={() => {
-            if (productPage === productPages) {
-              return
-            }
-            addMoreProductsSupplier(productPage + 1)
-          }}
-          quantity={quantity}
-          setQuantity={setQuantity}
-          quantityDisable={isLoading}
-          onAddHandler={() => submitInvoiceProduct()}
-          errors={errors}
-          data={invoiceProducts}
-          discounts={discounts}
-        ></InvoiceProductForm>*/}
         <Grid item xs={12}>
           <Paper
             sx={{

@@ -2,7 +2,7 @@ import { CreatePayment } from '../domains/payment.domain'
 import { IPaymentRepository, makePaymentRepository } from '../repositories/payment.repository'
 
 class PaymentService {
-  private paymentRepo: IPaymentRepository = makePaymentRepository()
+  private readonly paymentRepo: IPaymentRepository = makePaymentRepository()
 
   async getAll(
     invoiceId: number,

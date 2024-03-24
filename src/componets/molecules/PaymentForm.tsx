@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material'
+import { Alert, Box, Grid } from '@mui/material'
 import CustomTextField from '../atoms/CustomTextField'
 import CustomButton from '../atoms/CustomButton'
 import Title from '../atoms/Title'
@@ -26,6 +26,7 @@ export default function PaymentForm({
   total,
   discountPercentage,
   mountPayed,
+  totalToPay,
 }: PaymentFormProps) {
   const [paymentType, setPaymentType] = useState<PaymentType>()
   const [mount, setMount] = useState('')
@@ -70,7 +71,7 @@ export default function PaymentForm({
             }
             setPaymentType(event.target.value as PaymentType)
           }}
-          inputProps={{ inputMode: 'decimal' }}
+          inputProps={{ inputMode: 'decimal', lang: 'es-VE' }}
           items={[
             { description: 'Efectivo', value: PaymentType.CASH },
             { description: 'Pago móvil', value: PaymentType.MOBILE_PAYMENT },
@@ -87,7 +88,7 @@ export default function PaymentForm({
           error={errors['mount'] ? true : false}
           helperText={errors['mount']}
           onChange={(event) => setMount(event.target.value)}
-          inputProps={{ inputMode: 'decimal' }}
+          inputProps={{ inputMode: 'decimal', lang: 'es-VE' }}
         ></CustomTextField>
       </Grid>
       {paymentType != PaymentType.CASH && (
@@ -120,7 +121,13 @@ export default function PaymentForm({
         total={total}
         mountPayed={mountPayed}
         discountPercentage={discountPercentage}
+        totalToPay={totalToPay}
       ></BillToPay>
+      {errors['message'] && (
+        <Grid item xs={12} sm={12} lg={12}>
+          <Alert severity='error'>{errors['message']}</Alert>
+        </Grid>
+      )}
       <Grid item xs={12} sm={12} lg={12}>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <CustomButton

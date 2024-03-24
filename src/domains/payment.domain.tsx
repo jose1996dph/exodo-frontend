@@ -40,10 +40,20 @@ export class CreatePayment {
     this.transferDate = transferDate
   }
 
-  public isValid(): Record<string, string> {
+  public isValid(totalToPay: number): Record<string, string> {
     const errors: Record<string, string> = {}
+    if (totalToPay === 0) {
+      errors['message'] = 'Factura ya fue pagada'
+      return errors
+    }
     if (!this.mount) {
       errors['mount'] = 'Monto es requerido'
+    }
+    if (this.mount && this.mount <= 0) {
+      errors['mount'] = 'Monto es invalido'
+    }
+    if (this.mount && this.mount > totalToPay) {
+      errors['mount'] = 'Monto pagado no puede exeder al monto a pagar'
     }
     if (!this.paymentType) {
       errors['paymentType'] = 'Medio de pago es requerido'
@@ -57,6 +67,10 @@ export class CreatePayment {
     if (this.transferDate && this.transferDate > new Date()) {
       errors['transferDate'] = 'Fecha de transferencia es invalida'
     }
+    if (this.transferDate && this.transferDate > new Date()) {
+      errors['mount'] = 'Fecha de transferencia es invalida'
+    }
+
     return errors
   }
 

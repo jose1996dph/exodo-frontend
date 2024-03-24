@@ -462,7 +462,7 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
                   disabled={isLoading}
                   error={errors['price'] ? true : false}
                   helperText={errors['price']}
-                  inputProps={{ inputMode: 'numeric' }}
+                  inputProps={{ inputMode: 'decimal', lang: 'es-VE' }}
                   onChange={(event) => setPrice(event.target.value)}
                 ></CustomTextField>
               </Grid>

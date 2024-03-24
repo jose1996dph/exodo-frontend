@@ -5,11 +5,16 @@ export type BillToPayProps = {
   total: number
   mountPayed: number
   discountPercentage: number
+  totalToPay: number
 }
 
-export default function BillToPay({ total, mountPayed, discountPercentage }: BillToPayProps) {
+export default function BillToPay({
+  total,
+  mountPayed,
+  discountPercentage,
+  totalToPay,
+}: BillToPayProps) {
   const mountDiscount = discountPercentage > 0 ? (total * discountPercentage) / 100 : 0
-  const totalToPay = total - mountDiscount - mountPayed
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { InvoiceItem, CreateInvoice, InvoiceDetail } from '../domains/invoice.domain'
+import { InvoiceDetail, InvoiceItem, CreateInvoice } from '../domains/invoice.domain'
 import api from '../framework/api'
 import { BackendURL } from '../config'
 import { formatUrlText } from '../framework/helpers/formatter.helper'
@@ -55,7 +55,21 @@ class InvoiceRepository implements IInvoiceRepository {
   async getById(id: number): Promise<InvoiceDetail> {
     const { data } = await api.get(`${BackendURL}invoices/${id}`)
 
-    return data as InvoiceDetail
+    return new InvoiceDetail(
+      data.id,
+      data.total,
+      data.mountPayed,
+      data.status,
+      data.isActive,
+      data.updateAt,
+      data.createAt,
+      data.userId,
+      data.customerId,
+      data.supplierId,
+      data.customer,
+      data.supplier,
+      data.currentDiscountPercentage,
+    )
   }
 
   async createInvoice(createInvoice: CreateInvoice): Promise<InvoiceItem> {
