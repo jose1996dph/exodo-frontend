@@ -3,7 +3,7 @@ import { DiscountItem } from '../../domains/discount.domain'
 
 const propRows: CustomRow[] = [
   { title: 'Porcentaje', key: 'percentage', isImportant: true },
-  { title: 'Tiempo limite', key: 'deadline', isImportant: true },
+  { title: 'Tiempo límite', key: 'deadline', isImportant: true },
 ]
 type DiscountTableProps = {
   pages: number

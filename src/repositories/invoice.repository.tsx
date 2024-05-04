@@ -69,6 +69,8 @@ class InvoiceRepository implements IInvoiceRepository {
       data.customer,
       data.supplier,
       data.currentDiscountPercentage,
+      data.physicalInvoiceNumber,
+      data.physicalInvoiceDate,
     )
   }
 

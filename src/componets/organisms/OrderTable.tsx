@@ -1,6 +1,7 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { OrderItem } from '../../domains/order.domain'
-import { formatDate, formatFloat } from '../../framework/helpers/formatter.helper'
+import { formatDate } from '../../framework/helpers/formatter.helper'
+import Price from '../atoms/Price'
 
 const propRows: CustomRow[] = [
   {
@@ -19,7 +20,7 @@ const propRows: CustomRow[] = [
     title: 'Total',
     key: 'total',
     isImportant: false,
-    render: (_, item: OrderItem) => formatFloat(item.total),
+    render: (_, item: OrderItem) => <Price mount={item.total} />,
   },
   {
     title: 'Fecha',

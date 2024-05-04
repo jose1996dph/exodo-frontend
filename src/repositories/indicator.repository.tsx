@@ -17,7 +17,7 @@ class IndicatorRepository implements IIndicatorRepository {
 
     return data.map((i: any) => {
       return {
-        total: i.total,
+        total: parseFloat(i.total),
         time: new Date(i.time),
       }
     }) as Balance[]
@@ -27,7 +27,7 @@ class IndicatorRepository implements IIndicatorRepository {
     const { data } = await api.get(`${BackendURL}indicator/balance`)
 
     return {
-      total: data.total,
+      total: parseFloat(data.total),
       time: new Date(data.time),
     } as Balance
   }

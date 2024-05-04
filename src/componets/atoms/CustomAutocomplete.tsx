@@ -41,7 +41,7 @@ export default function CustomAutocomplete<
       }}
       inputValue={searchText}
       onInputChange={(event, value, reason) => {
-        if (!event && reason === 'reset') {
+        if ((!event || event.type === 'blur') && reason === 'reset') {
           return
         }
         setSearchText(value)

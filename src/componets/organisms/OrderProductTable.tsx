@@ -1,5 +1,6 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { OrderProductItem } from '../../domains/orderProduct.domain'
+import Price from '../atoms/Price'
 
 const propRows: CustomRow[] = [
   {
@@ -23,7 +24,7 @@ const propRows: CustomRow[] = [
         return
       }
 
-      return item.product.supplierProducts[0].price
+      return <Price mount={item.product.supplierProducts[0].price} />
     },
   },
   {
@@ -35,7 +36,7 @@ const propRows: CustomRow[] = [
         return
       }
 
-      return item.product.supplierProducts[0].price * item.quantity
+      return <Price mount={item.product.supplierProducts[0].price * item.quantity} />
     },
   },
 ]

@@ -1,4 +1,5 @@
-import { Menu, MenuItem, styled } from '@mui/material'
+import { FormControlLabel, Menu, MenuItem, styled } from '@mui/material'
+import Switch from '@mui/material/Switch'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -6,10 +7,15 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu'
 
 import AccountCircle from '@mui/icons-material/AccountCircle'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { makeAuthService } from '../../services/auth.service'
 import { UrlRoutes } from '../../framework/routes/routes'
 import { useNavigate } from 'react-router-dom'
+import { PriceContext } from '../../App'
+import {
+  Currencies,
+  setCurrency as setStoredCurrency,
+} from '../../framework/helpers/currency.helper'
 
 const drawerWidth = 240
 
@@ -45,6 +51,7 @@ type CustomAppBarProps = {
 }
 
 export default function CustomAppBar({ title, open, toggleDrawer }: CustomAppBarProps) {
+  const { currency, setCurrency } = useContext(PriceContext)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const navigate = useNavigate()
@@ -72,6 +79,13 @@ export default function CustomAppBar({ title, open, toggleDrawer }: CustomAppBar
     setAnchorEl(null)
   }
 
+  const handleOnCurrencyChanged = (_currency: Currencies) => {
+    if (setCurrency) {
+      setCurrency(_currency)
+    }
+    setStoredCurrency(_currency)
+  }
+
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -94,6 +108,25 @@ export default function CustomAppBar({ title, open, toggleDrawer }: CustomAppBar
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
+        <FormControlLabel
+          control={
+            <Switch
+              aria-label='account of current user'
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
+              color='default'
+              checked={currency == Currencies.DOLLAR}
+              onChange={(event, checked) => {
+                if (checked) {
+                  handleOnCurrencyChanged(Currencies.DOLLAR)
+                } else {
+                  handleOnCurrencyChanged(Currencies.BOLIVAR)
+                }
+              }}
+            ></Switch>
+          }
+          label={currency == Currencies.DOLLAR ? 'Dólar' : 'Bolivar'}
+        />
         <IconButton
           size='large'
           aria-label='account of current user'

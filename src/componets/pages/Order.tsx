@@ -34,7 +34,6 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   const [orderDiscountDirection, setOrderDiscountDirection] = useState<'asc' | 'desc'>('asc')
   const [pageDiscounts, setPageDiscounts] = useState(1)
   const [pagesDiscounts, setPagesDiscounts] = useState(0)
-  const [openModalToDeleteDiscount, setOpenModalToDeleteDiscount] = useState(false)
   const [selectedDiscountIdToDelete, setSelectedDiscountIdToDelete] = useState(0)
   const [selectedDiscountToEdit, setSelectedDiscountToEdit] = useState<DiscountItem>()
 

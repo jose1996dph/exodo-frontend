@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'rec
 import Title from '../atoms/Title'
 import { Balance } from '../../domains/balance.domain'
 import { formatFloat } from '../../framework/helpers/formatter.helper'
+import Price from '../atoms/Price'
 
 type ChartProp = {
   data: Balance[]
@@ -55,7 +56,7 @@ export default function Chart({ data }: ChartProp) {
               }}
               formatter={(value: string) => {
                 const _value = parseFloat(value)
-                return formatFloat(_value)
+                return <Price mount={_value} />
               }}
             />
             <Line

@@ -19,7 +19,7 @@ export class CreateDiscount {
       errors['percentage'] = 'Porcentaje es requerida'
     }
     if (!this.deadline || this.deadline <= 0) {
-      errors['deadLine'] = 'Tiempo limite es requerido'
+      errors['deadLine'] = 'Tiempo límite es requerido'
     }
     return errors
   }
@@ -39,7 +39,7 @@ export class UpdateDiscount {
       errors['discount'] = 'Porcentaje es requerida'
     }
     if (!this.deadline || this.deadline <= 0) {
-      errors['deadLine'] = 'Tiempo limite es requerido'
+      errors['deadLine'] = 'Tiempo límite es requerido'
     }
     return errors
   }

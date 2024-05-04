@@ -79,7 +79,7 @@ export default function DiscountForm({
       <Grid item xs={12} sm={4} lg={5}>
         <CustomTextField
           id='deadLine'
-          label='Timepo limite (en días)'
+          label='Tiempo límite (en días)'
           value={deadLine}
           disabled={isLoading}
           error={errors['deadLine'] ? true : false}

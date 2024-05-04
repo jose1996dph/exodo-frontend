@@ -1,6 +1,6 @@
 import { Alert, Grid, Paper } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ChangePassword, UpdateProfile } from '../../domains/profile.domain'
 import { UrlRoutes } from '../../framework/routes/routes'
 import { makeProfileService } from '../../services/profile.service'

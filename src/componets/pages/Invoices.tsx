@@ -96,10 +96,10 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
-        content='¿Está seguro de cambiar el estatus del invoiceo?'
+        content='¿Está seguro de cambiar el estatus de la factura?'
         onAcept={handlerToggleStatus}
       />
-      <Content title='Órdenes' open={open} toggleDrawer={toggleDrawer}>
+      <Content title='Facturas' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
           <Paper
             sx={{
@@ -112,7 +112,7 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
             <CustomButton
               aria-label='delete'
               color='primary'
-              text='Crear Orden'
+              text='Crear Factura'
               id='create_invoice'
               startIcon={<PersonAddIcon />}
               onClick={goToCreateInvoice}
@@ -129,7 +129,7 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
             }}
           >
             <CustomTextField
-              label='Buscar orden'
+              label='Buscar factura'
               aria-label='delete'
               color='primary'
               variant='outlined'

@@ -1,5 +1,6 @@
 import { InvoiceDetail } from '../../domains/invoice.domain'
 import { formatDate } from '../../framework/helpers/formatter.helper'
+import Price from '../atoms/Price'
 import Details, { DetailsItem } from '../molecules/Details'
 
 const ObjectFields: DetailsItem[] = [
@@ -9,8 +10,14 @@ const ObjectFields: DetailsItem[] = [
   { title: 'Tel. del Negocio', render: (_, invoice) => invoice.customer.phone },
   { title: 'Nombre del Contacto', render: (_, invoice) => invoice.customer.contactName },
   { title: 'Tel. del Contacto', render: (_, invoice) => invoice.customer.contactPhone },
-  { title: 'Total', render: (_, invoice) => invoice.total },
+  // { title: 'Total', render: (_, invoice) => <Price mount={invoice.total} /> },
   { title: 'Fecha', render: (_, invoice) => formatDate(invoice.createAt) },
+  { title: 'Nº F.ª Física', render: (_, invoice) => invoice.physicalInvoiceNumber },
+  {
+    title: 'Fecha F.ª Física',
+    render: (_, invoice) =>
+      invoice.physicalInvoiceDate ? formatDate(invoice.physicalInvoiceDate) : '',
+  },
 ]
 
 type InvoiceDetailsProps = {

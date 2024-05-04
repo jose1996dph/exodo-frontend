@@ -283,7 +283,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
         open={openModal}
         setOpen={setOpenModal}
         onCancel={() => setSelectedIdToDelete(0)}
-        content='¿Está seguro de eliminar este producto de la orden?'
+        content='¿Está seguro de eliminar este producto de la factura?'
         onAcept={handlerDeleteInvoiceProduct}
       />
       <Content title='Factura' open={open} toggleDrawer={toggleDrawer}>

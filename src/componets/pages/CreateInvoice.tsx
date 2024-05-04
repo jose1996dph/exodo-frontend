@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material'
+import { Alert, Grid } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { CreateInvoice as CreateInvoiceRequest } from '../../domains/invoice.domain'
@@ -66,10 +66,21 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
     setPages(_pages)
   }
 
-  const handleSubmit = async (customerId: number, supplierId: number) => {
+  const handleSubmit = async (
+    customerId: number,
+    supplierId: number,
+    physicalInvoiceNumber: string,
+    physicalInvoiceDate: Date,
+  ) => {
     setIsLoading(true)
     try {
-      const invoice = new CreateInvoiceRequest(customerId, supplierId, invoiceProducts)
+      const invoice = new CreateInvoiceRequest(
+        customerId,
+        supplierId,
+        physicalInvoiceNumber,
+        physicalInvoiceDate,
+        invoiceProducts,
+      )
 
       const _errors = invoice.isValid()
 
@@ -303,9 +314,11 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
           setInvoiceProducts={setInvoiceProducts}
         />
         {errorMessage && (
-          <Alert sx={{ mt: '10px' }} severity='error'>
-            {errorMessage}
-          </Alert>
+          <Grid item xs={12}>
+            <Alert sx={{ mt: '10px' }} severity='error'>
+              {errorMessage}
+            </Alert>
+          </Grid>
         )}
       </Content>
     </>

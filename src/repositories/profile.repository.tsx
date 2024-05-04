@@ -24,7 +24,7 @@ class ProfileRepository implements IProfileRepository {
   }
 
   async updatePassword(changePassword: ChangePassword): Promise<void> {
-    const { data } = await api.put(`${BackendURL}auth/profile/password`, changePassword)
+    await api.put(`${BackendURL}auth/profile/password`, changePassword)
   }
 }
 

@@ -13,8 +13,16 @@ import ConfirmDialog from '../atoms/ConfirmDialog'
 import InvoiceProductForm from './InvoiceProductForm'
 import { makeDiscountService } from '../../services/discount.service'
 import { DiscountItem } from '../../domains/discount.domain'
+import CustomTextField from '../atoms/CustomTextField'
+import CustomDatePiker from '../atoms/CustomDatePicker'
+import dayjs from 'dayjs'
 
-type SubmitHandler = (customerId: number, supplierId: number) => void
+type SubmitHandler = (
+  customerId: number,
+  supplierId: number,
+  physicalInvoiceNumber: string,
+  physicalInvoiceDate: Date,
+) => void
 type AddProductHandler = (product: ProductItem, quantity: number) => void
 type OnEditProductHandler = (product: ProductItem, quantity: number) => void
 type OnDeleteProductHandler = (product: ProductItem) => void
@@ -77,6 +85,9 @@ export default function InvoiceForm({
   const [products, setProducts] = useState<ProductItem[]>([])
 
   const [productSelected, setProductSelected] = useState<ProductItem>()
+
+  const [physicalInvoiceNumber, setPhysicalInvoiceNumber] = useState<string>('')
+  const [physicalInvoiceDate, setPhysicalInvoiceDate] = useState<Date>(new Date())
 
   const [searchProductText, setSearchProductText] = useState('')
 
@@ -345,6 +356,29 @@ export default function InvoiceForm({
                 )}
               ></CustomAutocomplete>
             </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                id='physicalInvoiceNumber'
+                label='Número de factura física'
+                value={physicalInvoiceNumber}
+                disabled={isLoading}
+                error={errors['physicalInvoiceNumber'] ? true : false}
+                inputProps={{ inputMode: 'numeric' }}
+                helperText={errors['physicalInvoiceNumber']}
+                onChange={(event) => setPhysicalInvoiceNumber(event.target.value)}
+              ></CustomTextField>
+            </Grid>
+            <Grid item xs={12}>
+              <CustomDatePiker
+                id='physicalInvoiceDate'
+                label='Fecha de la factura física'
+                value={dayjs(physicalInvoiceDate)}
+                disabled={isLoading}
+                error={errors['physicalInvoiceDate'] ? true : false}
+                helperText={errors['physicalInvoiceDate']}
+                onChange={(value) => value && setPhysicalInvoiceDate(value.toDate())}
+              ></CustomDatePiker>
+            </Grid>
           </Grid>
         </Paper>
       </Grid>
@@ -380,7 +414,14 @@ export default function InvoiceForm({
         onAddHandler={() => handlerOnAddProduct(productSelected, quantity)}
         errors={errors}
         data={invoiceProducts}
-        onSubmit={() => onSubmit(customerSelected?.id || 0, supplierSelected?.id || 0)}
+        onSubmit={() =>
+          onSubmit(
+            customerSelected?.id || 0,
+            supplierSelected?.id || 0,
+            physicalInvoiceNumber,
+            physicalInvoiceDate,
+          )
+        }
       ></InvoiceProductForm>
     </>
   )

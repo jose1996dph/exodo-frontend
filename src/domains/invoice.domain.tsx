@@ -36,6 +36,8 @@ export class InvoiceDetail implements InvoiceItem {
   public customer: CustomerItem
   public supplier: SupplierItem
   public currentDiscountPercentage: number
+  public physicalInvoiceNumber: string
+  public physicalInvoiceDate: Date
 
   constructor(
     id: number,
@@ -51,6 +53,8 @@ export class InvoiceDetail implements InvoiceItem {
     customer: CustomerItem,
     supplier: SupplierItem,
     currentDiscountPercentage: number,
+    physicalInvoiceNumber: string,
+    physicalInvoiceDate: Date,
   ) {
     this.id = id
     this.total = total
@@ -65,6 +69,8 @@ export class InvoiceDetail implements InvoiceItem {
     this.customer = customer
     this.supplier = supplier
     this.currentDiscountPercentage = currentDiscountPercentage
+    this.physicalInvoiceNumber = physicalInvoiceNumber
+    this.physicalInvoiceDate = physicalInvoiceDate
   }
 
   get totalToPay() {
@@ -91,11 +97,21 @@ class InvoiceProductRequest {
 export class CreateInvoice {
   public customerId: number
   public supplierId: number
+  public physicalInvoiceNumber: string
+  public physicalInvoiceDate: Date
   public products: InvoiceProductRequest[]
 
-  constructor(customerId: number, supplierId: number, products: InvoiceProductItem[]) {
+  constructor(
+    customerId: number,
+    supplierId: number,
+    physicalInvoiceNumber: string,
+    physicalInvoiceDate: Date,
+    products: InvoiceProductItem[],
+  ) {
     this.customerId = customerId
     this.supplierId = supplierId
+    this.physicalInvoiceNumber = physicalInvoiceNumber
+    this.physicalInvoiceDate = physicalInvoiceDate
     this.products = products.map(
       (product) => new InvoiceProductRequest(product.productId, product.quantity),
     )
@@ -109,9 +125,16 @@ export class CreateInvoice {
     if (!this.supplierId || this.supplierId === 0) {
       errors['supplierId'] = 'Distribuidor es requerido'
     }
+    if (!this.physicalInvoiceNumber || this.physicalInvoiceNumber.length === 0) {
+      errors['physicalInvoiceNumber'] = 'El número de factura física es requerido'
+    }
+    if (!this.physicalInvoiceDate || this.physicalInvoiceDate > new Date()) {
+      errors['physicalInvoiceDate'] = 'La fecha de la factura física'
+    }
     if (!this.products || this.products.length === 0) {
       errors['products'] = 'Los productos son requeridos'
     }
+
     return errors
   }
 }

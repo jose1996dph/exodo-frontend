@@ -1,5 +1,6 @@
 import { Divider, Grid } from '@mui/material'
 import { formatFloat } from '../../framework/helpers/formatter.helper'
+import Price from '../atoms/Price'
 
 export type BillToPayProps = {
   total: number
@@ -22,7 +23,7 @@ export default function BillToPay({
         Total
       </Grid>
       <Grid item xs={6}>
-        {formatFloat(total)}
+        <Price mount={total} />
       </Grid>
       <Grid item xs={6}>
         Descuento
@@ -34,7 +35,7 @@ export default function BillToPay({
         Monto pagado
       </Grid>
       <Grid item xs={6}>
-        - {formatFloat(mountPayed)}
+        - <Price mount={mountPayed} />
       </Grid>
       <Grid item xs={12}>
         <Divider></Divider>
@@ -43,7 +44,9 @@ export default function BillToPay({
         <b>Total a pagar</b>
       </Grid>
       <Grid item xs={6}>
-        <b>{formatFloat(totalToPay)}</b>
+        <b>
+          <Price mount={totalToPay} />
+        </b>
       </Grid>
     </>
   )

@@ -82,7 +82,7 @@ export default function PaymentForm({
       <Grid item xs={12} sm={6} lg={6}>
         <CustomTextField
           id='mount'
-          label='Monto'
+          label='Monto (en Dólares)'
           value={mount}
           disabled={isLoading}
           error={errors['mount'] ? true : false}

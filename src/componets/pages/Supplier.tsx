@@ -457,7 +457,7 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
               <Grid item xs={12} sm={2}>
                 <CustomTextField
                   id='price'
-                  label='Precio'
+                  label='Precio (en Dólares)'
                   value={price}
                   disabled={isLoading}
                   error={errors['price'] ? true : false}

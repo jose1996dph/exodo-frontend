@@ -87,7 +87,7 @@ export default function UserForm({
         <Grid item xs={12}>
           <CustomTextField
             id='dni'
-            label='Número de cedula'
+            label='Número de cédula'
             value={dni}
             disabled={isLoading}
             error={errors['dni'] ? true : false}

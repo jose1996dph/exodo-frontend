@@ -5,7 +5,7 @@ export function formatUrlText(value: string) {
 export function formatDate(value: Date | string) {
   const _value = typeof value === 'string' ? new Date(value) : value
 
-  return _value.toLocaleDateString()
+  return _value.toLocaleDateString('es-VE', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
 export function formatFloat(value: number) {

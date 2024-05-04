@@ -18,7 +18,7 @@ const propRows: CustomRow[] = [
       return ''
     },
   },
-  { title: 'Codigo de referencia', isImportant: false, key: 'referenceCode' },
+  { title: 'Código de referencia', isImportant: false, key: 'referenceCode' },
   {
     title: 'Fecha de transferencia',
     key: 'transferDate',

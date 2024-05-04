@@ -2,6 +2,7 @@ import { Grid } from '@mui/material'
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { DiscountItem } from '../../domains/discount.domain'
 import { formatFloat } from '../../framework/helpers/formatter.helper'
+import Price from '../atoms/Price'
 
 type PricesProp = {
   discounts: DiscountItem[]
@@ -12,13 +13,13 @@ type PricesProp = {
 export default function Prices({ discounts, total, productPrice = undefined }: PricesProp) {
   const tableRows: CustomRow[] = [
     {
-      title: 'Tiempo limite',
+      title: 'Tiempo límite',
       key: 'deadline',
       isImportant: true,
       render: (_, item: DiscountItem) => `${item.deadline} días`,
     },
     {
-      title: 'Porcentage',
+      title: 'Porcentaje',
       key: 'percentage',
       isImportant: true,
       render: (_, item: DiscountItem) => `${item.percentage}%`,
@@ -28,7 +29,8 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
       key: 'total',
       isImportant: true,
       render: (_, item: DiscountItem) => {
-        return total - (total * item.percentage) / 100
+        const _mount = total - (total * item.percentage) / 100
+        return <Price mount={_mount} />
       },
     },
   ]
@@ -39,7 +41,8 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
       key: 'unitPrice',
       isImportant: true,
       render: (_: CustomRow, item: DiscountItem) => {
-        return productPrice - (productPrice * item.percentage) / 100
+        const _mount = productPrice - (productPrice * item.percentage) / 100
+        return <Price mount={_mount} />
       },
     })
   }
@@ -70,7 +73,9 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
             fontSize: 18,
           }}
         >
-          <b>Precio c/u: {formatFloat(productPrice)}</b>
+          <b>
+            Precio c/u: <Price mount={productPrice} />
+          </b>
         </Grid>
       )}
       <Grid
@@ -83,7 +88,9 @@ export default function Prices({ discounts, total, productPrice = undefined }: P
           fontSize: 18,
         }}
       >
-        <b>Total: {formatFloat(total)}</b>
+        <b>
+          Total: <Price mount={total} />
+        </b>
       </Grid>
     </>
   )

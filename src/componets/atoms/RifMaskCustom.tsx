@@ -15,7 +15,7 @@ const RifMaskCustom = React.forwardRef<HTMLElement, RifMaskCustomProps>(function
       {...other}
       mask='a-00000000-0'
       prepare={(str: string) => {
-        if (!/[VEJPG0-9]/i.test(str)) {
+        if (!/[JG0-9]/i.test(str)) {
           return ''
         }
         return str.toUpperCase()
@@ -26,7 +26,5 @@ const RifMaskCustom = React.forwardRef<HTMLElement, RifMaskCustomProps>(function
     />
   )
 })
-/*
 
-*/
 export default RifMaskCustom
