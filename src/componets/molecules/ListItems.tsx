@@ -16,7 +16,7 @@ import WorkIcon from '@mui/icons-material/Work'
 import { useNavigate } from 'react-router-dom'
 
 import { UrlRoutes } from '../../framework/routes/routes'
-import { useMediaQuery } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import useAuth from '../../hooks/auth.hook'
 import { Role } from '../../domains/role.domain'
 
@@ -39,6 +39,11 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
 
   return (
     <Fragment>
+      {/**
+      <ListSubheader component='div' inset>
+        <Box sx={{ fontWeight: 550, color: '#1976d2' }}>Gestiones</Box>
+      </ListSubheader>
+       */}
       <ListItemButton onClick={() => navegateTo(UrlRoutes.Dashboard)}>
         <ListItemIcon>
           <DashboardIcon />
@@ -116,7 +121,7 @@ export const SecondaryListItems = ({ toggleDrawer }: MainListItemsProps) => {
   return (
     <Fragment>
       <ListSubheader component='div' inset>
-        Reportes
+        <Box sx={{ fontWeight: 'bold' }}>Reportes</Box>
       </ListSubheader>
       <ListItemButton onClick={() => navegateTo(UrlRoutes.SellerReports)}>
         <ListItemIcon>

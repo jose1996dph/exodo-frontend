@@ -12,13 +12,18 @@ const propRows: CustomRow[] = [
   {
     title: 'Presentación',
     key: 'presentation',
-    isImportant: true,
+    isImportant: false,
     render: (_, item: InvoiceProductItem) => item.product.presentation,
+  },
+  {
+    title: 'Cantidad',
+    key: 'quantity',
+    isImportant: false,
   },
   {
     title: 'Precio',
     key: 'price',
-    isImportant: true,
+    isImportant: false,
     render: (_, item: InvoiceProductItem) => {
       if (!item.product.supplierProducts || item.product.supplierProducts.length === 0) {
         return
@@ -36,7 +41,7 @@ const propRows: CustomRow[] = [
         return
       }
 
-      return item.product.supplierProducts[0].price * item.quantity
+      return <Price mount={item.product.supplierProducts[0].price * item.quantity} />
     },
   },
 ]

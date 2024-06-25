@@ -1,6 +1,7 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { PaymentItem, PaymentType } from '../../domains/payment.domain'
 import { formatDate } from '../../framework/helpers/formatter.helper'
+import Price from '../atoms/Price'
 
 const propRows: CustomRow[] = [
   {
@@ -35,7 +36,7 @@ const propRows: CustomRow[] = [
     title: 'Monto',
     key: 'mount',
     isImportant: true,
-    render: (_, item: PaymentItem) => item.mount.toFixed(2),
+    render: (_, item: PaymentItem) => <Price mount={item.mount} />,
   },
 ]
 
