@@ -4,7 +4,7 @@ import { SupplierReport } from '../../domains/supplierReport.domain'
 import Price from '../atoms/Price'
 
 const propRows: CustomRow[] = [
-  { title: 'Distribuidores', isImportant: true, key: 'name' },
+  { title: 'Proveedores', isImportant: true, key: 'name' },
   {
     title: 'Cantidad de facturas',
     isImportant: true,
@@ -28,6 +28,7 @@ type SupplierReportTableProps = {
   orderDirection: 'asc' | 'desc'
   setOrderDirection: (attribute: 'asc' | 'desc') => void
   data: SupplierReport[]
+  onReport: (id: number, item: any) => Promise<void>
 }
 
 export default function SupplierReportTable({
@@ -39,10 +40,11 @@ export default function SupplierReportTable({
   orderDirection,
   setOrderDirection,
   data,
+  onReport,
 }: SupplierReportTableProps) {
   return (
     <CustomTable
-      title='Distribuidores'
+      title='Proveedores'
       pages={pages}
       page={page}
       setPage={setPage}
@@ -52,6 +54,7 @@ export default function SupplierReportTable({
       orderDirection={orderDirection}
       setOrderDirection={setOrderDirection}
       tableRows={propRows}
+      onReport={onReport}
     ></CustomTable>
   )
 }

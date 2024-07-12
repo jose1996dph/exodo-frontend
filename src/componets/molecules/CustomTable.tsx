@@ -33,6 +33,7 @@ type CustomTableProps = {
   onShow?: (id: number) => void | undefined
   onDelete?: (id: number, item: any) => void | undefined
   onUpdate?: (id: number, item: any) => void | undefined
+  onReport?: (id: number, item: any) => Promise<void> | undefined
   onToggle?: (id: number) => void | undefined
 }
 
@@ -51,6 +52,7 @@ export default function CustomTable({
   onShow = undefined,
   onDelete = undefined,
   onUpdate = undefined,
+  onReport = undefined,
   onToggle = undefined,
 }: CustomTableProps) {
   const isNotAllImportant = tableRows.some((tr) => !tr.isImportant)
@@ -116,6 +118,7 @@ export default function CustomTable({
                     onDelete={onDelete}
                     onShow={onShow}
                     onToggle={onToggle}
+                    onReport={onReport}
                     onUpdate={onUpdate}
                   ></CustomTableRow>
                   {/**

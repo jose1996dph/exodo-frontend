@@ -13,6 +13,7 @@ export interface ICustomerRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[CustomerItem[], number]>
@@ -33,6 +34,7 @@ class CustomerRepository implements ICustomerRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[CustomerItem[], number]> {
@@ -43,6 +45,10 @@ class CustomerRepository implements ICustomerRepository {
 
     if (orderDirection) {
       params += `&orderDirection=${orderDirection}`
+    }
+
+    if (isActive !== undefined) {
+      params += `&isActive=${isActive}`
     }
 
     const { data } = await api.get(`${BackendURL}customers/?${params}`)

@@ -285,7 +285,7 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
         return
       }
       const supplierId = parseInt(id)
-      const _product = await productService.getAll(pageNum, searchText, 0, supplierId)
+      const _product = await productService.getAll(pageNum, searchText, 0, supplierId, 0, true)
       setProductsNoSupplier([...productsNoSupplier, ..._product[0]])
       setProductPages(_product[1])
       setProductPage(pageNum)
@@ -301,7 +301,7 @@ export default function Supplier({ open, toggleDrawer }: SupplierPageProps) {
         return
       }
       const supplierId = parseInt(id)
-      const _product = await productService.getAll(1, searchText, 0, supplierId)
+      const _product = await productService.getAll(1, searchText, 0, supplierId, 0, true)
       setProductsNoSupplier(_product[0])
       setProductPages(_product[1])
       setProductPage(1)

@@ -12,7 +12,7 @@ import Content from '../organisms/Content'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 import { makeOrderService } from '../../services/order.service'
 import { OrderItem } from '../../domains/order.domain'
-import ConfirmDialog from '../atoms/ConfirmDialog'
+// import ConfirmDialog from '../atoms/ConfirmDialog'
 import { useNavigate } from 'react-router-dom'
 import { UrlRoutes } from '../../framework/routes/routes'
 
@@ -26,8 +26,8 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
   const [orders, setOrders] = useState<OrderItem[]>([])
   const [orderBy, setOrderBy] = useState<string>('total')
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
-  const [openModal, setOpenModal] = useState(false)
-  const [seletedId, setSelectedId] = useState(0)
+  // const [openModal, setOpenModal] = useState(false)
+  // const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 
@@ -45,6 +45,7 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
     }
   }
 
+  /*
   const handleClose = () => {
     setOpenModal(false)
   }
@@ -64,6 +65,7 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
       handleClose()
     }
   }
+  */
 
   const goToCreateOrder = () => {
     navigate(UrlRoutes.CreateOrder, { replace: true })
@@ -88,12 +90,14 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
 
   return (
     <>
+      {/*
       <ConfirmDialog
         open={openModal}
         setOpen={setOpenModal}
         content='¿Está seguro de cambiar el estatus del ordero?'
         onAcept={handlerToggleStatus}
       />
+      */}
       <Content title='Órdenes' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
           <Paper
@@ -140,7 +144,6 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
             ></CustomTextField>
           </Paper>
         </Grid>
-        {/* Recent Orders */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
             <OrderTable
@@ -152,7 +155,6 @@ export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
               orderDirection={orderDirection}
               setOrderDirection={setOrderDirection}
               data={orders}
-              onToggle={openAlert}
               onShow={onShowHandler}
             />
           </Paper>

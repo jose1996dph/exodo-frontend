@@ -22,6 +22,7 @@ export interface IReportRepository {
     startDate?: Date,
     endDate?: Date,
   ): Promise<[SupplierReport[], number]>
+  getReport(supplierId: number, startDate?: Date, endDate?: Date): Promise<void>
 }
 
 class ReportRepository implements IReportRepository {
@@ -111,6 +112,38 @@ class ReportRepository implements IReportRepository {
     }
 
     return [reports as SupplierReport[], _count]
+  }
+
+  async getReport(supplierId: number, startDate?: Date, endDate?: Date): Promise<void> {
+    const params: any = {}
+
+    if (startDate) {
+      params['startDate'] = startDate
+    }
+
+    if (endDate) {
+      params['endDate'] = endDate
+    }
+
+    const { data } = await api.get(`${BackendURL}report/supplier/${supplierId}`, {
+      params: params,
+      responseType: 'blob',
+      responseEncoding: 'utf-8',
+    })
+
+    const blobURL = URL.createObjectURL(data)
+
+    const iframe = document.createElement('iframe')
+    document.body.appendChild(iframe)
+
+    iframe.style.display = 'none'
+    iframe.src = blobURL
+    iframe.onload = function () {
+      setTimeout(function () {
+        iframe.focus()
+        iframe.contentWindow?.print()
+      }, 1)
+    }
   }
 }
 

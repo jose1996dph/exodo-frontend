@@ -11,6 +11,7 @@ export interface IProductRepository {
     supplierId: number,
     notSupplierId: number,
     notOrderId: number,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[ProductItem[], number]>
@@ -34,6 +35,7 @@ class ProductRepository implements IProductRepository {
     supplierId = 0,
     notSupplierId = 0,
     notOrderId: number,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[ProductItem[], number]> {
@@ -57,6 +59,10 @@ class ProductRepository implements IProductRepository {
 
     if (orderDirection) {
       params += `&orderDirection=${orderDirection}`
+    }
+
+    if (isActive !== undefined) {
+      params += `&isActive=${isActive}`
     }
 
     const { data } = await api.get(`${BackendURL}products/?${params}`)

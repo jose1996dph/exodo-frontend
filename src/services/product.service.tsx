@@ -10,6 +10,7 @@ class ProductService {
     supplierId = 0,
     notSupplierId = 0,
     notOrderId = 0,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ) {
@@ -22,6 +23,7 @@ class ProductService {
         supplierId,
         notSupplierId,
         notOrderId,
+        isActive,
         orderBy,
         orderDirection,
       )

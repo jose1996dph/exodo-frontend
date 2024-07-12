@@ -22,6 +22,7 @@ export type CustomerDetail = {
   phone: string
   contactPhone: string
   contactName: string
+  isActive: boolean
 }
 
 export class CreateCustomer {

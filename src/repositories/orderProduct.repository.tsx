@@ -82,7 +82,6 @@ class OrderProductRepository implements IOrderProductRepository {
     updateOrderProduct: UpdateOrderProduct,
   ): Promise<OrderProductItem> {
     const { data } = await api.put(`${BackendURL}orders/${id}/product/${productId}`, {
-      productId: updateOrderProduct.productId,
       quantity: updateOrderProduct.quantity,
     })
 

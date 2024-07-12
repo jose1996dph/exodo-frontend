@@ -4,6 +4,8 @@ import TableRow from '@mui/material/TableRow'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import PrintIcon from '@mui/icons-material/Print'
+import CircularProgress from '@mui/material/CircularProgress'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -16,6 +18,7 @@ type TableAction = {
   onShow?: (id: number) => void | undefined
   onDelete?: (id: number, item: any) => void | undefined
   onUpdate?: (id: number, item: any) => void | undefined
+  onReport?: (id: number, item: any) => Promise<void> | undefined
   onToggle?: (id: number) => void | undefined
 }
 
@@ -25,8 +28,23 @@ function TableAction({
   onShow = undefined,
   onDelete = undefined,
   onUpdate = undefined,
+  onReport = undefined,
   onToggle = undefined,
 }: TableAction) {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handlerOnReport = async (id: number, item: any) => {
+    if (isLoading || !onReport) {
+      return
+    }
+
+    setIsLoading(true)
+
+    await onReport(id, item)
+
+    setIsLoading(false)
+  }
+
   return (
     <>
       {onShow && (
@@ -44,6 +62,11 @@ function TableAction({
           <DeleteIcon />
         </IconButton>
       )}
+      {onReport && (
+        <IconButton color='primary' onClick={() => handlerOnReport(item[identify], item)}>
+          {isLoading ? <CircularProgress size={20} /> : <PrintIcon />}
+        </IconButton>
+      )}
       {onToggle && <Switch checked={item['isActive']} onChange={() => onToggle(item[identify])} />}
     </>
   )
@@ -57,6 +80,7 @@ type CustomTableRowProps = {
   onShow?: (id: number) => void | undefined
   onDelete?: (id: number, item: any) => void | undefined
   onUpdate?: (id: number, item: any) => void | undefined
+  onReport?: (id: number, item: any) => Promise<void> | undefined
   onToggle?: (id: number) => void | undefined
 }
 
@@ -68,6 +92,7 @@ export default function CustomTableRow({
   onShow = undefined,
   onDelete = undefined,
   onUpdate = undefined,
+  onReport = undefined,
   onToggle = undefined,
 }: CustomTableRowProps) {
   const [open, setOpen] = useState(false)
@@ -98,6 +123,7 @@ export default function CustomTableRow({
               onDelete={onDelete}
               onShow={onShow}
               onToggle={onToggle}
+              onReport={onReport}
               onUpdate={onUpdate}
             ></TableAction>
             {/**
@@ -161,6 +187,7 @@ export default function CustomTableRow({
                       onShow={onShow}
                       onToggle={onToggle}
                       onUpdate={onUpdate}
+                      onReport={onReport}
                     ></TableAction>
                   </Grid>
                 </Grid>

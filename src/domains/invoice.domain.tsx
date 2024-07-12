@@ -123,7 +123,7 @@ export class CreateInvoice {
       errors['customerId'] = 'Cliente es requerido'
     }
     if (!this.supplierId || this.supplierId === 0) {
-      errors['supplierId'] = 'Distribuidor es requerido'
+      errors['supplierId'] = 'Proveedor es requerido'
     }
     if (!this.physicalInvoiceNumber || this.physicalInvoiceNumber.length === 0) {
       errors['physicalInvoiceNumber'] = 'El número de factura física es requerido'

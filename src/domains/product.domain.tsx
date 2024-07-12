@@ -7,6 +7,7 @@ export type ProductItem = {
   presentation: string
   category: CategoryItem
   categoryId: number
+  isActive: boolean
 }
 
 export type ProductDetail = ProductItem & {

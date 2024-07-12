@@ -47,6 +47,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
   // const [productsNoOrder, setProductsNoOrder] = useState<ProductItem[]>([])
   const [productSelected, setProductSelected] = useState<ProductItem>()
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [detailErrors, setDetailErrors] = useState<string[]>([])
   const [searchText, setSearchText] = useState<string>('')
   const [quantity, setQuantity] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
@@ -302,7 +303,14 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
 
       const orderId = parseInt(id)
       const supplierId = supplier.id
-      const _products = await productService.getAll(nextPage, searchText, supplierId, 0, orderId)
+      const _products = await productService.getAll(
+        nextPage,
+        searchText,
+        supplierId,
+        0,
+        orderId,
+        true,
+      )
       setProducts([...products, ..._products[0]])
       setProductPages(_products[1])
       setProductPage(nextPage)
@@ -346,7 +354,7 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
         return
       }
       const orderId = parseInt(id)
-      const _product = await productService.getAll(1, searchText, supplier.id, 0, orderId)
+      const _product = await productService.getAll(1, searchText, supplier.id, 0, orderId, true)
       setProducts(_product[0])
       setProductPages(_product[1])
       setProductPage(1)
@@ -394,6 +402,20 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
     return () => clearTimeout(timeOutId)
   }, [searchText, supplier])
 
+  useEffect(() => {
+    const _errors = []
+
+    if (customer && !customer.isActive) {
+      _errors.push('Cliente desabilitado')
+    }
+
+    if (supplier && !supplier.isActive) {
+      _errors.push('Proveedor desabilitado')
+    }
+
+    setDetailErrors(_errors)
+  }, [customer, supplier])
+
   return (
     <>
       <ConfirmDialog
@@ -410,7 +432,9 @@ export default function Order({ open, toggleDrawer }: OrderPageProps) {
           option={{
             title: 'Facturar',
             action: () => navigate(`${UrlRoutes.CreateInvoice}?orderId=${id}`),
+            disabled: !(customer?.isActive && supplier?.isActive),
           }}
+          errors={detailErrors}
         ></OrderDetails>
         <OrderProductForm
           pages={pages}

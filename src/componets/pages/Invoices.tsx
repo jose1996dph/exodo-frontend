@@ -12,7 +12,6 @@ import Content from '../organisms/Content'
 import { ToggleDrawerHandler } from '../molecules/CustomAppBar'
 import { makeInvoiceService } from '../../services/invoice.service'
 import { InvoiceItem } from '../../domains/invoice.domain'
-import ConfirmDialog from '../atoms/ConfirmDialog'
 import { useNavigate } from 'react-router-dom'
 import { UrlRoutes } from '../../framework/routes/routes'
 
@@ -26,8 +25,6 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
   const [invoices, setInvoices] = useState<InvoiceItem[]>([])
   const [orderBy, setOrderBy] = useState<string>('total')
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
-  const [openModal, setOpenModal] = useState(false)
-  const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 
@@ -47,26 +44,6 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
       setPages(_pages)
     } catch {
       console.error('error')
-    }
-  }
-
-  const handleClose = () => {
-    setOpenModal(false)
-  }
-
-  const openAlert = (id: number) => {
-    setOpenModal(true)
-    setSelectedId(id)
-  }
-
-  const handlerToggleStatus = async () => {
-    try {
-      await invoiceService.toggleStatus(seletedId)
-      loadInvoices()
-    } catch {
-      console.error('error')
-    } finally {
-      handleClose()
     }
   }
 
@@ -93,12 +70,6 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
 
   return (
     <>
-      <ConfirmDialog
-        open={openModal}
-        setOpen={setOpenModal}
-        content='¿Está seguro de cambiar el estatus de la factura?'
-        onAcept={handlerToggleStatus}
-      />
       <Content title='Facturas' open={open} toggleDrawer={toggleDrawer}>
         <Grid item xs={12} md={4} lg={3}>
           <Paper
@@ -157,7 +128,6 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
               orderDirection={orderDirection}
               setOrderDirection={setOrderDirection}
               data={invoices}
-              onToggle={openAlert}
               onShow={onShowHandler}
             />
           </Paper>

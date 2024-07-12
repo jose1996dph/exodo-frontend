@@ -1,7 +1,7 @@
 import { IReportRepository, makeReportRepository } from '../repositories/report.repository'
 
 class ReportService {
-  private indicatorRepo: IReportRepository = makeReportRepository()
+  private reportRepo: IReportRepository = makeReportRepository()
 
   async getSellerReport(
     pageNum: number,
@@ -12,7 +12,7 @@ class ReportService {
     endDate?: Date,
   ) {
     const pageSize = 10
-    return await this.indicatorRepo.getSellerReport(
+    return await this.reportRepo.getSellerReport(
       pageSize,
       pageNum,
       search,
@@ -32,7 +32,7 @@ class ReportService {
     endDate?: Date,
   ) {
     const pageSize = 10
-    return await this.indicatorRepo.getSupplierReport(
+    return await this.reportRepo.getSupplierReport(
       pageSize,
       pageNum,
       search,
@@ -41,6 +41,10 @@ class ReportService {
       startDate,
       endDate,
     )
+  }
+
+  async getReport(supplierId: number, startDate?: Date, endDate?: Date): Promise<void> {
+    await this.reportRepo.getReport(supplierId, startDate, endDate)
   }
 }
 

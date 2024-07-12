@@ -40,6 +40,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
       const [_suppliers, _pages] = await supplierService.getAll(
         page,
         searchText,
+        undefined,
         orderBy,
         orderDirection,
       )

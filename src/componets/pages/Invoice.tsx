@@ -51,7 +51,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
   // const [productsNoInvoice, setProductsNoInvoice] = useState<ProductItem[]>([])
   const [productSelected, setProductSelected] = useState<ProductItem>()
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [searchText, setSearchText] = useState<string>('')
+  // const [searchText, setSearchText] = useState<string>('')
   const [quantity, setQuantity] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const [productPages, setProductPages] = useState(0)
@@ -111,7 +111,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     try {
       const _supplier = await supplierService.getById(supplierId)
       setSupplier(_supplier)
-      loadProductsNotInvoice()
+      // loadProductsNotInvoice()
     } catch {
       console.error('error')
     }
@@ -184,7 +184,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       clearForm()
       loadInvoice()
       loadProducts()
-      loadProductsNotInvoice()
+      // loadProductsNotInvoice()
     } catch {
       console.error('error')
     }
@@ -195,9 +195,10 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     setQuantity('')
     setProductSelected(undefined)
     setSelectedToEdit(undefined)
-    setSearchText('')
+    // setSearchText('')
   }
 
+  /*
   const loadProductsNotInvoice = async () => {
     try {
       if (!id) {
@@ -207,7 +208,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
         return
       }
       const invoiceId = parseInt(id)
-      const _product = await productService.getAll(1, searchText, supplier.id, 0, invoiceId)
+      const _product = await productService.getAll(1, searchText, supplier.id, 0, invoiceId, true)
       setProducts(_product[0])
       setProductPages(_product[1])
       setProductPage(1)
@@ -218,6 +219,7 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
       setIsLoading(false)
     }
   }
+    */
 
   const handlerSubmitPayment = async (
     mount: number,
@@ -271,11 +273,13 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
     loadPayments()
   }, [paymentsPage, paymentsOrderDirection, paymentsOrderBy])
 
+  /**
   useEffect(() => {
     setIsLoading(true)
     const timeOutId = setTimeout(() => loadProductsNotInvoice(), 1000)
     return () => clearTimeout(timeOutId)
   }, [searchText, supplier])
+   */
 
   return (
     <>

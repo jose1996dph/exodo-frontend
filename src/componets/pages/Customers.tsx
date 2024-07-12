@@ -40,6 +40,7 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
       const [_customers, _pages] = await customerService.getAll(
         page,
         searchText,
+        undefined,
         orderBy,
         orderDirection,
       )

@@ -4,13 +4,20 @@ import { ISupplierRepository, makeSupplierRepository } from '../repositories/sup
 class SupplierService {
   private supplierRepo: ISupplierRepository = makeSupplierRepository()
 
-  async getAll(pageNum: number, search: string, orderBy?: string, orderDirection?: string) {
+  async getAll(
+    pageNum: number,
+    search: string,
+    isActive?: boolean,
+    orderBy?: string,
+    orderDirection?: string,
+  ) {
     try {
       const pageSize = 10
       const suppliers = await this.supplierRepo.getAll(
         pageSize,
         pageNum - 1,
         search,
+        isActive,
         orderBy,
         orderDirection,
       )

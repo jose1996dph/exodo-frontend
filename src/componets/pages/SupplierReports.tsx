@@ -47,6 +47,14 @@ export default function SupplierReports({ open, toggleDrawer }: SupplierReportsP
     }
   }
 
+  const getReport = async (supplierId: number) => {
+    try {
+      await reportService.getReport(supplierId, startDate, endDate)
+    } catch {
+      console.error('error')
+    }
+  }
+
   useEffect(() => {
     setIsLoading(true)
     loadReports()
@@ -94,6 +102,7 @@ export default function SupplierReports({ open, toggleDrawer }: SupplierReportsP
             orderDirection={orderDirection}
             setOrderDirection={setOrderDirection}
             data={reports}
+            onReport={(id, item: SupplierReport) => getReport(item.supplierId)}
           />
         </Paper>
       </Grid>

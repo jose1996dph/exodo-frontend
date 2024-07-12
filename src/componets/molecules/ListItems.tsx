@@ -1,4 +1,6 @@
 import { Fragment } from 'react'
+import MuiGrow from '@mui/material/Grow'
+import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -16,15 +18,28 @@ import WorkIcon from '@mui/icons-material/Work'
 import { useNavigate } from 'react-router-dom'
 
 import { UrlRoutes } from '../../framework/routes/routes'
-import { Box, useMediaQuery } from '@mui/material'
+import { styled, useMediaQuery } from '@mui/material'
 import useAuth from '../../hooks/auth.hook'
 import { Role } from '../../domains/role.domain'
 
+const Grow = styled(MuiGrow)(({ theme, ...props }) => ({
+  '&': {
+    transition: theme.transitions.create('display', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    ...(!props.in && {
+      display: 'none',
+    }),
+  },
+}))
+
 type MainListItemsProps = {
+  open: boolean
   toggleDrawer: () => void
 }
 
-export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
+export const MainListItems = ({ toggleDrawer, open }: MainListItemsProps) => {
   const [isLoged, isAuthorized] = useAuth()
   const isXs = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
   const navigate = useNavigate()
@@ -39,11 +54,13 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
 
   return (
     <Fragment>
-      {/**
-      <ListSubheader component='div' inset>
-        <Box sx={{ fontWeight: 550, color: '#1976d2' }}>Gestiones</Box>
-      </ListSubheader>
-       */}
+      <Grow in={open} appear={false}>
+        <ListItem>
+          <ListSubheader component='div'>
+            <ListItemText primary='Gestiones' />
+          </ListSubheader>
+        </ListItem>
+      </Grow>
       <ListItemButton onClick={() => navegateTo(UrlRoutes.Dashboard)}>
         <ListItemIcon>
           <DashboardIcon />
@@ -88,14 +105,6 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
         </ListItemIcon>
         <ListItemText primary='Categorías' />
       </ListItemButton>
-      {/*
-      <ListItemButton onClick={() => navegateTo(UrlRoutes.SellerReport)}>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary='Reportes' />
-      </ListItemButton>
-      */}
       {_isAuthorized && (
         <ListItemButton onClick={() => navegateTo(UrlRoutes.Users)}>
           <ListItemIcon>
@@ -108,7 +117,7 @@ export const MainListItems = ({ toggleDrawer }: MainListItemsProps) => {
   )
 }
 
-export const SecondaryListItems = ({ toggleDrawer }: MainListItemsProps) => {
+export const SecondaryListItems = ({ toggleDrawer, open }: MainListItemsProps) => {
   const isXs = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
   const navigate = useNavigate()
 
@@ -120,9 +129,13 @@ export const SecondaryListItems = ({ toggleDrawer }: MainListItemsProps) => {
   }
   return (
     <Fragment>
-      <ListSubheader component='div' inset>
-        <Box sx={{ fontWeight: 'bold' }}>Reportes</Box>
-      </ListSubheader>
+      <Grow in={open}>
+        <ListItem>
+          <ListSubheader component='div'>
+            <ListItemText primary='Reportes' />
+          </ListSubheader>
+        </ListItem>
+      </Grow>
       <ListItemButton onClick={() => navegateTo(UrlRoutes.SellerReports)}>
         <ListItemIcon>
           <BarChartIcon />

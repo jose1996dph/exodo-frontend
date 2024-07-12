@@ -57,7 +57,7 @@ export class CreateOrder {
       errors['customerId'] = 'Cliente es requerido'
     }
     if (!this.supplierId || this.supplierId === 0) {
-      errors['supplierId'] = 'Distribuidor es requerido'
+      errors['supplierId'] = 'Proveedor es requerido'
     }
     if (!this.products || this.products.length === 0) {
       errors['products'] = 'Los productos son requeridos'

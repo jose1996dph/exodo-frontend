@@ -127,11 +127,10 @@ export default function OrderForm({
 
   const loadCustomers = async () => {
     try {
-      const _customers = await customerService.getAll(1, searchCustomerText)
+      const _customers = await customerService.getAll(1, searchCustomerText, true)
       setCustomers(_customers[0])
       setCustomerPages(_customers[1])
       setCustomerPage(1)
-      // setErrors({})
     } catch {
       console.error('error')
     }
@@ -143,7 +142,6 @@ export default function OrderForm({
       setSuppliers(_suppliers[0])
       setSupplierPages(_suppliers[1])
       setSupplierPage(1)
-      // setErrors({})
     } catch {
       console.error('error')
     }
@@ -155,7 +153,14 @@ export default function OrderForm({
         return
       }
 
-      const _product = await productService.getAll(1, searchProductText, supplierSelected.id)
+      const _product = await productService.getAll(
+        1,
+        searchProductText,
+        supplierSelected.id,
+        0,
+        0,
+        true,
+      )
 
       setProducts(_product[0])
       setProductPages(_product[1])
@@ -171,7 +176,7 @@ export default function OrderForm({
 
   const addMoreCustomers = async (nextPage: number) => {
     try {
-      const _customers = await customerService.getAll(nextPage, searchCustomerText)
+      const _customers = await customerService.getAll(nextPage, searchCustomerText, true)
       setCustomers([...customers, ..._customers[0]])
       setCustomerPages(_customers[1])
       setCustomerPage(nextPage)
@@ -197,7 +202,14 @@ export default function OrderForm({
         return
       }
       const supplierId = supplierSelected.id
-      const _products = await productService.getAll(nextPage, searchProductText, supplierId)
+      const _products = await productService.getAll(
+        nextPage,
+        searchProductText,
+        supplierId,
+        0,
+        0,
+        true,
+      )
       setProducts([...products, ..._products[0]])
       setProductPages(_products[1])
       setProductPage(nextPage)

@@ -34,7 +34,7 @@ export default function SupplierReportForm({
         </Grid>
         <Grid item xs={12} md={6}>
           <CustomTextField
-            label='Buscar distribuidor'
+            label='Buscar proveedor'
             aria-label='delete'
             color='primary'
             variant='outlined'

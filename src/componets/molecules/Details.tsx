@@ -1,4 +1,4 @@
-import { Grid, GridProps, Paper } from '@mui/material'
+import { Alert, AlertTitle, Grid, GridProps, Paper } from '@mui/material'
 import SubTitle from '../atoms/SubTitle'
 import Title from '../atoms/Title'
 import CustomButton from '../atoms/CustomButton'
@@ -6,6 +6,7 @@ import CustomButton from '../atoms/CustomButton'
 export type OptionDetails = {
   title: string
   action: () => void
+  disabled?: boolean
 }
 
 export type DetailsItem = {
@@ -19,9 +20,10 @@ export type DetailsProps<T> = {
   obj: T | undefined
   items: DetailsItem[]
   option?: OptionDetails
+  errors?: string[]
 }
 
-export default function Details<T>({ title, obj, items, option }: DetailsProps<T>) {
+export default function Details<T>({ title, obj, items, option, errors }: DetailsProps<T>) {
   if (obj === undefined) {
     return <></>
   }
@@ -46,6 +48,7 @@ export default function Details<T>({ title, obj, items, option }: DetailsProps<T
                 text={option.title}
                 style={{ marginTop: 0, marginBottom: 0 }}
                 onClick={() => option.action()}
+                disabled={option.disabled}
               ></CustomButton>
             </Grid>
           )}
@@ -57,6 +60,18 @@ export default function Details<T>({ title, obj, items, option }: DetailsProps<T
               </Grid>
             )
           })}
+          {errors && errors.length > 0 && (
+            <Grid item xs={12} marginTop={2}>
+              <Alert severity='warning'>
+                <AlertTitle>Order no puede ser facturada</AlertTitle>
+                <ul>
+                  {errors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </Alert>
+            </Grid>
+          )}
         </Grid>
       </Paper>
     </Grid>

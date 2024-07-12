@@ -13,6 +13,7 @@ export interface ISupplierRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[SupplierItem[], number]>
@@ -33,6 +34,7 @@ class SupplierRepository implements ISupplierRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    isActive?: boolean,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[SupplierItem[], number]> {
@@ -44,6 +46,10 @@ class SupplierRepository implements ISupplierRepository {
 
     if (orderDirection) {
       params += `&orderDirection=${orderDirection}`
+    }
+
+    if (isActive !== undefined) {
+      params += `&isActive=${isActive}`
     }
 
     const { data } = await api.get(`${BackendURL}suppliers/?${params}`)

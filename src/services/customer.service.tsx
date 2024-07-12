@@ -4,13 +4,20 @@ import { ICustomerRepository, makeCustomerRepository } from '../repositories/cus
 class CustomerService {
   private customerRepo: ICustomerRepository = makeCustomerRepository()
 
-  async getAll(pageNum: number, search: string, orderBy?: string, orderDirection?: string) {
+  async getAll(
+    pageNum: number,
+    search: string,
+    isActive?: boolean,
+    orderBy?: string,
+    orderDirection?: string,
+  ) {
     try {
       const pageSize = 10
       const customers = await this.customerRepo.getAll(
         pageSize,
         pageNum - 1,
         search,
+        isActive,
         orderBy,
         orderDirection,
       )

@@ -40,7 +40,6 @@ type OrderTableProps = {
   setOrderDirection: (attribute: 'asc' | 'desc') => void
   data: OrderItem[]
   onShow: (id: number) => void
-  onToggle: (id: number) => void
 }
 
 export default function OrderTable({
@@ -53,7 +52,6 @@ export default function OrderTable({
   setOrderDirection,
   data,
   onShow,
-  onToggle,
 }: OrderTableProps) {
   return (
     <CustomTable
@@ -68,7 +66,6 @@ export default function OrderTable({
       setOrderDirection={setOrderDirection}
       tableRows={propRows}
       onShow={onShow}
-      onToggle={onToggle}
     ></CustomTable>
   )
 }

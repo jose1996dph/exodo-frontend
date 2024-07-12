@@ -1,6 +1,6 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
 import { InvoiceItem } from '../../domains/invoice.domain'
-import { formatDate, formatFloat } from '../../framework/helpers/formatter.helper'
+import { formatDate } from '../../framework/helpers/formatter.helper'
 import Price from '../atoms/Price'
 
 const propRows: CustomRow[] = [
@@ -40,7 +40,6 @@ type InvoiceTableProps = {
   setOrderDirection: (attribute: 'asc' | 'desc') => void
   data: InvoiceItem[]
   onShow: (id: number) => void
-  onToggle: (id: number) => void
 }
 
 export default function InvoiceTable({
@@ -53,7 +52,6 @@ export default function InvoiceTable({
   setOrderDirection,
   data,
   onShow,
-  onToggle,
 }: InvoiceTableProps) {
   return (
     <CustomTable
@@ -68,7 +66,6 @@ export default function InvoiceTable({
       setOrderDirection={setOrderDirection}
       tableRows={propRows}
       onShow={onShow}
-      onToggle={onToggle}
     ></CustomTable>
   )
 }
