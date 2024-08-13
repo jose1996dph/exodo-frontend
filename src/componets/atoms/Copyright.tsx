@@ -1,5 +1,4 @@
 import Typography, { TypographyProps } from '@mui/material/Typography'
-import Link from '@mui/material/Link'
 import { SxProps } from '@mui/system'
 import { Theme } from '@mui/material/styles/createTheme'
 
@@ -12,10 +11,7 @@ export default function Copyright(props: CopyrightProps) {
   return (
     <Typography variant='body2' color='text.secondary' align='center' {...props} sx={props.sx}>
       {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
+      <u>Exodo 2014</u> {new Date().getFullYear()}
       {'.'}
     </Typography>
   )

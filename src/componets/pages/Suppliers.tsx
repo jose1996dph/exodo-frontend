@@ -138,7 +138,7 @@ export default function Suppliers({ open, toggleDrawer }: SuppliersPageProps) {
             }}
           >
             <CustomTextField
-              label='Buscar proveeder'
+              label='Buscar proveedor'
               aria-label='delete'
               color='primary'
               variant='outlined'
