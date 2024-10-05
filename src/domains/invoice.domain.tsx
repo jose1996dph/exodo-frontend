@@ -10,7 +10,10 @@ export enum InvoiceStatus {
 export type InvoiceItem = {
   id: number
   total: number
+  physicalInvoiceNumber: string
+  physicalInvoiceDate: Date
   mountPayed: number
+  status: InvoiceStatus
   isActive: boolean
   updateAt: string
   createAt: string

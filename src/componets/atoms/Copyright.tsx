@@ -10,9 +10,7 @@ type CopyrightProps = TypographyProps & {
 export default function Copyright(props: CopyrightProps) {
   return (
     <Typography variant='body2' color='text.secondary' align='center' {...props} sx={props.sx}>
-      {'Copyright © '}
-      <u>Exodo 2014</u> {new Date().getFullYear()}
-      {'.'}
+      <u>Exodo 2014</u>. © Todo los derechos reservados.
     </Typography>
   )
 }

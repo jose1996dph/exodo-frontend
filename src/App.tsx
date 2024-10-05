@@ -52,12 +52,12 @@ export const PriceContext = createContext<PriceContextObj>({})
 function App() {
   const [isLoged, isAuthorized] = useAuth()
 
+  const theme = useTheme()
+  const isNotXS = useMediaQuery(theme.breakpoints.up('sm'))
+
   const [open, setOpen] = useState(true)
   const [currency, setCurrency] = useState(getStoredCurrency())
   const [dollarValue, setDollarValue] = useState(0)
-
-  const theme = useTheme()
-  const isNotXS = useMediaQuery(theme.breakpoints.up('sm'))
 
   const toggleDrawer = () => {
     setOpen(!open)
@@ -84,6 +84,7 @@ function App() {
 
   useEffect(() => {
     getDollarValue()
+    setOpen(isNotXS)
   }, [])
 
   return (

@@ -108,49 +108,18 @@ export default function CustomTable({
             </TableHead>
             <TableBody>
               {items.map((item) => (
-                <>
-                  <CustomTableRow
-                    doShowCollapse={doShowCollapse}
-                    item={item}
-                    identify={identify}
-                    tableRows={tableRows}
-                    key={item[identify]}
-                    onDelete={onDelete}
-                    onShow={onShow}
-                    onToggle={onToggle}
-                    onReport={onReport}
-                    onUpdate={onUpdate}
-                  ></CustomTableRow>
-                  {/**
-            <TableRow key={item[identify]}>
-              {tableRows.map((tableRow) => (
-                <TableCell key={tableRow.key} {...tableRow.props}>
-                  {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
-                </TableCell>
-              ))}
-              <TableCell align='right'>
-                {onShow && (
-                  <IconButton color='primary' onClick={() => onShow(item[identify])}>
-                    <VisibilityIcon />
-                  </IconButton>
-                )}
-                {onUpdate && (
-                  <IconButton color='primary' onClick={() => onUpdate(item[identify], item)}>
-                    <EditIcon />
-                  </IconButton>
-                )}
-                {onDelete && (
-                  <IconButton color='error' onClick={() => onDelete(item[identify], item)}>
-                    <DeleteIcon />
-                  </IconButton>
-                )}
-                {onToggle && (
-                  <Switch checked={item['isActive']} onChange={() => onToggle(item[identify])} />
-                )}
-              </TableCell>
-            </TableRow>
-           */}
-                </>
+                <CustomTableRow
+                  doShowCollapse={doShowCollapse}
+                  item={item}
+                  identify={identify}
+                  tableRows={tableRows}
+                  key={item[identify]}
+                  onDelete={onDelete}
+                  onShow={onShow}
+                  onToggle={onToggle}
+                  onReport={onReport}
+                  onUpdate={onUpdate}
+                ></CustomTableRow>
               ))}
             </TableBody>
           </Table>

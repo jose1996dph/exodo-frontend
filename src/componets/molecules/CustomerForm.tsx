@@ -58,7 +58,7 @@ export default function CustomerForm({ isLoading, customer, errors, onSubmit }: 
           <CustomTextField
             id='dni'
             label='Rif'
-            placeholder='E-00000000-1'
+            placeholder='J-00000000-1'
             value={dni}
             disabled={isLoading}
             error={errors['dni'] ? true : false}

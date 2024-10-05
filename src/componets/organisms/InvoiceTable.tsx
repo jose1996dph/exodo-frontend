@@ -1,13 +1,14 @@
 import CustomTable, { CustomRow } from '../molecules/CustomTable'
-import { InvoiceItem } from '../../domains/invoice.domain'
+import { InvoiceItem, InvoiceStatus } from '../../domains/invoice.domain'
 import { formatDate } from '../../framework/helpers/formatter.helper'
 import Price from '../atoms/Price'
+import { Chip } from '@mui/material'
 
 const propRows: CustomRow[] = [
   {
     title: 'Proveedor',
     key: 'supplier',
-    isImportant: true,
+    isImportant: false,
     render: (_, item: InvoiceItem) => item.supplier.name,
   },
   {
@@ -15,6 +16,17 @@ const propRows: CustomRow[] = [
     key: 'customer',
     isImportant: true,
     render: (_, item: InvoiceItem) => item.customer.businessName,
+  },
+  {
+    title: 'Estado',
+    key: 'status',
+    isImportant: true,
+    render: (_, item: InvoiceItem) => (
+      <Chip
+        label={item.status}
+        color={InvoiceStatus.PAYED === item.status ? 'primary' : 'default'}
+      />
+    ),
   },
   {
     title: 'Total',

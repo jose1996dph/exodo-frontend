@@ -158,14 +158,14 @@ export default function CustomTableRow({
                   {tableRows.map(
                     (tableRow) =>
                       !tableRow.isImportant && (
-                        <>
-                          <Grid item xs={6} key={tableRow.key}>
+                        <Fragment key={tableRow.key}>
+                          <Grid item xs={6}>
                             <b>{tableRow.title}</b>
                           </Grid>
-                          <Grid item xs={6} key={tableRow.key}>
+                          <Grid item xs={6}>
                             {tableRow.render ? tableRow.render(tableRow, item) : item[tableRow.key]}
                           </Grid>
-                        </>
+                        </Fragment>
                       ),
                   )}
                   <Grid

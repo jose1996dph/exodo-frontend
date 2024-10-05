@@ -100,7 +100,7 @@ export default function Login() {
           >
             <Logo sx={{ m: 2 }} width='100%' />
             <Typography component='h1' variant='h5'>
-              Inicia sessión
+              Iniciar sesión
             </Typography>
             <Box component='form' noValidate sx={{ mt: 1 }}>
               <CustomTextField
