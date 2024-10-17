@@ -24,8 +24,8 @@ type OrdersPageProps = {
 export default function Orders({ open, toggleDrawer }: OrdersPageProps) {
   const [searchText, setSearchText] = useState('')
   const [orders, setOrders] = useState<OrderItem[]>([])
-  const [orderBy, setOrderBy] = useState<string>('total')
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [orderBy, setOrderBy] = useState<string>('createAt')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('desc')
   // const [openModal, setOpenModal] = useState(false)
   // const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)

@@ -23,8 +23,8 @@ type InvoicesPageProps = {
 export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
   const [searchText, setSearchText] = useState('')
   const [invoices, setInvoices] = useState<InvoiceItem[]>([])
-  const [orderBy, setOrderBy] = useState<string>('total')
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [orderBy, setOrderBy] = useState<string>('createAt')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('desc')
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 

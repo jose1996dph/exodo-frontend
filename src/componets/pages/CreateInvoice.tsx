@@ -89,11 +89,11 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
         return
       }
 
-      await invoiceService.create(invoice)
+      const { id } = await invoiceService.create(invoice)
 
       clearForm()
 
-      navigate(UrlRoutes.Invoices, { replace: true })
+      navigate(`${UrlRoutes.Invoice}${id}`, { replace: true })
     } catch (error) {
       if (isServerException(error)) {
         const { message } = error as ServerException
