@@ -93,18 +93,22 @@ export const MainListItems = ({ toggleDrawer, open }: MainListItemsProps) => {
           <ListItemText primary='Proveedores' />
         </ListItemButton>
       )}
-      <ListItemButton onClick={() => navegateTo(UrlRoutes.Products)}>
-        <ListItemIcon>
-          <InventoryIcon />
-        </ListItemIcon>
-        <ListItemText primary='Productos' />
-      </ListItemButton>
-      <ListItemButton onClick={() => navegateTo(UrlRoutes.Categories)}>
-        <ListItemIcon>
-          <CategoryIcon />
-        </ListItemIcon>
-        <ListItemText primary='Categorías' />
-      </ListItemButton>
+      {_isAuthorized && (
+        <ListItemButton onClick={() => navegateTo(UrlRoutes.Products)}>
+          <ListItemIcon>
+            <InventoryIcon />
+          </ListItemIcon>
+          <ListItemText primary='Productos' />
+        </ListItemButton>
+      )}
+      {_isAuthorized && (
+        <ListItemButton onClick={() => navegateTo(UrlRoutes.Categories)}>
+          <ListItemIcon>
+            <CategoryIcon />
+          </ListItemIcon>
+          <ListItemText primary='Categorías' />
+        </ListItemButton>
+      )}
       {_isAuthorized && (
         <ListItemButton onClick={() => navegateTo(UrlRoutes.Users)}>
           <ListItemIcon>

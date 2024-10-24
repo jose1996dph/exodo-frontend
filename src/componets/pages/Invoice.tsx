@@ -235,7 +235,13 @@ export default function Invoice({ open, toggleDrawer }: InvoicePageProps) {
 
       const payment = new CreatePayment(mount, paymentType, referenceCode, tranferDate)
 
-      const _errors = payment.isValid(invoice?.totalToPay ?? 0)
+      // eslint-disable-next-line no-debugger
+      debugger
+
+      const _errors = payment.isValid(
+        invoice?.totalToPay ?? 0,
+        invoice?.physicalInvoiceDate ?? new Date(),
+      )
 
       setErrors(_errors)
       if (Object.keys(_errors).length) {

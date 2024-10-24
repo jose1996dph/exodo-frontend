@@ -12,7 +12,7 @@ export enum UrlRoutes {
   EditUser = '/edit/user/',
   // Customer
   Customers = '/customers',
-  Customer = '/customers/:id',
+  Customer = '/customers/',
   CreateCustomer = '/create/customer',
   EditCustomer = '/edit/customer/',
   // Supplier

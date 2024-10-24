@@ -12,7 +12,7 @@ const propRows: CustomRow[] = [
     render: (_, item: SupplierReport) => formatInteger(item.count || 0),
   },
   {
-    title: 'Total facturado',
+    title: 'Total cobrado',
     key: 'total',
     isImportant: false,
     render: (_, item: SupplierReport) => <Price mount={item.total || 0} />,

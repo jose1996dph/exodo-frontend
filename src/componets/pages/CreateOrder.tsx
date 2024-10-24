@@ -62,11 +62,11 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
         return
       }
 
-      await orderService.create(order)
+      const newOrder = await orderService.create(order)
 
       clearForm()
 
-      navigate(UrlRoutes.Orders, { replace: true })
+      navigate(`${UrlRoutes.Order}${newOrder.id}`, { replace: true })
     } catch (error) {
       if (isServerException(error)) {
         const { message } = error as ServerException
@@ -101,6 +101,8 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
       orderProducts.forEach((op) => (_total = _total + op.calculatePrice()))
       calculatePages(orderProducts.length)
       setTotal(_total)
+
+      loadDisplayableOrderProduct(orderProducts)
     } catch (error) {
       console.error(error)
       throw error
@@ -132,6 +134,8 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
       orderProducts.forEach((op) => (_total = _total + op.calculatePrice()))
       calculatePages(orderProducts.length)
       setTotal(_total)
+
+      loadDisplayableOrderProduct(_orderProducts)
     } catch (error) {
       console.error(error)
       throw error
@@ -149,6 +153,8 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
       orderProducts.forEach((op) => (_total = _total + op.calculatePrice()))
       calculatePages(orderProducts.length)
       setTotal(_total)
+
+      loadDisplayableOrderProduct(_orderProducts)
     } catch (error) {
       console.error(error)
       throw error
@@ -165,6 +171,8 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
   const loadDisplayableOrderProduct = (_orderProducts: OrderProductItem[]) => {
     const numberOfRecords = 10
     const _page = (page - 1) * numberOfRecords
+
+    _orderProducts = _orderProducts.sort(sortOrderProducts)
 
     if (_orderProducts.length <= _page + numberOfRecords) {
       setDisplayableOrderProduct(_orderProducts.slice(_page))
@@ -206,12 +214,8 @@ export default function CreateOrder({ open, toggleDrawer }: CreateOrderPageProps
   }
 
   useEffect(() => {
-    loadDisplayableOrderProduct(orderProducts.sort(sortOrderProducts))
-  }, [orderBy, orderDirection])
-
-  useEffect(() => {
-    loadDisplayableOrderProduct(orderProducts.sort(sortOrderProducts))
-  }, [page, total])
+    loadDisplayableOrderProduct(orderProducts)
+  }, [page, orderBy, orderDirection])
 
   useEffect(() => {
     if (orderProducts.length > 0) {

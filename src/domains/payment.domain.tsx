@@ -40,7 +40,7 @@ export class CreatePayment {
     this.transferDate = transferDate
   }
 
-  public isValid(totalToPay: number): Record<string, string> {
+  public isValid(totalToPay: number, invoiceCreatedDate: Date): Record<string, string> {
     const errors: Record<string, string> = {}
     if (totalToPay === 0) {
       errors['message'] = 'Factura ya fue pagada'
@@ -67,8 +67,8 @@ export class CreatePayment {
     if (this.transferDate && this.transferDate > new Date()) {
       errors['transferDate'] = 'Fecha de transferencia es invalida'
     }
-    if (this.transferDate && this.transferDate > new Date()) {
-      errors['mount'] = 'Fecha de transferencia es invalida'
+    if (this.transferDate && this.transferDate < new Date(invoiceCreatedDate)) {
+      errors['transferDate'] = 'Fecha de transferencia es invalida'
     }
 
     return errors

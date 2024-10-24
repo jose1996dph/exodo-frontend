@@ -127,6 +127,8 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
       invoiceProducts.forEach((op) => (_total = _total + op.calculatePrice()))
       calculatePages(invoiceProducts.length)
       setTotal(_total)
+
+      loadDisplayableInvoiceProduct(invoiceProducts)
     } catch (error) {
       console.error(error)
       throw error
@@ -158,6 +160,8 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
       invoiceProducts.forEach((op) => (_total = _total + op.calculatePrice()))
       calculatePages(invoiceProducts.length)
       setTotal(_total)
+
+      loadDisplayableInvoiceProduct(_invoiceProducts)
     } catch (error) {
       console.error(error)
       throw error
@@ -175,6 +179,8 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
       invoiceProducts.forEach((op) => (_total = _total + op.calculatePrice()))
       calculatePages(invoiceProducts.length)
       setTotal(_total)
+
+      loadDisplayableInvoiceProduct(_invoiceProducts)
     } catch (error) {
       console.error(error)
       throw error
@@ -203,7 +209,7 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
       calculatePages(_invoiceProducts.length)
       setTotal(_total)
 
-      // loadDisplayableInvoiceProduct(_invoiceProducts)
+      loadDisplayableInvoiceProduct(_invoiceProducts)
     } catch (error) {
       console.error(error)
     }
@@ -212,6 +218,8 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
   const loadDisplayableInvoiceProduct = (_invoiceProducts: InvoiceProductItem[]) => {
     const numberOfRecords = 10
     const _page = (page - 1) * numberOfRecords
+
+    _invoiceProducts = _invoiceProducts.sort(sortInvoiceProducts)
 
     if (_invoiceProducts.length <= _page + numberOfRecords) {
       setDisplayableInvoiceProduct(_invoiceProducts.slice(_page))
@@ -267,12 +275,8 @@ export default function CreateInvoice({ open, toggleDrawer }: CreateInvoicePageP
   }, [])
 
   useEffect(() => {
-    loadDisplayableInvoiceProduct(invoiceProducts.sort(sortInvoiceProducts))
-  }, [orderBy, orderDirection])
-
-  useEffect(() => {
-    loadDisplayableInvoiceProduct(invoiceProducts.sort(sortInvoiceProducts))
-  }, [page, total])
+    loadDisplayableInvoiceProduct(invoiceProducts)
+  }, [page, orderBy, orderDirection])
 
   useEffect(() => {
     if (invoiceProducts.length > 0) {

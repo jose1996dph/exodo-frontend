@@ -92,7 +92,7 @@ export default function InvoiceProductForm({
     setTotal(supplierProduct.price * _quantity)
   }, [productSelected])
 
-  useEffect(() => {
+  const loadTotal = () => {
     if (!productSelected) {
       setTotal(0)
       return
@@ -118,6 +118,11 @@ export default function InvoiceProductForm({
     }
 
     setTotal(supplierProduct.price * _quantity)
+  }
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => loadTotal(), 500)
+    return () => clearTimeout(timeOutId)
   }, [quantity])
 
   return (
@@ -168,6 +173,7 @@ export default function InvoiceProductForm({
                 error={errors['quantity'] ? true : false}
                 helperText={errors['quantity']}
                 onChange={(event) => setQuantity(event.target.value)}
+                inputProps={{ inputMode: 'numeric' }}
               ></CustomTextField>
             </Grid>
             <Prices discounts={discounts} total={total} productPrice={productPrice}></Prices>

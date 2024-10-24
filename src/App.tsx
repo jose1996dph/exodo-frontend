@@ -6,6 +6,7 @@ import EditUser from './componets/pages/EditUser'
 import Login from './componets/pages/Login'
 import SetPassword from './componets/pages/SetPassword'
 import ForgotPassword from './componets/pages/ForgotPassword'
+import CustomerPage from './componets/pages/Customer'
 import CustomersPage from './componets/pages/Customers'
 import CreateCustomer from './componets/pages/CreateCustomer'
 import UsersPage from './componets/pages/Users'
@@ -186,6 +187,15 @@ function App() {
                 element={
                   <ProtectedRoute isLoged={isLoged}>
                     <CustomersPage open={open} toggleDrawer={toggleDrawer} />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path={`${UrlRoutes.Customer}:id`}
+                element={
+                  <ProtectedRoute isLoged={isLoged}>
+                    <CustomerPage open={open} toggleDrawer={toggleDrawer} />
                   </ProtectedRoute>
                 }
               />

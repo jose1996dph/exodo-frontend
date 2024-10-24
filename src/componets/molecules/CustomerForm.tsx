@@ -139,7 +139,7 @@ export default function CustomerForm({ isLoading, customer, errors, onSubmit }: 
         <Grid item xs={12}>
           <CustomTextField
             id='contactPhone'
-            label='teléfono de persona de contacto'
+            label='Teléfono de persona de contacto'
             value={contactPhone}
             disabled={isLoading}
             error={errors['contactPhone'] ? true : false}

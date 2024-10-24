@@ -15,6 +15,8 @@ import { CustomerItem } from '../../domains/customer.domain'
 import ConfirmDialog from '../atoms/ConfirmDialog'
 import { useNavigate } from 'react-router-dom'
 import { UrlRoutes } from '../../framework/routes/routes'
+import useAuth from '../../hooks/auth.hook'
+import { Role } from '../../domains/role.domain'
 
 type CustomersPageProps = {
   open: boolean
@@ -22,6 +24,7 @@ type CustomersPageProps = {
 }
 
 export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
+  const [isLoged, isAuthorized] = useAuth()
   const [searchText, setSearchText] = useState('')
   const [customers, setCustomers] = useState<CustomerItem[]>([])
   const [orderBy, setOrderBy] = useState<string>('dni')
@@ -30,6 +33,8 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
   const [seletedId, setSelectedId] = useState(0)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
+
+  const _isAuthorized = isAuthorized(Role.ADMIN)
 
   const customerService = makeCustomerService()
 
@@ -72,12 +77,20 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
   }
 
   const goToCreateCustomer = () => {
-    navigate(UrlRoutes.CreateCustomer, { replace: true })
+    navigate(UrlRoutes.CreateCustomer)
+  }
+
+  const onShowHandler = (id: number) => {
+    try {
+      navigate(`${UrlRoutes.Customer}${id}`)
+    } catch {
+      console.error('error')
+    }
   }
 
   const onUpdateHandler = (id: number) => {
     try {
-      navigate(`${UrlRoutes.EditCustomer}${id}`, { replace: true })
+      navigate(`${UrlRoutes.EditCustomer}${id}`)
     } catch {
       console.error('error')
     }
@@ -101,26 +114,28 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
         onAcept={handlerToggleStatus}
       />
       <Content title='Clientes' open={open} toggleDrawer={toggleDrawer}>
-        <Grid item xs={12} md={4} lg={3}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 120,
-            }}
-          >
-            <CustomButton
-              aria-label='delete'
-              color='primary'
-              text='Crear cliente'
-              id='create_customer'
-              startIcon={<PersonAddIcon />}
-              onClick={goToCreateCustomer}
-            ></CustomButton>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={8} lg={9}>
+        {_isAuthorized && (
+          <Grid item xs={12} md={4} lg={3}>
+            <Paper
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: 120,
+              }}
+            >
+              <CustomButton
+                aria-label='delete'
+                color='primary'
+                text='Crear cliente'
+                id='create_customer'
+                startIcon={<PersonAddIcon />}
+                onClick={goToCreateCustomer}
+              ></CustomButton>
+            </Paper>
+          </Grid>
+        )}
+        <Grid item xs={12} md={_isAuthorized ? 8 : 12} lg={_isAuthorized ? 9 : 12}>
           <Paper
             sx={{
               p: 2,
@@ -158,6 +173,7 @@ export default function Customers({ open, toggleDrawer }: CustomersPageProps) {
               orderDirection={orderDirection}
               setOrderDirection={setOrderDirection}
               data={customers}
+              onShow={onShowHandler}
               onToggle={openAlert}
               onUpdate={onUpdateHandler}
             />

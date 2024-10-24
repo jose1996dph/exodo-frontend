@@ -9,9 +9,9 @@ export function formatDate(value: Date | string) {
 }
 
 export function formatFloat(value: number) {
-  return value.toLocaleString('es-VE', { minimumFractionDigits: 2 })
+  return value.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 export function formatInteger(value: number) {
-  return value.toLocaleString('es-VE', { minimumFractionDigits: 0 })
+  return value.toLocaleString('es-VE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
 }

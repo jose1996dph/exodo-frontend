@@ -4,13 +4,20 @@ import { IInvoiceRepository, makeInvoiceRepository } from '../repositories/invoi
 class InvoiceService {
   private invoiceRepo: IInvoiceRepository = makeInvoiceRepository()
 
-  async getAll(pageNum: number, search: string, orderBy?: string, orderDirection?: string) {
+  async getAll(
+    pageNum: number,
+    search: string,
+    customerId?: number,
+    orderBy?: string,
+    orderDirection?: string,
+  ) {
     try {
       const pageSize = 10
       const invoices = await this.invoiceRepo.getAll(
         pageSize,
         pageNum - 1,
         search,
+        customerId,
         orderBy,
         orderDirection,
       )

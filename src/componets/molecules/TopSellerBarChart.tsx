@@ -3,8 +3,7 @@ import { Typography, useTheme } from '@mui/material'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import Title from '../atoms/Title'
 import { TopSeller } from '../../domains/topSeller.domain'
-import { formatFloat } from '../../framework/helpers/formatter.helper'
-import Price from '../atoms/Price'
+import { formatFloat, formatInteger } from '../../framework/helpers/formatter.helper'
 
 type TopSellerBarChartProp = {
   data: TopSeller[]
@@ -57,7 +56,7 @@ export default function TopSellerBarChart({ data }: TopSellerBarChartProp) {
             <Tooltip
               formatter={(value: string) => {
                 const _value = parseFloat(value)
-                return <Price mount={_value} />
+                return formatInteger(_value)
               }}
             />
             <Bar

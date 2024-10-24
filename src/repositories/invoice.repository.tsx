@@ -8,6 +8,7 @@ export interface IInvoiceRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    customerId?: number,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[InvoiceItem[], number]>
@@ -26,10 +27,15 @@ class InvoiceRepository implements IInvoiceRepository {
     pageSize: number,
     pageNum: number,
     search: string,
+    customerId?: number,
     orderBy?: string,
     orderDirection?: string,
   ): Promise<[InvoiceItem[], number]> {
     let params = `pageSize=${pageSize}&pageNum=${pageNum}&search=${formatUrlText(search)}`
+
+    if (customerId) {
+      params += `&customerId=${customerId}`
+    }
 
     if (orderBy) {
       params += `&orderBy=${orderBy}`

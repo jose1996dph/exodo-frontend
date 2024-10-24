@@ -8,16 +8,15 @@ const propRows: CustomRow[] = [
   {
     title: 'Proveedor',
     key: 'supplier',
-    isImportant: false,
+    isImportant: true,
     render: (_, item: InvoiceItem) => item.supplier.name,
   },
   {
     title: 'Cliente',
     key: 'customer',
-    isImportant: true,
+    isImportant: false,
     render: (_, item: InvoiceItem) => item.customer.businessName,
   },
-  /*
   {
     title: 'Estado',
     key: 'status',
@@ -29,7 +28,6 @@ const propRows: CustomRow[] = [
       />
     ),
   },
-  */
   {
     title: 'Total',
     key: 'total',

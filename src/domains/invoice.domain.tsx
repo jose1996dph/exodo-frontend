@@ -83,7 +83,9 @@ export class InvoiceDetail implements InvoiceItem {
 
     const mountDiscount =
       this.currentDiscountPercentage > 0 ? (this.total * this.currentDiscountPercentage) / 100 : 0
-    return this.total - mountDiscount - this.mountPayed
+    const _totalToPay = this.total - mountDiscount - this.mountPayed
+
+    return Number(_totalToPay.toFixed(2))
   }
 }
 

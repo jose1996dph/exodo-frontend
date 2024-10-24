@@ -37,6 +37,7 @@ export default function Invoices({ open, toggleDrawer }: InvoicesPageProps) {
       const [_invoices, _pages] = await invoiceService.getAll(
         page,
         searchText,
+        undefined,
         orderBy,
         orderDirection,
       )
